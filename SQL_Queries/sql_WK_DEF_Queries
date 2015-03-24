@@ -1,7 +1,12 @@
 -------------------------------------------------------------------------------------------------------------------------------------
 /*				WK - NORTH .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
+<ExportDef>
+<Title>North Export</Title>
+<OutputSequence/>
+<Database>GEMdb</Database>
 
+<SQLCMD>
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
 DECLARE 		@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
@@ -56,6 +61,13 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
 
+</SQLCMD>
+
+<Description/>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter/>
+<OutputFilename>D:\GEM\ImportExport\Payroll\TEST_mealdd</OutputFilename>
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,7 +75,12 @@ ORDER BY		DTL.AccountNo
 -------------------------------------------------------------------------------------------------------------------------------------
 /*				WK - SOUTH .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
+<ExportDef>
+<Title>South Export</Title>
+<OutputSequence/>
+<Database>GEMdb</Database>
 
+<SQLCMD>
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
 DECLARE 		@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
@@ -118,6 +135,15 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
 
+</SQLCMD>
+
+<Description/>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter/>
+<OutputFilename>D:\GEM\ImportExport\Payroll\TEST_mealdds</OutputFilename>
+
+
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -126,6 +152,12 @@ ORDER BY		DTL.AccountNo
 -------------------------------------------------------------------------------------------------------------------------------------
 /*				WK - BOSSIER .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
+<ExportDef>
+<Title>Bossier Export</Title>
+<OutputSequence/>
+<Database>GEMdb</Database>
+
+<SQLCMD>
 
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
@@ -181,6 +213,15 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
 
+</SQLCMD>
+
+<Description></Description>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter></Delimiter>
+<OutputFilename>D:\GEM\ImportExport\Payroll\TEST_mealddb</OutputFilename>
+
+
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -190,6 +231,12 @@ ORDER BY		DTL.AccountNo
 /*				WK - PIERREMONT .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
 
+<ExportDef>
+<Title>Pierremont Export</Title>
+<OutputSequence></OutputSequence>
+<Database>GEMdb</Database>
+
+<SQLCMD>
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
 DECLARE 		@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
@@ -244,6 +291,14 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
 
+</SQLCMD>
+
+<Description></Description>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter></Delimiter>
+<OutputFilename>D:\GEM\ImportExport\Payroll\TEST_mealddp</OutputFilename>
+
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -252,6 +307,13 @@ ORDER BY		DTL.AccountNo
 -------------------------------------------------------------------------------------------------------------------------------------
 /*				WK - INNOVATION .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
+
+<ExportDef>
+<Title>Innovation Export</Title>
+<OutputSequence></OutputSequence>
+<Database>GEMdb</Database>
+
+<SQLCMD>
 
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
@@ -307,6 +369,14 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
 
+</SQLCMD>
+<Description></Description>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter></Delimiter>
+<OutputFilename>D:\GEM\ImportExport\Payroll\TEST_mealddi</OutputFilename>
+
+
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -316,6 +386,12 @@ ORDER BY		DTL.AccountNo
 /*				WK - PCARE .DEF FILE SQL QUERY																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
 
+<ExportDef>
+<Title>PCARE Export</Title>
+<OutputSequence></OutputSequence>
+<Database>GEMdb</Database>
+
+<SQLCMD>
 
 DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
 DECLARE 		@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
@@ -369,6 +445,14 @@ WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
+
+</SQLCMD>
+
+<Description></Description>
+<Active>1</Active>
+<Append>0</Append>
+<Delimiter></Delimiter>
+<OutputFilename>D:\GEM\ImportExport\Payroll\mealpc</OutputFilename>
 
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
