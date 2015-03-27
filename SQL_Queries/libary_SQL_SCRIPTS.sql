@@ -72,3 +72,108 @@ SELECT 	 		 @NOW_DATE AS RightNow
 				,@END_DATE AS CycleEndDate
 
 FROM			tblCycleXLAT
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------------------------------------
+/*				DATE/TIME FORMAT CALCULATIONS																						*/
+-------------------------------------------------------------------------------------------------------------------------------------
+
+/*	Standard Date Formats
+=============================================================== */
+
+--				Format DATE as:	Jan 1 2015 1:29PM  --  DEFAULT
+SELECT			CONVERT(VARCHAR(20),GETDATE(), 100)	
+
+--				Format DATE as:	01/01/15  --  Standard: USA
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 1) AS [MM/DD/YY]
+
+--				Format DATE as:	01/01/2015  --  Standard: USA
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 101) AS [MM/DD/YYYY]	
+
+--				Format DATE as:	15.01.01  --  Standard: ANSI
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 2) AS [YY.MM.DD]
+
+--				Format DATE as:	2015.01.01  --  Standard: ANSI
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 102) AS [YYYY.MM.DD]
+
+--				Format DATE as:	01/01/15  --  Standard: British/French
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 3) AS [DD/MM/YY]
+
+--				Format DATE as:	01/01/2015  --  Standard: British/French
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 103) AS [DD/MM/YYYY]
+
+--				Format DATE as:	01.01.15  --  Standard: German
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 4) AS [DD.MM.YY]
+
+--				Format DATE as:	01.01.2015  --  Standard: German
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 104) AS [DD.MM.YYYY]
+
+--				Format DATE as:	01-01-15  --  Standard: Italian
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 5) AS [DD-MM-YY]
+
+--				Format DATE as:	01-01-2015  --  Standard: Italian
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 105) AS [DD-MM-YYYY]
+
+--				Format DATE as:	01 Jan 15 
+SELECT			CONVERT(VARCHAR(9),GETDATE(), 6) AS [DD MON YY]
+
+--				Format DATE as:	01 Jan 2015 
+SELECT			CONVERT(VARCHAR(11),GETDATE(), 106) AS [DD MON YYYY]
+
+--				Format DATE as:	Jan 01, 15 
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 7) AS [Mon DD, YY]
+
+--				Format DATE as:	Jan 01, 2015 
+SELECT			CONVERT(VARCHAR(12),GETDATE(), 107) AS [Mon DD, YYYY]
+
+--				Format DATE/TIME as:	Jan 01 2015 01:23:45:123PM 
+SELECT			CONVERT(VARCHAR(26),GETDATE(), 109)
+
+--				Format DATE as:	01-01-15	--	Standard: USA
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 10) AS [MM-DD-YY]
+
+--				Format DATE as:	01-01-2015	--	Standard: USA
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 110) AS [MM-DD-YYYY]
+
+--				Format DATE as:	150101		--	Standard: ISO
+SELECT			CONVERT(VARCHAR(6),GETDATE(), 12) AS [YYMMDD]
+
+--				Format DATE as:	20150101		--	Standard: ISO
+SELECT			CONVERT(VARCHAR(8),GETDATE(), 112) AS [YYYYMMDD]
+
+--				Format DATE as:	2015-01-01 01:23:45	--	Standard: ODBC CANONICAL
+SELECT			CONVERT(VARCHAR(19),GETDATE(), 120)
+
+--				Format DATE as:	2015-01-01 01:23:45:123	--	Standard: ODBC CANONICAL MS
+SELECT			CONVERT(VARCHAR(23),GETDATE(), 121)
+
+--				Format DATE as:	01/15
+SELECT			RIGHT(CONVERT(VARCHAR(8),GETDATE(), 3), 5) AS [MM/YY]
+SELECT			SUBSTRING(CONVERT(VARCHAR(8), GETDATE(), 3), 4, 5) AS [MM/YY]
+
+--				Format DATE as:	01/2015
+SELECT			RIGHT(CONVERT(VARCHAR(10), GETDATE(), 103), 7) AS [MM/YYYY]
+
+--				Format DATE as:	January 01, 2015
+SELECT			DATENAME(MM, GETDATE()) + RIGHT(CONVERT(VARCHAR(12), GETDATE(), 107), 9) AS [Month DD, YYYY]
+
+--				Format DATE as:	Jan 2015
+SELECT			SUBSTRING(CONVERT(VARCHAR(11), GETDATE(), 113), 4, 8) AS [Mon YYYY]
+
+--				Format DATE as:	January 2015
+SELECT			DATENAME(MM, GETDATE()) + RIGHT(CONVERT(VARCHAR(12), GETDATE(), 107), 9) AS [Month DD, YYYY]
+
+--				Format DATE as:	15 January
+SELECT			CAST(DAY(GETDATE()) AS VARCHAR(2)) + ' ' + DATENAME(MM, GETDATE()) AS [DD Month]
+
+--				Format DATE as: January 01
+SELECT			DATENAME(MM, GETDATE()) + ' ' + CAST(DAY(GETDATE()) AS VARCHAR(2)) AS [Month DD]
+
+
+/*	Standard Time Formats
+=============================================================== */
+--				Format TIME as:	01:23:45 
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 108) AS [Mon DD, YY]
