@@ -141,15 +141,39 @@ WHERE 		c.AccountNo = d.AccountNo
 /*				UPDATE QUERIES																										*/
 -------------------------------------------------------------------------------------------------------------------------------------
 
-USE GEMdb
-GO
+
 
 /*		UPDATE: Modify Badge Expiration Dates
 =================================================*/
+USE [GEMdb] 
+GO
 
-update			tblBadgesOHD
-set				ExpireDate = '2055-12-31 23:59:59'
-where			ExpireDate = '2055-01-01 00:00:00.000'
+DECLARE	@_NewExpDate datetime, @_OldExpDateBeg datetime, @_OldExpDateEnd datetime;
+
+SET		@_OldExpDateBeg = '2055-01-01'
+SET		@_OldExpDateEnd = '2055-12-31'
+
+SET		@_NewExpDate = '2056-01-01 11:59:59 PM'
+
+
+UPDATE	tblAccountTTL
+SET 	ExpireDate = @_NewExpDate
+WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+
+UPDATE	tblAccountOHD
+SET 	ExpireDate = @_NewExpDate
+WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+
+UPDATE 	tblBadgesOHD	
+SET 	ExpireDate = @_NewExpDate
+WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+
+UPDATE 	cfgSIMxlat
+SET 	ExpireDate = @_NewExpDate
+WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+
+UPDATE	cfgOverhead
+SET 	ExpireDays = 18250
 
 
 ------------------------------------------------------------------------------------
