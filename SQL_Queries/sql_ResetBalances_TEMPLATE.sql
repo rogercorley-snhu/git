@@ -1,10 +1,11 @@
-------------------------------------------------------------------------------------------------------------------
-/*					BALANCE RESET QUERIES - TEMPLATE					  										 */
-------------------------------------------------------------------------------------------------------------------
-
 /*
 ------------------------------------------------------------------------------------------------------------------
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+[	BALANCE RESET QUERIES - TEMPLATE				]				  										 
+------------------------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ------------------------------------------------------------------------------------------------------------------
 
 Author:		Roger Corley
@@ -28,10 +29,9 @@ Set of SQL queries created to completed the following tasks:
 
 
 ------------------------------------------------------------------------------------------------------------------
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ------------------------------------------------------------------------------------------------------------------
 */
-
 
 USE [GEMdb];
 GO
@@ -54,59 +54,59 @@ DECLARE		@_BadgeNo char(19);
 */
 
 SET		@_TDATE		= '03-26-2015 23:59:59';
-/*				MODIFY DATE VALUE ONLY!! DO NOT MODIFY TIME VALUE!!
-				-- The date MUST MATCH the LAST day of the cycle.
-				-- The last day of the cycle is the night before 
-				-- the BeginDate of the next cycle.
+/*					MODIFY DATE VALUE ONLY!! DO NOT MODIFY TIME VALUE!!
+					-- The date MUST MATCH the LAST day of the cycle.
+					-- The last day of the cycle is the night before 
+					-- the BeginDate of the next cycle.
 							
-				Enclose with single quotes ('').				*/
+					Enclose with single quotes ('').				*/
 
 
 SET		@_BID		= 'Payments';	
-/*		 		 !! DO NOT MODIFY !!							*/
+/*		 		 	!! DO NOT MODIFY !!								*/
 
 
 SET		@_CID		= 1;			
-/* 				!! DO NOT MODIFY !!								*/
+/* 					!! DO NOT MODIFY !!								*/
 
 
 SET		@_OUTNO		= 1000;			
-/*				No single quotes ('').
-				MODIFY ONLY IF REQUIRED. 						*/
+/*					No single quotes ('').
+					MODIFY ONLY IF REQUIRED. 						*/
 
 
 SET		@_PAYTID	= 501;			
-/*				No single quotes ('').
+/*					No single quotes ('').
 
-				 This value MUST MATCH THE CORRECT 
-				-- Payment TransID for any charge TransID(s) 
-				-- listed in the WHERE clause.
-				-- ( e.g. '501' <--> '10'; '502' <--> '20' )	*/
+					 This value MUST MATCH THE CORRECT 
+					-- Payment TransID for any charge TransID(s) 
+					-- listed in the WHERE clause.
+					-- ( e.g. '501' <--> '10'; '502' <--> '20' )	*/
 
 
 SET		@_REFNO		= 'AUTO';		
-/*				Enclose with single quotes ('').
-				MODIFY ONLY IF REQUIRED. 						*/
+/*					Enclose with single quotes ('').
+					MODIFY ONLY IF REQUIRED. 						*/
 
 
 SET		@_CHKNO		= 'BIWK';		
-/* 				Enclose with single quotes ('').
-				This value MUST MATCH THE CORRECT XLATID
-				for this payment type.
-				( e.g. 'BIWK'; 'BIWK2'; 'MTH' ) 				*/
+/* 					Enclose with single quotes ('').
+					This value MUST MATCH THE CORRECT XLATID
+					for this payment type.
+					( e.g. 'BIWK'; 'BIWK2'; 'MTH' ) 				*/
 
 
 SET		@_BadgeNo	= NULL;			
-/*				!! DO NOT MODIFY !! EVER !!!					*/
+/*					!! DO NOT MODIFY !! EVER !!!					*/
 
 
-SET 		@_CHGTID 	= ',1,2,4,15,';
-/*				Enclose with single quotes ('').
-				MUST BEGIN AND END with commas (,1,2,3,).		*/
+SET 	@_CHGTID 	= ',1,2,4,15,';
+/*					Enclose with single quotes ('').
+					MUST BEGIN AND END with commas (,1,2,3,).		*/
 
-SET 		@_ACID		= ',10,40,';
-/*				Enclose with single quotes ('').
-				MUST BEGIN AND END with commas (,10,20,30,).	*/
+SET 	@_ACID		= ',10,40,';
+/*					Enclose with single quotes ('').
+					MUST BEGIN AND END with commas (,10,20,30,).	*/
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ SET 		@_ACID		= ',10,40,';
 
 /*
 ------------------------------------------------------------------------------------------------------------------
-[	FIRST SECTION OF BALANCE RESET QUERY 	]
+[	FIRST SECTION OF BALANCE RESET QUERY 			]
 ------------------------------------------------------------------------------------------------------------------
 */
 
@@ -126,25 +126,25 @@ SET		@_BEGINDATE	= (SELECT BeginDate FROM tblCycleXlat AS xlat
 SET		@_ENDDATE	= (SELECT EndDate FROM tblCycleXlat AS xlat 
 				WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
 
-SELECT	@_BID 		AS BatchID
-		,@_CID 		AS CoreID
+SELECT	@_BID 			AS BatchID
+		,@_CID 			AS CoreID
 		,ohd.AccountNo 	AS AccountNo
-		,@_TDATE 	AS TransDate
-		,@_OUTNO 	AS OutletNo
-		,@_PAYTID 	AS TransID
-		,@_REFNO 	AS RefNum
-		,@_CHKNO 	AS ChkNum
+		,@_TDATE 		AS TransDate
+		,@_OUTNO 		AS OutletNo
+		,@_PAYTID 		AS TransID
+		,@_REFNO 		AS RefNum
+		,@_CHKNO 		AS ChkNum
 			
 			
 		,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS TransTotal
 		,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS Sales1
 			
-		,@_BADGENO 	AS BadgeNo
+		,@_BADGENO 		AS BadgeNo
 
 		
 INTO	RESETS
 
-FROM	tblDetail 	AS dtl
+FROM	tblDetail 		AS dtl
 		LEFT JOIN tblAccountOHD AS ohd ON dtl.AccountNo = ohd.AccountNo
 		
 WHERE	CHARINDEX(','+CAST(TransID as VARCHAR(50))+',',@_CHGTID) > 0 AND
@@ -163,7 +163,7 @@ ORDER BY 	dbo.LPad(RTRIM(ohd.AccountNo),19,'0')
 
 /*
 ------------------------------------------------------------------------------------------------------------------
-[	SECOND SECTION OF BALANCE RESET QUERY   ]
+[	SECOND SECTION OF BALANCE RESET QUERY   		]
 ------------------------------------------------------------------------------------------------------------------
 */
 
