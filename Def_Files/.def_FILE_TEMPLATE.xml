@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+<GEMDefFile>
+	<Company>Common CENTS Solutions</Company>
+	<Version>1.70.31</Version>
+	<Application>GEM Export Utility</Application>
+	<Copyright>© Copyright 2002, All Rights Reserved</Copyright>
+	<CreateDate>04/06/2015 5:00:00 PM</CreateDate>
+	<Author>Roger Corley</Author>
+	<Description>
+	</Description>
+
+		<ExportDefs Creator="GEM Export Utility">
+		<ExportDef>
+			<Title>South Export</Title>
+			<OutputSequence/>
+			<Database>GEMdb</Database>
+
+			<SQLCMD>
+			DECLARE @TDATE DATETIME, @BEG_DATE DATETIME, @END_DATE DATETIME, @YEAR_NO VARCHAR(2);
+			DECLARE @TDATE_ADJ int, @CYCLENO_ADJ int, @PERIOD_NO int;
+			DECLARE @TID varchar(50), @ACID varchar(50);
+
+			------------------------------------------------------------------------------------------------------------------
+			------------------------------------------------------------------------------------------------------------------
+			SET @TDATE_ADJ = 10;       --Variable used to calculate @TDATE value
+			SET @CYCLENO_ADJ = 178;    --Variable used to calculate @PERIOD_NO value
+
+			SET @TID = ',2,';		--Variable(s) that contains necessary dtl.TransID(s) for this export file
+			SET @ACID = ',10,20,';	--Variable(s) that contains necessary a.AccountClassID(s) for this export file
+
+			------------------------------------------------------------------------------------------------------------------
+			------------------------------------------------------------------------------------------------------------------
+			SET @TDATE = GETDATE()-@TDATE_ADJ;
+			SET @BEG_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+			SET @END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+
+			SET @YEAR_NO = (SELECT CONVERT(VARCHAR(2),@TDATE,2) AS [YY]);
+			SET @PERIOD_NO = (SELECT CycleNo FROM tblCycleXLAT WHERE @BEG_DATE = BeginDate AND XlatID = 'BIWK2') - @CYCLENO_ADJ;
+
+			----------------------------------------------------------------------------------------------------------------
+			----------------------------------------------------------------------------------------------------------------
+			SELECT	
+			  DTL.AccountNo
+			  ,CONVERT(VARCHAR(20),SUM(TransTotal),0) as [TransTotal]
+			  ,DTL.BadgeNo
+			  ,OHD.Email
+			  --,OHD.Fax
+			  ,@YEAR_NO as [YEAR]
+			  ,@PERIOD_NO as [PERIOD]
+			  --,DTL.TransID
+
+			FROM		
+			  tblDetail as DTL
+			  LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
+
+			WHERE	
+			  DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
+			  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
+			  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
+			  AND OHD.Fax NOT LIKE 'DIETARY'
+
+			GROUP BY	
+			  DTL.AccountNo
+			  ,DTL.BadgeNo
+			  ,OHD.Email
+			  ,OHD.Fax
+			  ,DTL.TransID
+
+			ORDER BY	
+			  DTL.AccountNo
+			</SQLCMD>
+			
+			<Description/>
+			<Active>1</Active>
+			<Append>0</Append>
+			<Delimiter/>
+			<OutputFilename>D:\GEM\ImportExport\Payroll\mealdds</OutputFilename>
+			<UseCRLF>1</UseCRLF>
+			<UseCR>0</UseCR>
+			<UseLF>0</UseLF>
+			<GenerateCredits>0</GenerateCredits>
+			<TransID>100</TransID>
+			<Outlet>1000</Outlet>
+			<Reference>EU Auto</Reference>
+			<Fields Creator="GEM Export Utility">
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>2</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars>36</LeadChars>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>AccountNo</Fieldname>
+					<Position>0</Position>
+					<Width>5</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>12</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars>N</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>3</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars>06</LeadChars>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width/>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars>MEALS</LeadChars>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>TransTotal</Fieldname>
+					<Position>0</Position>
+					<Width>13</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>1</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>YEAR</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation>00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>PERIOD</Fieldname>
+					<Position>0</Position>
+					<Width>2</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation>00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>YEAR</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation>00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>PERIOD</Fieldname>
+					<Position>0</Position>
+					<Width>2</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation>00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+			</Fields>
+		</ExportDef>
+	</ExportDefs>
+</GEMDefFile>
