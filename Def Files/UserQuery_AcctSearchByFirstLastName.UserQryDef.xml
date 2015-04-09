@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserQryDef>
+
+	<DefFile>D:\GEM\User Queries\AccountSearchByFirstLastName.UserQryDef</DefFile>
+	<QueryName>Find Account By Employee Name</QueryName>
+	<Category>Accounts</Category>
+
+	<Description>
+		Search for account information based on employee's first and last name. 
+		User can search by either name or both. 
+		If unsure about name spelling, user can search partial names.
+	</Description>
+
+	<Parameters>
+		<Parameter name="firstName" display="First Name" />
+		<Parameter name="lastName" display="Last Name" />
+	</Parameters>
+
+	<QuerySQL><![CDATA[
+		DECLARE @fname varchar(20), @lname varchar(20);
+
+		SET		@fname = ISNULL('@#firstName#@', '');
+		SET		@lname = ISNULL('@#lastName#@', '');
+
+		SELECT	ohd.accountno as [AccountNo]
+				,b.badgeno as [BadgeNo]
+				,ohd.firstname as [FirstName]
+				,ohd.lastname as [LastName]
+
+		FROM	tblAccountOHD as ohd
+				left join tblBadgesOHD as b ON ohd.accountno = b.accountno
+
+		WHERE	ohd.firstname LIKE @fname + '%'
+				and ohd.lastname LIKE '%' + @lname + '%'
+
+		GROUP BY ohd.accountno, b.badgeno, ohd.firstname, ohd.lastname
+		ORDER BY ohd.accountno, b.badgeno, ohd.lastname, ohd.firstname
+
+		]]></QuerySQL>
+
+</UserQryDef>
