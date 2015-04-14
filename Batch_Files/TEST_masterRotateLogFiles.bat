@@ -8,7 +8,17 @@
 
 ::	Set Date Variable
 ::-----------------------------------------------------------------------
-	for /f "tokens=2-8 delims=.:/ " %%a in ("%date%") do set DATE=%%a-%%b-%%c
+	for /f "delims=" %%a in ('wmic OS Get localdatetime  ^| find "."') do set "dt=%%a"
+		set "YYYY=%dt:~0,4%"
+		set "MM=%dt:~4,2%"
+		set "DD=%dt:~6,2%"
+		set "HH=%dt:~8,2%"
+		set "Min=%dt:~10,2%"
+		set "Sec=%dt:~12,2%"
+
+		set datestamp=%YYYY%/%MM%/%DD%
+		set timestamp=%HH%:%Min%:%Sec%
+		set fullstamp=%datestamp% %timestamp%
 
 ::	Configure Batch Variables
 ::	[ ** Modify AS NEEDED 						** ] 
@@ -33,27 +43,38 @@
 :CHK_GOnline
 ::-----------------------------------------------------------------------
 	if exist %_SYS_ROOT%\%_GOnline%.log (
-		echo !DATE! : [ MSG ] : !_GOnline!.log found. >> !_IMPORT_LOG!
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+		echo !fullstamp! : [ MSG ] : !_GOnline!.log found. >> !_IMPORT_LOG!
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
 		goto RotateGOnlineLogs) 
 	else (
-		echo !DATE! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG! )
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
+		echo !fullstamp! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG! 
+		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
+		)
 		goto CHK_GDaily
 
 ::-----------------------------------------------------------------------
 :CHK_GDaily
 ::-----------------------------------------------------------------------
 	if exist %_SYS_ROOT%\%_GDaily%.cp (
-		echo !DATE! : [ MSG ] : !_GDaily!.cp found. >> !_IMPORT_LOG!
-		goto RotateGDailyLogs) 
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+		echo !fullstamp! : [ MSG ] : !_GDaily!.cp found. >> !_IMPORT_LOG!
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+		goto RotateGDailyLogs)
 	else (
-		echo !DATE! : [ ERROR ] : !_GDaily!.cp not found. >> !_IMPORT_LOG! )
+		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
+		echo !fullstamp! : [ ERROR ] : !_GDaily!.cp not found. >> !_IMPORT_LOG!
+		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
+		)
 		goto DONE
-
 
 ::-----------------------------------------------------------------------
 :RotateGOnlineLogs
 ::-----------------------------------------------------------------------
-	echo %DATE% : [JOB BEGIN] Begin Rotate GEMonline Logs >> %_IMPORT_LOG%
+	echo %fullstamp% : [JOB BEGIN] Begin Rotate GEMonline Logs >> %_IMPORT_LOG%
 
 	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
@@ -66,9 +87,10 @@
 	if exist %_SYS_ROOT%\%_GOnline%.log copy %_SYS_ROOT%\%_GOnline%.log %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01
 	del /Q %_SYS_ROOT%\%_GOnline%.log
 	
-	echo %DATE% : [JOB END] End Rotate GEMonline Logs >> %_IMPORT_LOG%
-	echo .................................................................... >> %_IMPORT_LOG%
-	echo .................................................................... >> %_IMPORT_LOG%
+	echo %fullstamp% : [JOB END] End Rotate GEMonline Logs >> %_IMPORT_LOG%
+	echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+	echo .............................................................................. >> %_IMPORT_LOG%
+	echo .............................................................................. >> %_IMPORT_LOG%
 
 	goto CHK_GDaily
 
@@ -76,7 +98,7 @@
 ::-----------------------------------------------------------------------
 :RotateGDailyLogs
 ::-----------------------------------------------------------------------
-	echo %DATE% : [JOB BEGIN] Begin Rotate GEMDaily Logs >> %_IMPORT_LOG%
+	echo %fullstamp% : [JOB BEGIN] Begin Rotate GEMDaily Logs >> %_IMPORT_LOG%
 
 	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
@@ -89,14 +111,15 @@
 	if exist %_SYS_ROOT%\%_GDaily%.cp copy %_SYS_ROOT%\%_GDaily%.cp %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp01
 	del /Q %_SYS_ROOT%\%_GDaily%.cp
 
-	echo %DATE% : [JOB END] End Rotate GEMDaily Logs >> %_IMPORT_LOG%
-	echo .................................................................... >> %_IMPORT_LOG%
-	echo .................................................................... >> %_IMPORT_LOG%
+	echo %fullstamp% : [JOB END] End Rotate GEMDaily Logs >> %_IMPORT_LOG%
+	echo --------------------------------------------------------------- >> !_IMPORT_LOG!
+	echo .............................................................................. >> %_IMPORT_LOG%
+	echo .............................................................................. >> %_IMPORT_LOG%
 	
 	goto DONE
 
 :DONE
-	echo %DATE% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG% 
-	echo -------------------------------------------------------------------- >> %_IMPORT_LOG%
-	echo ******************************************************************** >> %_IMPORT_LOG%
-	echo -------------------------------------------------------------------- >> %_IMPORT_LOG%
+	echo %fullstamp% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG% 
+	echo ------------------------------------------------------------------------------ >> %_IMPORT_LOG%
+	echo ****************************************************************************** >> %_IMPORT_LOG%
+	echo ------------------------------------------------------------------------------ >> %_IMPORT_LOG%
