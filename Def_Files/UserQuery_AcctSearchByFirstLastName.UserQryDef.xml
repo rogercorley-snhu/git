@@ -19,7 +19,7 @@
 	<QuerySQL><![CDATA[
 		DECLARE @fname varchar(20), @lname varchar(20);
 
-		SET	@fname = ISNULL('@#firstName#@', '');
+		SET	@fname = ISNULL('@#firstName#@', ''); 
 		SET	@lname = ISNULL('@#lastName#@', '');
 
 		SELECT	ohd.accountno as [AccountNo]
