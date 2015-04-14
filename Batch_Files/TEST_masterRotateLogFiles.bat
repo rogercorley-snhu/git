@@ -15,7 +15,7 @@
 ::	[ ** Be Sure To Create Archive & ImportEmployees Directories 	** ]
 ::---------------------------------------------------------
 	set _SYS_ROOT=C:
-	set _DIR_ARCH=_GPayLogArchive
+	set _ARCHIVE=_GPayLogArchive
 
 
 ::	Configure Log File Variables
@@ -23,8 +23,8 @@
 ::	[ ** KEEP LEADING UNDERSCORE  (e.g. _logfilename)	** ]
 ::	[ ** REMOVE BRACKETS					** ]
 ::---------------------------------------------------------
-	set _GOnline_LOG_NAME=gemonline
-	set _GDaily_LOG_NAME=GEMDaily
+	set _GOnline=gemonline
+	set _GDaily=GEMDaily
 	set _IMPORT_LOG=C:\_GPayLogArchive\_RotateLogFiles.log
 	set _GOnline_CHK=0
 	set _GDaily_CHK=0
@@ -32,42 +32,42 @@
 ::-----------------------------------------------------------------------
 :CHK_GOnline
 ::-----------------------------------------------------------------------
-	if exist %_SYS_ROOT%\%_GOnline_LOG_NAME%.log (
-		echo !DATE! : [ MSG ] : GEMonline.log found. >> !_IMPORT_LOG!
+	if exist %_SYS_ROOT%\%_GOnline%.log (
+		echo !DATE! : [ MSG ] : !_GOnline!.log found. >> !_IMPORT_LOG!
 		goto RotateGOnlineLogs) 
 	else (
-		echo !DATE! : [ ERROR ] : GEMonline.log not found. >> !_IMPORT_LOG!
-		goto CHK_GDAILY)
+		echo !DATE! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG! )
+		goto CHK_GDaily
 
 ::-----------------------------------------------------------------------
 :CHK_GDaily
 ::-----------------------------------------------------------------------
-	if exist %_SYS_ROOT%\%_GDaily_LOG_NAME%.cp (
-		echo !DATE! : [ MSG ] : GEMonline.log found. >> !_IMPORT_LOG!
+	if exist %_SYS_ROOT%\%_GDaily%.cp (
+		echo !DATE! : [ MSG ] : !_GDaily!.cp found. >> !_IMPORT_LOG!
 		goto RotateGDailyLogs) 
 	else (
-		echo !DATE! : [ ERROR ] : GEMonline.log not found. >> !_IMPORT_LOG!
-		goto DONE)
+		echo !DATE! : [ ERROR ] : !_GDaily!.cp not found. >> !_IMPORT_LOG! )
+		goto DONE
 
 
 ::-----------------------------------------------------------------------
 :RotateGOnlineLogs
 ::-----------------------------------------------------------------------
-	echo %DATE% : [JOB BEGIN] Beginning GEMOnline Log File Rotation Job >> %_IMPORT_LOG%
-	echo .................................................................... >> %_IMPORT_LOG%
+	echo %DATE% : [JOB BEGIN] Begin Rotate GEMonline Logs >> %_IMPORT_LOG%
 
-	del /Q %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log08
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log07 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log07 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log08
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log06 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log06 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log07
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log05 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log05 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log06
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log04 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log04 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log05
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log03 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log03 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log04
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log02 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log02 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log03
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log01 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log01 %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log02
-	if exist %_SYS_ROOT%\%_GOnline_LOG_NAME%.log copy %_SYS_ROOT%\%_GOnline_LOG_NAME%.log %_SYS_ROOT%\%_DIR_ARCH%\%_GOnline_LOG_NAME%.log01
-	del /Q %_SYS_ROOT%\%_GOnline_LOG_NAME%.log
+	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log06 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log06 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log05 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log05 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log06
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log04 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log04 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log05
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log03 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log03 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log04
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log02 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log02 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log03
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log02
+	if exist %_SYS_ROOT%\%_GOnline%.log copy %_SYS_ROOT%\%_GOnline%.log %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01
+	del /Q %_SYS_ROOT%\%_GOnline%.log
 	
-	echo %DATE% : [JOB END] GEMDaily Log File Rotation Complete >> %_IMPORT_LOG%
+	echo %DATE% : [JOB END] End Rotate GEMonline Logs >> %_IMPORT_LOG%
+	echo .................................................................... >> %_IMPORT_LOG%
 	echo .................................................................... >> %_IMPORT_LOG%
 
 	goto CHK_GDaily
@@ -76,23 +76,27 @@
 ::-----------------------------------------------------------------------
 :RotateGDailyLogs
 ::-----------------------------------------------------------------------
-	echo %DATE% : [JOB BEGIN] Beginning GEMOnline Log File Rotation Job >> %_IMPORT_LOG%
+	echo %DATE% : [JOB BEGIN] Begin Rotate GEMDaily Logs >> %_IMPORT_LOG%
+
+	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp06 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp06 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp05 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp05 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp06
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp04 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp04 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp05
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp03 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp03 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp04
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp02 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp02 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp03
+	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp01 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp01 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp02
+	if exist %_SYS_ROOT%\%_GDaily%.cp copy %_SYS_ROOT%\%_GDaily%.cp %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp01
+	del /Q %_SYS_ROOT%\%_GDaily%.cp
+
+	echo %DATE% : [JOB END] End Rotate GEMDaily Logs >> %_IMPORT_LOG%
 	echo .................................................................... >> %_IMPORT_LOG%
-
-	del /Q %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp08
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp07 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp07 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp08
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp06 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp06 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp07
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp05 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp05 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp06
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp04 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp04 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp05
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp03 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp03 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp04
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp02 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp02 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp03
-	if exist %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp01 copy %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp01 %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp02
-	if exist %_SYS_ROOT%\%_GDaily_LOG_NAME%.cp copy %_SYS_ROOT%\%_GDaily_LOG_NAME%.cp %_SYS_ROOT%\%_DIR_ARCH%\%_GDaily_LOG_NAME%.cp01
-	del /Q %_SYS_ROOT%\%_GDaily_LOG_NAME%.cp
-
-	echo %DATE% : [JOB END] GEMDaily Log File Rotation Complete >> %_IMPORT_LOG%
 	echo .................................................................... >> %_IMPORT_LOG%
-
+	
 	goto DONE
 
 :DONE
+	echo %DATE% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG% 
+	echo -------------------------------------------------------------------- >> %_IMPORT_LOG%
+	echo ******************************************************************** >> %_IMPORT_LOG%
+	echo -------------------------------------------------------------------- >> %_IMPORT_LOG%
