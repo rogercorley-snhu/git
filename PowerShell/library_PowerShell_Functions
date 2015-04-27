@@ -1,0 +1,45 @@
+
+
+function logccs ($action) {
+#------------------------------------------------
+$now=Get-Date
+#------------------------------------------------
+$path = "C:\CCSLogs\"
+$LogFile = 'C:\CCSLogs\'+"logCCSWork.txt"
+#------------------------------------------------
+$caseno = Read-Host "Enter Case #: "
+$client = Read-Host "Enter Client Name: "
+$startw = "[START] :"
+$stopw = "[ END ] :"
+#------------------------------------------------
+if([IO.Directory]::Exists($path)) {
+    #Do Nothing!
+}
+else {
+    New-Item -ItemType directory -Path C:\CCSLogs
+}
+#------------------------------------------------
+if([IO.File]::Exists($LogFile)) {
+    #Do Nothing!
+}
+else {
+    New-Item -ItemType file -Path C:\CCSLogs\logCCSWork.txt
+}
+#------------------------------------------------
+if ($action -eq '1'){
+    Write-Host "$startw $now `t$caseno `t$client"
+    Add-Content C:\CCSLogs\logCCSWork.txt "`n$startw $now `t: $caseno `t: $client"
+}
+elseif ($action -eq '2'){
+    Write-Host "$stopw $now `t$caseno `t$client"
+    Add-Content C:\CCSLogs\logCCSWork.txt "`n$stopw $now `t: $caseno `t: $client"
+}
+#------------------------------------------------
+} # End function
+
+
+##################################################################
+
+# Format StopWatch Elapsed Time
+#------------------------------------------------
+$resultstime.Elapsed.ToString('dd\.hh\:mm\:ss')

@@ -500,23 +500,47 @@ WHERE 			CHARINDEX(','+CAST(someColumn as VARCHAR(50))+',', @_IDs) > 0
 
 
 -------------------------------------------------------------------------------------------------------------------------------------
-/*				SQL MATH : SUM - AVG - MAX - MIN - ETC																							*/
+/*				SQL MATH : SUM - AVG - MAX - MIN - ETC																																									*/
 -------------------------------------------------------------------------------------------------------------------------------------
 
 
-/*
-	SUM OVER : Running Totals ( gte SQL 2012)
+/*	SUM OVER : Running Totals ( gte SQL 2012)
 =============================================================== */
 
 SELECT a.id, a.account, a.deposit, SUM(a.deposit) OVER (ORDER BY a.id) AS 'total'
     FROM #TestData a
     ORDER BY a.id;
 
-/*
-	SUM OVER : Running Totals - Separate Accts using PARTITION clause ( gte SQL 2012)
+
+/*	SUM OVER : Running Totals - Separate Accts using PARTITION clause ( gte SQL 2012)
 =============================================================== */
 
 SELECT a.id, a.account, a.deposit, SUM(a.deposit) OVER (PARTITION BY a.account ORDER BY a.id) AS 'total'
     FROM #TestData a
     ORDER BY a.id;
 
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+/*	MICROS dbisql : Functions & Utilities																																													*/
+-------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------------------------------------
+/*	DEFAULT DBISQL ADMIN USER -- SIGN INTO MICROS DB
+=============================================================== */
+--	USERNAME:		dba
+--	PASSWORD:		$upp0rt2
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*	UNLOCK DEFAULT CCENTS PASSWORD - Micros dbisql
+=============================================================== */
+UPDATE 	micros.emp_def
+SET 		ob_account_disabled='F'
+WHERE 	user_id = 'ccents'
+
+
+/*	CLASSIC SECURITY ( TO RESET UNKNOWN CCENTS PASSWORD )
+=============================================================== */
+UPDATE 	micros.rest_def
+SET 		ob_classic_security = ‘T’

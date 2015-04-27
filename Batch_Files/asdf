@@ -1,0 +1,7 @@
+    @echo off
+    cls
+    setlocal ENABLEDELAYEDEXPANSION
+
+    call func_DeleteHeaderRow.bat
+
+    call ImportMasterTest.bat
