@@ -1,79 +1,92 @@
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '  =====[[[ VerifyImportFile.vbs ]]]=====
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '
-'         Author: Richard Beverly
-'           Date: 04-Jan-11
+'  Author: Richard Beverly
+'  Date: 04-Jan-11
+'...................................................................................................................................................
 '
-'                  This software is protected under copyright law.  It is forbidden to copy use or distrubute this software without the express, 
+'		This software is protected under copyright law.  It is forbidden to copy use or distrubute this software without the express, 
 '			written, permission of Common CENTS Solutions.  No warranties are expressed or implied.  Use of this software is at the 
 '			risk of the user and Common CENTS Solutions is not libabe for any loss or damage resulting from its use.
 '
-'                  License to use this software is granted to the user having a valid, paid, software maintenance agreement in effect for a 
+'		...................................................................................................................................
+'		License to use this software is granted to the user having a valid, paid, software maintenance agreement in effect for a 
 '			qualifying GEM product.
+'		....................................................................................................................................
 '
-'                  (c) Copyright 2011, Common CENTS Solutions, Inc -- All rights reserved
+'		(c) Copyright 2011, Common CENTS Solutions, Inc -- All rights reserved
 '
+'===================================================================================================================================================
+'  -----[[ Description ]]-----  
+'===================================================================================================================================================
 '
-'---------------------------------------------------------------------------------------------------------------------------------------------------
-'
-'  Description:  This script runs verification checks on each field of an import file to verify the fields meet specific criteria.
+'		This script runs verification checks on each field of an import file to verify the fields meet specific criteria.
 '			Depending on the settings in the "Settings" area below, this script will create a "Good" import 
 '			file containing all rows whose fields passed the verifications and also create a "Bad" import file 
 '			containing only those rows for whom at least one field did NOT pass. If specified, the script will 
 '			add a new field to the end of all rows in the "Bad" file explaining which field failed and the reason. 
+'		....................................................................................................................................
 '
-'			The "Config Array" variables should contain relevant values for each field (column) in the import file. 
+'		The "Config Array" variables should contain relevant values for each field (column) in the import file. 
 '			Each array element will correspond to the same ordinal field in each line (i.e. element 1 = field1, etc.). 
 '			In other words each array variable should have the same number of elements as the expected number of fields, 
 '			even if you aren't checking each field. Failure to do so will result in an early script termination.
+'		....................................................................................................................................
 '
-'			All Errors, including one that cause the script to halt execution, will be logged in the specified log 
+'		All Errors, including one that cause the script to halt execution, will be logged in the specified log 
 '			file unless a log file name isn't specified.
 '
 '---------------------------------------------------------------------------------------------------------------------------------------------------
 '
-'  Developer Notes: A developer can add new verifications to this script by adding functions to the verification functions section 
+'===================================================================================================================================================
+'  -----[[ Developer Notes ]]-----  
+'===================================================================================================================================================
+'		
+'		 A developer can add new verifications to this script by adding functions to the verification functions section 
 '			and calls to those functions within the "RunLineVerifications" procedure and also a Constant or an array 
 '			varaible to define parameters for each field in each row. Inspect existing functions, calls and constants 
 '			to see how it is done.
+'		'...................................................................................................................................
 '
-'			*NOTE 1: All verification functions should return a boolean specifying if ALL fields in the line pass verification.
+'		*NOTE 1: All verification functions should return a boolean specifying if ALL fields in the line pass verification.
 '			Actually, If a field fails verification, the function should call the "ProcessLine" procedure, passing error info,
 '			setting the function to return False and exiting the function. If all field checks pass, the function should return TRUE.
+'		'...................................................................................................................................
 '
-'			*NOTE 2: Be sure to include calls to the "HandleError" and "ConfirmArrLen" subprocedures to properly handle unforseen problems
+'		*NOTE 2: Be sure to include calls to the "HandleError" and "ConfirmArrLen" subprocedures to properly handle unforseen problems
 '
 '
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '  ----[[ Verifications performed in this script ]]---- 	(For specific info, see comments by each variable):
-'=======================================================================================================================================================================================
-'...................................................................................................................................................
+'===================================================================================================================================================
+'
+'---------------------------------------------------------------------------------------------------------------------------------------------------
 '  Name				Config Array to use		Description
-'...................................................................................................................................................
+'---------------------------------------------------------------------------------------------------------------------------------------------------
 '
 '  * Minimum number of lines	none				There must be at least this number of lines in the file.
 '								**Use the MIN_NUMBER_OF_LINES constant to set this minimum
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Expected number of fields	none				Each line must have the specified number of fields
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Max Field Length		MaxLengthArray			Length of each field in each line must be less than or equal to the specified 
 '								length as defined in the config array 
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Min Field Length		MinLengthArray			Length of each field in each line must be greater than or equal to the specified 
 '								length as defined in the config array 
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Numeric Field Only		NumericOnlyArray		Each field can be checked to be only numeric data or not checked.
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Must contain value		MustContainValueArray		Each field can be compared to be one of several exact values (not case sensitive).
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '  * Must NOT contain value	MustNotContainValueArray	Each field can be compared to NOT be one of several exact values (not case sensitive).
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+'...................................................................................................................................................
 '
 '
-'======================================================================================================================================================================================
-'  -----[ Revision History ]-----
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
+'  ----[[ Revision History ]]----
+'===================================================================================================================================================
 '
 '
 '  Version 1.00		Initial Writing		04-Jan-11	Richard Beverly
@@ -81,26 +94,27 @@
 '
 '  Version 1.10					19-Feb-15	Richard Beverly
 '...................................................................................................................................................
-'			Feature:	The first version required that any test be fully defined for all fields, using some "do not test" value to bypass the test.
-'						Now, if the test "Array" isn't defined (because it doesn't exist, or is commented out, the test will not run. Currently, this
-'						is implemented in each test "Function", by returning the boolean value [True] if the expected config array isn't an array.
-'						This means that the expected array should be an undefined, null, or non-existant variable. This also means that any custom Functions
-'						need to implement this methodology, or the behavior will not work as intended. In fact, outside of this change to each function, this
-'						version is identical to version 1.00.
+'  Feature:		The first version required that any test be fully defined for all fields, using some "do not test" value to bypass the test.
+'			Now, if the test "Array" isn't defined (because it doesn't exist, or is commented out, the test will not run. Currently, this
+'			is implemented in each test "Function", by returning the boolean value [True] if the expected config array isn't an array.
+'			This means that the expected array should be an undefined, null, or non-existant variable. This also means that any custom 
+'			Functions need to implement this methodology, or the behavior will not work as intended. In fact, outside of this change to 
+'			each function, this version is identical to version 1.00.
 '
 '...................................................................................................................................................
 '
 '  Version 1.20					19-Mar-15	Richard Beverly
 '...................................................................................................................................................
-'			Feature:	A minimum number of lines must exist in the file, otherwise the Good file will be archived and a new "good file" will be created as an empty file.
-'						Use the MIN_NUMBER_OF_LINES constant to set this minimum. This will always be evaluated, so set a realistic value. That is, if you don't care to check
-'						set to a very low number. If you KNOW there will be at least (for instance) 1,500 employees in the file everytime, and it would be an incorrect
-'						file if it were less, then this number should be 1500 (do not use the comma thousands seperator)
+'  Feature:		A minimum number of lines must exist in the file, otherwise the Good file will be archived and a new "good file" will be 
+'			created as an empty file. Use the MIN_NUMBER_OF_LINES constant to set this minimum. This will always be evaluated, so set 
+'			a realistic value. That is, if you don't care to check set to a very low number. If you KNOW there will be at least (for instance) 
+'			1,500 employees in the file everytime, and it would be an incorrect file if it were less, then this number should be 1500 
+'			(do not use the comma thousands seperator)
 '
 '
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '  ----[[ Array Variables to be used below ]]----
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 
 Dim MaxLengthArray            
 Dim MinLengthArray            
@@ -119,83 +133,121 @@ Dim LineCountInvalid
 Dim GoodFileBackup
 '...................................................................................................................................................
 
+
 LineCountInvalid = False
 '...................................................................................................................................................
 
-'some ado constants (DO NOT CHANGE THESE)
+
+'.............................................
+'some ado constants ** DO NOT CHANGE THESE **
+'.............................................
 Const FOR_READING = 1
 Const FOR_APPENDING = 8
 
 
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '  ----[[ START Script Settings ]]----
-'=======================================================================================================================================================================================
-'**** Change the following constants to values you need for your import file, etc.
+'===================================================================================================================================================
 
-Const FILE_DIRECTORY 	= ""			'<--- DO NOT include a '\' at end. empty string means current dir
+'............................................................................
+'Change the following constants to values you need for your import file, etc.
+'............................................................................
 
-Const INPUT_FILE_NAME 	= "testImport.txt"
+'............................................................................
+   Const FILE_DIRECTORY 		= ""	
+'		
+'  DO NOT include a '\' at end. empty string means current dir
+'............................................................................
 
-Const BAD_FILE_NAME 	= "BadRecords.txt"
 
-Const GOOD_FILE_NAME 	= "GoodRecords.txt"
+   Const INPUT_FILE_NAME		= "testImport.txt"
 
-Const LOG_FILE_NAME 	= "VerifyImportError.log"
+   Const BAD_FILE_NAME			= "BadRecords.txt"
 
-Const FIELD_DELIMITER 	= ","
+   Const GOOD_FILE_NAME			= "GoodRecords.txt"
 
-Const INCLUDE_EXPLAINATION_FIELD = True
+   Const LOG_FILE_NAME			= "VerifyImportError.log"
 
-Const EXPECTED_NUMBER_OF_FIELDS  = 5
+   Const FIELD_DELIMITER		= ","
 
-Const MIN_NUMBER_OF_LINES = 10 			'<----- Must be set to a minimum number. if the number of lines in the file are less than this, 
-						'	a backup is created and the "Good File" will be an empty file that should be refused for 
-						'	import in the import sproc. The Bad File will contain a line describing the failure
+   Const INCLUDE_EXPLAINATION_FIELD 	= True
+
+   Const EXPECTED_NUMBER_OF_FIELDS  	= 5
+
+'............................................................................
+   Const MIN_NUMBER_OF_LINES 		= 10
+'	
+'  Must be set to a minimum number. if the number of lines in the file are 
+'  less than this, a backup is created and the "Good File" will be an empty 
+'  file that should be refused for import in the import sproc. The Bad File 
+'  will contain a line describing the failure
+'............................................................................
                     
       
 '---------------------------------------------------------------------------------------------------------------------------------------------------
 '  ----[ Test Config Arrays ]----
 '---------------------------------------------------------------------------------------------------------------------------------------------------
-'  * Uncomment (remove LEADING apostrophe) from each line of test arrays you need to use
-'  * Add an apostrophe to the BEGINNING of any test array line that you do not wish to test.
-'  * Format: Array(value, value, value, value). A comma must separate each value. No comma at the end of the value list.
-'  * The number of values in the array must match the number of fields in each line of the file
-'  * Each array has a commented description at the end of the line. i.e. '<-- comments... The apostrophe MUST be in front of the description, or the script will error.
+
+'  * Uncomment (remove LEADING apostrophe) from each line of test arrays you 
+'    need to use.
+'  * Add an apostrophe to the BEGINNING of any test array line that you do not 
+'    wish to test.
+'  * Format: Array(value, value, value, value). A comma must separate each value. 
+'    No comma at the end of the value list.
+'  * The number of values in the array must match the number of fields in each 
+'    line of the file
+'  * Each array has a commented description at the end of the line. 
+'    i.e. '<-- comments... The apostrophe MUST be in front of the description, 
+'    or the script will error.
 '  * String (text) values must be surrounded by double quotes ("my text")
-'  * Boolean (true, false) values must be capitolized (True,False) and NOT surrounded by quotes
-'  * Numeric values must NOT be surrounded by quotes, unless the entire array is intended to be text values
+'  * Boolean (true, false) values must be capitolized (True,False) and NOT 
+'    surrounded by quotes
+'  * Numeric values must NOT be surrounded by quotes, unless the entire array is 
+'    intended to be text values
 '---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 '---------------------------------------------------------------------------------------------------------------------------------------------------				  
 '  ----[[ BEGIN Test Config Arrays ]]----
 '---------------------------------------------------------------------------------------------------------------------------------------------------
+
   MaxLengthArray		= Array(999, 999, 999, 999, 3) 
-				'<-- Numeric - to NOT test the max length, use a high number like 999
+				'<-- Numeric - to NOT test the max length, 
+				'    use a high number like 999
+'............................................................................
 
   MinLengthArray		= Array(0, 0, 0,0,3) 
-				'<-- Numeric - to NOT test the min length, use 0 (the number zero)
+				'  Numeric - to NOT test the min length, 
+				'  use 0 (the number zero)
+'............................................................................
 
   NumericOnlyArray		= Array(True, False, False, False, True) 
-				'<-- Boolean - True = Must contain only numeric characters, False = Don't test field
+				'  Boolean - True = Must contain only numeric 
+				'  characters, False = Don't test field
+'............................................................................
 
   MustContainValueArray		= Array("", "", "","HR|ADMIN|SALES|SUPPORT|FINANCE","") 
-				'<-- Text - provide empty string for fields not being tested, Pipe char as delimiter (i.e. "Employee|Department|Admin")
+				'  Text - provide empty string for fields not 
+				'  being tested, Pipe char as delimiter 
+				'  (i.e. "Employee|Department|Admin")
+'............................................................................
 
   MustNotContainValueArray	= Array("", "", "","","600") 
-				'<-- Text - provide empty string for fields not being tested, Pipe char as delimiter
-'---------------------------------------------------------------------------------------------------------------------------------------------------
+				'  Text - provide empty string for fields not 
+				'  being tested, Pipe char as delimiter
 
-'=======================================================================================================================================================================================
+
+'===================================================================================================================================================
 '  ----[[ END Script Settings ]]----
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 '  ----[[ RUN Program ]]----
-'=======================================================================================================================================================================================
+'===================================================================================================================================================
 
 Main
 
@@ -679,3 +731,10 @@ Sub Main()
               
 End Sub
 '---------------------------------------------------------------------------------------------------------------------------------------------------
+'===================================================================================================================================================
+'  ----[[ END Program ]]----
+'===================================================================================================================================================
+
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
