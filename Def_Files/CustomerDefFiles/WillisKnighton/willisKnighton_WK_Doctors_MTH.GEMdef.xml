@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<GEMDefFile>
+	<Company>Common CENTS Solutions</Company>
+	<Version>1.70.31</Version>
+	<Application>GEM Export Utility</Application>
+	<Copyright>© Copyright 2015, All Rights Reserved</Copyright>
+	<CreateDate>04/30/2015 1:49:22 PM</CreateDate>
+	<Author>Roger Corley</Author>
+
+	<Description>Saved by wparker1 from CCENTS1 at 1/2/2015 11:13:22 AM
+Saved by wparker1 from CCENTS1 at 1/2/2015 11:13:57 AM
+Saved by wparker1 from CCENTS1 at 1/2/2015 11:40:36 AM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:34:52 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:35:58 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:36:45 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:37:37 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:40:08 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:41:13 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:43:06 PM
+Saved by gemuser from CCENTS1 at 4/17/2015 2:43:46 PM</Description>
+
+	<ExportDefs Creator="GEM Export Utility">
+		<ExportDef>
+			
+			<Title>Doctors Export</Title>
+
+			<OutputSequence/>
+			<Database>GEMdb</Database>
+
+			<SQLCMD>--
+
+DECLARE @tdate DATETIME, @bdate DATETIME, @edate DATETIME, @tdate_adj INT;
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate_adj = 20;	-- Variable used to calculate @tdate value
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate = GETDATE()-@tdate_adj;
+SET @bdate = (SELECT BeginDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'MTH');
+SET @edate = (SELECT EndDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'MTH');
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+SELECT	
+	 ohd.accountNo AS [AccountNo]
+	,CONVERT(VARCHAR(20),SUM(dtl.TransTotal),0) AS [TransTotal]
+	,ohd.Firstname AS [FirstName]
+	,ohd.LastName AS [LastName]
+	,dtl.TransID AS [TransID]
+---------------------------------------------------------------
+
+FROM         
+	tblDetail AS dtl
+	LEFT JOIN tblAccountOHD AS ohd ON ohd.AccountNo = dtl.AccountNo
+---------------------------------------------------------------
+
+WHERE      
+	dtl.TransDate BETWEEN @bdate AND @edate
+	AND dtl.TransId $gt; 500
+	AND ohd.AccountClassID = 40
+---------------------------------------------------------------
+
+GROUP BY 
+	 ohd.AccountNo
+	,dtl.BadgeNo
+	,ohd.FirstName
+	,ohd.LastName
+	,dtl.TransTotal
+	,dtl.TransID
+---------------------------------------------------------------
+
+ORDER BY 
+	ohd.AccountNo
+---------------------------------------------------------------
+
+----</SQLCMD>
+			<Description/>
+			<Active>1</Active>
+			<Append>0</Append>
+			<Delimiter/>
+
+			<OutputFilename>D:\GEM\ImportExport\Payroll\wkdoctors.txt</OutputFilename>
+
+			<UseCRLF>1</UseCRLF>
+			<UseCR>0</UseCR>
+			<UseLF>0</UseLF>
+			<GenerateCredits>0</GenerateCredits>
+			<TransID>100</TransID>
+			<Outlet>1000</Outlet>
+			<Reference>EU Auto</Reference>
+
+			<Fields Creator="GEM Export Utility">
+
+				<Field>
+					<Fieldname>AccountNo</Fieldname>
+					<Position>0</Position>
+					<Width>5</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>2</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname>Firstname</Fieldname>
+					<Position>0</Position>
+					<Width>15</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname>LastName</Fieldname>
+					<Position>0</Position>
+					<Width>15</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname>TransTotal</Fieldname>
+					<Position>0</Position>
+					<Width>13</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation>0.00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname/>
+					<Position>0</Position>
+					<Width>5</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+				<Field>
+					<Fieldname>TransID</Fieldname>
+					<Position>0</Position>
+					<Width>3</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>&quot;</LeadQuote>
+					<TrailQuote>&quot;</TrailQuote>
+					<Transformation>###</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+
+			</Fields>
+
+		</ExportDef>
+
+	</ExportDefs>
+
+</GEMDefFile>

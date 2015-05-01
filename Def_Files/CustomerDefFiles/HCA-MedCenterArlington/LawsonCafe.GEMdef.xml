@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<GEMDefFile>
+  <Company>Common CENTS Solutions</Company>
+  <Version>1.0.0</Version>
+  <Application>GEM Export Utility</Application>
+  <Copyright>(c) Copyright 2015, All Rights Reserved</Copyright>
+  <CreateDate>05/01/2015 2:26:51 PM</CreateDate>
+  <Author>Roger Corley</Author>
+  <Description>Export DEF File for the creation of the LAWSON format file.
+Saved by gemuser FROM MCDHDBSGEMS01 at 3/21/2005 12:19:20 PM
+Saved by gemuser FROM NWMCAPPGEMPAY at 9/21/2006 4:23:25 PM
+Saved by rkeys FROM RKLAPTOP at 10/15/2006 10:06:43 AM
+Saved by gemuser FROM TRIDAPPWSUS01 at 12/6/2007 10:07:57 AM
+Saved by gemuser FROM TRIDAPPWSUS01 at 12/6/2007 10:10:56 AM
+Saved by gemuser FROM TRIDAPPWSUS01 at 12/6/2007 10:12:43 AM
+Saved by gemuser FROM PKMCAPPCENTS at 2/12/2008 10:51:36 AM
+Saved by gemuser FROM PKMCAPPCENTS at 2/22/2008 11:25:43 AM
+Saved by gemuser FROM PKMCAPPCENTS at 2/22/2008 11:25:47 AM
+Saved by gemuser FROM PKMCAPPCENTS at 3/4/2008 7:07:10 PM
+Saved by gemuser FROM MCOAWPAPPCCS01 at 4/30/2015 3:31:34 PM
+Saved by gemuser FROM MCOAWPAPPCCS01 at 4/30/2015 3:34:52 PM</Description>
+  <ExportDefs>
+    <ExportDef>
+      <Title>Create the HEADER record</Title>
+      <OutputSequence>1</OutputSequence>
+      <Database>GEMdb</Database>
+      <SQLCMD>--
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+DECLARE @tdate DATETIME, @bdate DATETIME, @edate DATETIME, @tdate_adj INT;
+DECLARE @tid VARCHAR(50), @acid VARCHAR(50);
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate_adj = 10;  -- Variable used to calculate @tdate value
+
+SET @tid = ',1,2,5,'; --Variable(s) that contains necessary dtl.TransID(s) for this export file
+SET @acid = ',10,';   --Variable(s) that contains necessary a.AccountClassID(s) for this export file
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate = GETDATE()-@tdate_adj;
+SET @bdate = (SELECT BeginDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK');
+SET @edate = (SELECT EndDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK');
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+SELECT
+   GETDATE()-1 AS [Date]
+  ,COUNT(*) AS [Lines]
+  ,SUM(TransTotal) AS [Total]
+---------------------------------------------------------------
+
+FROM         
+  tblDetail AS dtl
+  LEFT JOIN tblAccountOHD AS ohd ON ohd.AccountNo = dtl.AccountNo
+---------------------------------------------------------------
+
+WHERE      
+  dtl.TransDate BETWEEN @bdate AND @edate
+  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
+  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
+---------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+
+      --</SQLCMD>
+
+      <Description>Create the header portion of the output file.  I am using the Date - 5 so that we can run this up to 5 days after the cycle cutoff AND still get the desired totals.</Description>
+
+      <Active>1</Active>
+      <Append>0</Append>
+      <Delimiter/>
+
+      <OutputFilename>E:\GEM\ImportExport\CCDEDCAF.CSV</OutputFilename>
+
+      <UseCRLF>1</UseCRLF>
+      <UseCR>0</UseCR>
+      <UseLF>0</UseLF>
+      <GenerateCredits>0</GenerateCredits>
+      <TransID>100</TransID>
+      <Outlet>1000</Outlet>
+      <Reference>EU Auto</Reference>
+      <Fields>
+        <Field>
+          <Fieldname/>
+          <Position>0</Position>
+          <Width>0</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>0</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars>C</LeadChars>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote>"</LeadQuote>
+          <TrailQuote>"</TrailQuote>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname/>
+          <Position>0</Position>
+          <Width>8</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>0</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote>"</LeadQuote>
+          <TrailQuote>"</TrailQuote>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname>Date</Fieldname>
+          <Position>0</Position>
+          <Width>0</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>0</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation>YYMMDD</Transformation>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname>Lines</Fieldname>
+          <Position>0</Position>
+          <Width>5</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>1</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation>#####</Transformation>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname>Total</Fieldname>
+          <Position>0</Position>
+          <Width>8</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>1</Justification>
+          <SuppressDecimal>1</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+      </Fields>
+    </ExportDef>
+
+    <ExportDef>
+      <Title>Body Records</Title>
+      <OutputSequence>2</OutputSequence>
+      <Database>GEMdb</Database>
+
+      <SQLCMD>--
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+DECLARE @tdate DATETIME, @bdate DATETIME, @edate DATETIME, @tdate_adj INT;
+DECLARE @tid VARCHAR(50), @acid VARCHAR(50);
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate_adj = 10;  -- Variable used to calculate @tdate value
+
+SET @tid = ',1,2,5,'; --Variable(s) that contains necessary dtl.TransID(s) for this export file
+SET @acid = ',10,';   --Variable(s) that contains necessary a.AccountClassID(s) for this export file
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+SET @tdate = GETDATE()-@tdate_adj;
+SET @bdate = (SELECT BeginDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK');
+SET @edate = (SELECT EndDate FROM tblCycleXLAT WHERE @tdate BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK');
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+SELECT 
+   dtl.AccountNo AS [AccountNo]
+  ,SUM(dtl.TransTotal) AS [Total] 
+---------------------------------------------------------------
+
+FROM         
+  tblDetail AS dtl
+  LEFT JOIN tblAccountOHD AS ohd ON ohd.AccountNo = dtl.AccountNo
+---------------------------------------------------------------
+
+WHERE      
+  dtl.TransDate BETWEEN @bdate AND @edate
+  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
+  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
+---------------------------------------------------------------
+
+GROUP BY
+  dtl.AccountNo
+---------------------------------------------------------------
+
+ORDER BY 
+  dtl.AccountNo
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+      --</SQLCMD>
+
+      <Description>Create the Body records FROM the tblAccountTransTTL</Description>
+      <Active>1</Active>
+      <Append>1</Append>
+      <Delimiter/>
+
+      <OutputFilename>E:\GEM\ImportExport\CCDEDCAF.CSV</OutputFilename>
+      <UseCRLF>1</UseCRLF>
+
+      <UseCR>0</UseCR>
+      <UseLF>0</UseLF>
+      <GenerateCredits>0</GenerateCredits>
+      <TransID>100</TransID>
+      <Outlet>1000</Outlet>
+      <Reference>EU Auto</Reference>
+      <Fields>
+        <Field>
+          <Fieldname/>
+          <Position>0</Position>
+          <Width>0</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>0</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars>A</LeadChars>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname>AccountNo</Fieldname>
+          <Position>0</Position>
+          <Width>9</Width>
+          <TrimSpaces></TrimSpaces>
+          <Justification>0</Justification>
+          <SuppressDecimal>0</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+        <Field>
+          <Fieldname>Total</Fieldname>
+          <Position>0</Position>
+          <Width>6</Width>
+          <TrimSpaces>0</TrimSpaces>
+          <Justification>1</Justification>
+          <SuppressDecimal>1</SuppressDecimal>
+          <NumDecimal>2</NumDecimal>
+          <LeadChars/>
+          <TrailChars/>
+          <SpacePad/>
+          <UseQuotes>0</UseQuotes>
+          <LeadQuote/>
+          <TrailQuote/>
+          <Transformation/>
+          <SubtotalField>0</SubtotalField>
+          <CreditField>0</CreditField>
+        </Field>
+      </Fields>
+    </ExportDef>
+  </ExportDefs>
+</GEMDefFile>

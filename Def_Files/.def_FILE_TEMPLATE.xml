@@ -16,58 +16,59 @@
 			<Database>GEMdb</Database>
 
 			<SQLCMD>
-			DECLARE @TDATE DATETIME, @BEG_DATE DATETIME, @END_DATE DATETIME, @YEAR_NO VARCHAR(2);
-			DECLARE @TDATE_ADJ int, @CYCLENO_ADJ int, @PERIOD_NO int;
-			DECLARE @TID varchar(50), @ACID varchar(50);
+DECLARE @TDATE DATETIME, @BEG_DATE DATETIME, @END_DATE DATETIME, @YEAR_NO VARCHAR(2);
+DECLARE @TDATE_ADJ int, @CYCLENO_ADJ int, @PERIOD_NO int;
+DECLARE @TID varchar(50), @ACID varchar(50);
 
-			------------------------------------------------------------------------------------------------------------------
-			------------------------------------------------------------------------------------------------------------------
-			SET @TDATE_ADJ = 10;       --Variable used to calculate @TDATE value
-			SET @CYCLENO_ADJ = 178;    --Variable used to calculate @PERIOD_NO value
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+SET @TDATE_ADJ = 10;       --Variable used to calculate @TDATE value
+SET @CYCLENO_ADJ = 178;    --Variable used to calculate @PERIOD_NO value
 
-			SET @TID = ',2,';		--Variable(s) that contains necessary dtl.TransID(s) for this export file
-			SET @ACID = ',10,20,';	--Variable(s) that contains necessary a.AccountClassID(s) for this export file
+SET @TID = ',2,';		--Variable(s) that contains necessary dtl.TransID(s) for this export file
+SET @ACID = ',10,20,';	--Variable(s) that contains necessary a.AccountClassID(s) for this export file
 
-			------------------------------------------------------------------------------------------------------------------
-			------------------------------------------------------------------------------------------------------------------
-			SET @TDATE = GETDATE()-@TDATE_ADJ;
-			SET @BEG_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
-			SET @END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+SET @TDATE = GETDATE()-@TDATE_ADJ;
+SET @BEG_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+SET @END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
 
-			SET @YEAR_NO = (SELECT CONVERT(VARCHAR(2),@TDATE,2) AS [YY]);
-			SET @PERIOD_NO = (SELECT CycleNo FROM tblCycleXLAT WHERE @BEG_DATE = BeginDate AND XlatID = 'BIWK2') - @CYCLENO_ADJ;
+SET @YEAR_NO = (SELECT CONVERT(VARCHAR(2),@TDATE,2) AS [YY]);
+SET @PERIOD_NO = (SELECT CycleNo FROM tblCycleXLAT WHERE @BEG_DATE = BeginDate AND XlatID = 'BIWK2') - @CYCLENO_ADJ;
 
-			----------------------------------------------------------------------------------------------------------------
-			----------------------------------------------------------------------------------------------------------------
-			SELECT	
-			  DTL.AccountNo
-			  ,CONVERT(VARCHAR(20),SUM(TransTotal),0) as [TransTotal]
-			  ,DTL.BadgeNo
-			  ,OHD.Email
-			  --,OHD.Fax
-			  ,@YEAR_NO as [YEAR]
-			  ,@PERIOD_NO as [PERIOD]
-			  --,DTL.TransID
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+SELECT	
+	 DTL.AccountNo
+	,CONVERT(VARCHAR(20),SUM(TransTotal),0) as [TransTotal]
+	,DTL.BadgeNo
+	,OHD.Email
+	--,OHD.Fax
+	,@YEAR_NO as [YEAR]
+	,@PERIOD_NO as [PERIOD]
+	--,DTL.TransID
 
-			FROM		
-			  tblDetail as DTL
-			  LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
+FROM		
+  tblDetail as DTL
+  LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
 
-			WHERE	
-			  DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
-			  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
-			  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
-			  AND OHD.Fax NOT LIKE 'DIETARY'
+WHERE	
+  DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
+  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
+  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
+  AND OHD.Fax NOT LIKE 'DIETARY'
 
-			GROUP BY	
-			  DTL.AccountNo
-			  ,DTL.BadgeNo
-			  ,OHD.Email
-			  ,OHD.Fax
-			  ,DTL.TransID
+GROUP BY	
+   DTL.AccountNo
+  ,DTL.BadgeNo
+  ,OHD.Email
+  ,OHD.Fax
+  ,DTL.TransID
 
-			ORDER BY	
-			  DTL.AccountNo
+ORDER BY	
+  DTL.AccountNo
+  
 			</SQLCMD>
 			
 			<Description/>
