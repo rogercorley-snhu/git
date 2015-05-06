@@ -1,0 +1,466 @@
+<?xml version="1.0"?>
+<GEMDefFile>
+	<Company>Common CENTS Solutions</Company>
+	<Version>1.70.31</Version>
+	<Application>GEM Export Utility</Application>
+	<Copyright>© Copyright 2002, All Rights Reserved</Copyright>
+	<CreateDate>3/23/2015 9:14:46 AM</CreateDate>
+	<Author>Roger Corley</Author>
+	<Description>Saved by gemuser from CCENTS1 at 4/16/2015 4:49:17 PM
+Saved by gemuser from CCENTS1 at 4/16/2015 5:03:12 PM</Description>
+	<ExportDefs Creator="GEM Export Utility">
+		<ExportDef>
+		
+			<Title>WKPierremont Bi-Weekly Export: Header</Title>
+			
+			<OutputSequence/>
+			<Database/>
+			<SQLCMD>--
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+/*	Declare Header Constants
+------------------------------------------------------------------ */
+DECLARE @ROW_ID AS VARCHAR(1), @DOUPU AS VARCHAR(8);
+DECLARE @FREQ AS VARCHAR(1), @IMPTYPE AS VARCHAR(1);
+DECLARE @BATCH AS VARCHAR(1);
+
+/*	Set Header Constants
+------------------------------------------------------------------ */
+SET	@ROW_ID = 'H';  -- Row Identifier - ALWAYS 'H'
+SET	@DOUPU = '1';  -- Distinguishing Organization Unit for Processing Unit
+SET	@FREQ = '';  -- Payroll Frequency -- LEAVE BLANK
+SET	@IMPTYPE = ''; -- File Type Import - LEAVE BLANK
+SET	@BATCH = '';  -- Batch - LEAVE BLANK
+
+SELECT	
+   @ROW_ID AS [RowID]
+  ,@DOUPU AS [DistOrgUnit]
+  ,@FREQ AS [PayrollFreq]
+  ,@IMPTYPE AS [FileImportType]
+  ,@BATCH AS [Batch]
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+--</SQLCMD>
+			<Description/>
+			<Active>1</Active>
+			<Append>0</Append>
+			<Delimiter/>
+	
+			<OutputFilename>D:\GEM\ImportExport\Payroll\BW_WKPierremont_Export</OutputFilename>
+						
+			<UseCRLF>1</UseCRLF>
+			<UseCR>0</UseCR>
+			<UseLF>0</UseLF>
+			<GenerateCredits>0</GenerateCredits>
+			<TransID>100</TransID>
+			<Outlet>1000</Outlet>
+			<Reference>EU Auto</Reference>
+			<Fields Creator="GEM Export Utility">
+				<Field>
+					<Fieldname>RowID</Fieldname>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>DistOrgUnit</Fieldname>
+					<Position>0</Position>
+					<Width>8</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>PayrollFreq</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>FileImportType</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>Batch</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars></TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote>"</LeadQuote>
+					<TrailQuote>"</TrailQuote>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+			</Fields>
+		</ExportDef>
+		<ExportDef>
+		
+			<Title>WKPierremont Bi-Weekly Export: Detail</Title>
+			
+			<OutputSequence/>
+			<Database>GEMdb</Database>
+			<SQLCMD>--
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+DECLARE @TDATE DATETIME, @BEG_DATE DATETIME, @END_DATE DATETIME;
+DECLARE @YEAR_NO VARCHAR(2), @TDATE_ADJ int;
+DECLARE @TID varchar(50), @ACID varchar(50);
+
+------------------------------------------------------------------
+DECLARE @D_ROWID AS CHAR(1), @D_DOUD AS CHAR(8), @D_DEDUCT AS CHAR(16);
+DECLARE @D_PAYCYCLEINST AS CHAR(1);
+DECLARE @D_EQU AS CHAR(1), @D_EMPAMT AS CHAR(1); 
+DECLARE @D_3PARTYAMT AS CHAR(1), @D_ACCTNUM AS CHAR(1), @CHKIND AS CHAR(10);
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+SET	@TDATE_ADJ = 10;    --Variable used to calculate @TDATE value
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+SET	@TID = ',3,';		--Variable(s) that contains necessary dtl.TransID(s) for this export file
+SET	@ACID = ',10,20,';	--Variable(s) that contains necessary a.AccountClassID(s) for this export file
+
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+SET @TDATE = GETDATE()-@TDATE_ADJ;
+SET @BEG_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+SET @END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = 'BIWK2');
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+SET @D_ROWID = 'D';			-- ALWAYS 'D'
+SET @D_DOUD = 'WKHS';		-- ALWAYS 'WKHS'
+
+------------------------------------------------------------------
+SET @D_DEDUCT = 'MEAL WKP';	-- Deduction Code for location ** CONFIGURE THIS VARIABLE ONLY IN THIS SECTION **
+------------------------------------------------------------------
+
+/*	DEDUCTION CODE DESCRIPTIONS
+------------------------------------------------------------------ 
+WKN:		Willis Knighton North 			-- "MEAL WK"
+WKS:		Willis Knighton South 			-- "MEAL WKS"
+WKP:		Willis Knighton Pierremont 		-- "MEAL WKP"
+WKB:		Willis Knighton Bossier 		-- "MEAL WKB"
+WKI:		Willis Knighton Innovation 		-- "MEAL WKI"
+ECC/PCC:									-- "DIETARY"
+------------------------------------------------------------------ */
+
+SET @D_PAYCYCLEINST = '';	--  Payroll Cycle Instance - LEAVE BLANK
+SET @D_EQU = 'F';		--  Equation - ALWAYS 'F'
+SET @D_EMPAMT = '';		--  Employer Amount - LEAVE BLANK
+SET @D_3PARTYAMT = '';	--  3rd Party Amount - LEAVE BLANK
+SET @D_ACCTNUM = '';	--  Account Number - LEAVE BLANK
+SET @CHKIND = 'Primary';	--  Check Indicator - ALWAYS 'Primary'
+
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+SELECT	
+   @D_ROWID AS [RowID]
+  ,DTL.AccountNo AS [Employee]
+  ,@D_DOUD AS [DistOrgUnit]
+  ,@D_DEDUCT AS [Deduction]
+  ,@D_PAYCYCLEINST AS [PayrollCycleInst]
+  ,@D_EQU AS [Equation]
+  ,CONVERT(MONEY,SUM(TransTotal),0) AS [EmployeeAmount]
+  ,@D_EMPAMT AS [EmployerAmount]
+  ,@D_3PARTYAMT AS [3rdPartyAmount]
+  ,@D_ACCTNUM AS [AccountNumber]
+  ,@CHKIND AS [CheckIndicator]
+
+FROM		
+  tblDetail as DTL
+  LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
+
+WHERE	
+  DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
+  AND CHARINDEX(','+CAST(TransID AS VARCHAR(50))+',',@TID) > 0
+  AND CHARINDEX(','+CAST(OHD.AccountClassID AS VARCHAR(50))+',',@ACID) > 0 
+  AND OHD.Fax NOT LIKE 'DIETARY'
+
+GROUP BY	
+  DTL.AccountNo
+  ,DTL.BadgeNo
+  ,OHD.Email
+  ,OHD.Fax
+  ,DTL.TransID
+
+ORDER BY	
+  DTL.AccountNo
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+--</SQLCMD>
+			<Description/>
+			<Active>1</Active>
+			<Append>1</Append>
+			<Delimiter/>
+	
+			<OutputFilename>D:\GEM\ImportExport\Payroll\BW_WKPierremont_Export</OutputFilename>
+			
+			<UseCRLF>1</UseCRLF>
+			<UseCR>0</UseCR>
+			<UseLF>0</UseLF>
+			<GenerateCredits>0</GenerateCredits>
+			<TransID>100</TransID>
+			<Outlet>1000</Outlet>
+			<Reference>EU Auto</Reference>
+			<Fields Creator="GEM Export Utility">
+				<Field>
+					<Fieldname>RowID</Fieldname>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>Employee</Fieldname>
+					<Position>0</Position>
+					<Width>8</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>DistOrgUnit</Fieldname>
+					<Position>0</Position>
+					<Width>8</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>Deduction</Fieldname>
+					<Position>0</Position>
+					<Width>16</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>PayrollCycleInst</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>Equation</Fieldname>
+					<Position>0</Position>
+					<Width>1</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>EmployeeAmount</Fieldname>
+					<Position>0</Position>
+					<Width>8</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>1</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation>0.00</Transformation>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>EmployerAmount</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>3rdPartyAmount</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>2</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>AccountNumber</Fieldname>
+					<Position>0</Position>
+					<Width>0</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars/>
+					<TrailChars>,</TrailChars>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+				<Field>
+					<Fieldname>CheckIndicator</Fieldname>
+					<Position>0</Position>
+					<Width>10</Width>
+					<TrimSpaces>0</TrimSpaces>
+					<Justification>0</Justification>
+					<SuppressDecimal>0</SuppressDecimal>
+					<NumDecimal>0</NumDecimal>
+					<LeadChars></LeadChars>
+					<TrailChars/>
+					<SpacePad/>
+					<UseQuotes>0</UseQuotes>
+					<LeadQuote/>
+					<TrailQuote/>
+					<Transformation/>
+					<SubtotalField>0</SubtotalField>
+					<CreditField>0</CreditField>
+				</Field>
+			</Fields>
+		</ExportDef>
+	</ExportDefs>
+</GEMDefFile>

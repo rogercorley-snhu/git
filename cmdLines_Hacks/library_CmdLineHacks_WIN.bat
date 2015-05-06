@@ -1,129 +1,129 @@
 
-::-------------------------------------------------------------------------------------------------------------------------------------
-::  LIBARARY :: WINDOWS :: COMMAND LINE TRICKS & TIPS                                                                                        */
-::-------------------------------------------------------------------------------------------------------------------------------------
+        ::-------------------------------------------------------------------------------------------------------------------------------------
+        ::  LIBARARY :: WINDOWS :: COMMAND LINE TRICKS & TIPS                                                                                        */
+        ::-------------------------------------------------------------------------------------------------------------------------------------
 
-::  SYSTEM INFO : SYSTEM UP-TIME
-::===============================================================
-::  LTE : WIN 2003
-::---------------------------------------
-    system info | find "Up Time" 
+        ::  SYSTEM INFO : SYSTEM UP-TIME
+        ::===============================================================
+        ::  LTE : WIN 2003
+        ::---------------------------------------
+        system info | find "Up Time"
 
-::  GTE : WIN 2008
-::---------------------------------------
-    system info | find "Boot" 
-
-
-::  NETWORKING : PATHPING
-::===============================================================
-::  
-    pathping <xxx.xxx.xxx.xxx>
+        ::  GTE : WIN 2008
+        ::---------------------------------------
+        system info | find "Boot"
 
 
-
-::  SERVICES : TASKLIST : GTE WIN 07
-::===============================================================
-::  TASKLIST -M 
-::  -------------------------------------
-::  -- Displays with all DLLs associated
-::  -- with tasks.
-::---------------------------------------
-    tasklist -m
-
-::  TASKLIST -SVC 
-::  -------------------------------------
-::  -- Displays with services that support
-::  -- each task.
-::---------------------------------------
-    tasklist -svc
+        ::  NETWORKING : PATHPING
+        ::===============================================================
+        ::
+        pathping <xxx.xxx.xxx.xxx>
 
 
-::  SERVICES : TASKKILL
-::===============================================================
-::  TASKKILL -PID
-::  -------------------------------------
-::  --  Kills a task by its PID
-::---------------------------------------
-    taskkill -pid <processID#>
 
-::  TASKKILL -IM
-::  -------------------------------------
-::  --  Kills a task by its Image Name
-::---------------------------------------
-    taskkill -im <iexplore.exe>
+        ::  SERVICES : TASKLIST : GTE WIN 07
+        ::===============================================================
+        ::  TASKLIST -M
+        ::  -------------------------------------
+        ::  -- Displays with all DLLs associated
+        ::  -- with tasks.
+        ::---------------------------------------
+        tasklist -m
 
-
-::  ACTIVE DIRECTORY : SEE WHICH SERVER AUTHENTICATED LOGGED IN USER
-::===============================================================
-    echo %logonserver%
+        ::  TASKLIST -SVC
+        ::  -------------------------------------
+        ::  -- Displays with services that support
+        ::  -- each task.
+        ::---------------------------------------
+        tasklist -svc
 
 
-::  ACTIVE DIRECTORY : SEE SEC GROUPS LOGGED IN USER BELONGS TO
-::===============================================================
-    whoami /groups 
+        ::  SERVICES : TASKKILL
+        ::===============================================================
+        ::  TASKKILL -PID
+        ::  -------------------------------------
+        ::  --  Kills a task by its PID
+        ::---------------------------------------
+        taskkill -pid <processID#>
 
-::  ACTIVE DIRECTORY : VIEW DOMAIN ACCOUNT POLICIES
-::===============================================================
-    net accounts
-
-
-::  SYSTEM : GENERATE TEXT SUMMARY OF SYSTEM
-::===============================================================
-    systeminfo | more
-
-
-::  NETWORKING : NETSTAT WITH FINDSTR : Find a specific connection
-::===============================================================
-    netstat -ano | findstr <xxx.xxx.xxx.xxx>
+        ::  TASKKILL -IM
+        ::  -------------------------------------
+        ::  --  Kills a task by its Image Name
+        ::---------------------------------------
+        taskkill -im <iexplore.exe>
 
 
-::  SYSTEM : REBOOT SERVER
-::===============================================================
-    shutdown -r -f -t 0 -m \\localhost
+        ::  ACTIVE DIRECTORY : SEE WHICH SERVER AUTHENTICATED LOGGED IN USER
+        ::===============================================================
+        echo %logonserver%
 
 
-::  SYSTEM :  Create a text file that displays when files
-::            last accessed. Use it to determine which files can 
-::            be deleted or archived to free up space.
-::===============================================================
-    dir /t:a /s /od >> list.txt [enter]
+        ::  ACTIVE DIRECTORY : SEE SEC GROUPS LOGGED IN USER BELONGS TO
+        ::===============================================================
+        whoami /groups
+
+        ::  ACTIVE DIRECTORY : VIEW DOMAIN ACCOUNT POLICIES
+        ::===============================================================
+        net accounts
 
 
-::  FILES : RECOVER READABLE DATA FROM A CORRUPT FILE 
-::===============================================================
-  recover filename.ext
+        ::  SYSTEM : GENERATE TEXT SUMMARY OF SYSTEM
+        ::===============================================================
+        systeminfo | more
 
 
-::  BATCH TRICK : Pause a batch job for a period of time.
-::===============================================================
-  ping -n 10 127.0.0.1 > NUL 2>&1
+        ::  NETWORKING : NETSTAT WITH FINDSTR : Find a specific connection
+        ::===============================================================
+        netstat -ano | findstr <xxx.xxx.xxx.xxx>
 
 
-::  IIS : RESTART IIS
-::===============================================================
-  iisreset
+        ::  SYSTEM : REBOOT SERVER
+        ::===============================================================
+        shutdown -r -f -t 0 -m \\localhost
 
 
-::  SERVICES TRICK :  STOP - START A SERVICE
-::===============================================================
-::-------------------------------------
-::  Create a batch file to run repeated restarts
-::-------------------------------------
-  net stop %1 && net start %1
+        ::  SYSTEM :  Create a text file that displays when files
+        ::            last accessed. Use it to determine which files can
+        ::            be deleted or archived to free up space.
+        ::===============================================================
+        dir /t:a /s /od >> list.txt [enter]
 
 
-::  CMD LINE TRICK :  PIPE COMMAND RETURNS TO CLIPBOARD
-::===============================================================
-::-------------------------------------
-::  GTE WIN 07
-::-------------------------------------
-  <command> | clip 
+        ::  FILES : RECOVER READABLE DATA FROM A CORRUPT FILE
+        ::===============================================================
+        recover filename.ext
 
-::  CMD LINE TRICK :  OUTPUT CONTENTS OF FILE TO CLIPBOARD
-::===============================================================
-::-------------------------------------
-  echo text | clip 
-        OR 
-  clip < filename.txt
-        OR 
-  type filename.txt | clip 
+
+        ::  BATCH TRICK : Pause a batch job for a period of time.
+        ::===============================================================
+        ping -n 10 127.0.0.1 > NUL 2>&1
+
+
+        ::  IIS : RESTART IIS
+        ::===============================================================
+        iisreset
+
+
+        ::  SERVICES TRICK :  STOP - START A SERVICE
+        ::===============================================================
+        ::-------------------------------------
+        ::  Create a batch file to run repeated restarts
+        ::-------------------------------------
+        net stop %1 && net start %1
+
+
+        ::  CMD LINE TRICK :  PIPE COMMAND RETURNS TO CLIPBOARD
+        ::===============================================================
+        ::-------------------------------------
+        ::  GTE WIN 07
+        ::-------------------------------------
+        <command> | clip
+
+        ::  CMD LINE TRICK :  OUTPUT CONTENTS OF FILE TO CLIPBOARD
+        ::===============================================================
+        ::-------------------------------------
+        echo text | clip
+        OR
+        clip < filename.txt
+        OR
+        type filename.txt | clip
