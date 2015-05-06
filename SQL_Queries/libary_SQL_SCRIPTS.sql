@@ -3,48 +3,48 @@
 -------------------------------------------------------------------------------------------------------------------------------------
 
 
-DECLARE			@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
-DECLARE 		@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
-DECLARE 		@PERIOD_NO AS int, @CYCLEADJ AS int;
+DECLARE	@TDATE AS DATETIME, @BEG_DATE AS DATETIME, @END_DATE AS DATETIME;
+DECLARE	@YEAR_NO AS VARCHAR(2), @XLAT_ID AS VARCHAR(8);
+DECLARE	@PERIOD_NO AS int, @CYCLEADJ AS int;
 
-SET 			@CYCLEADJ = 178;
-SET 			@XLAT_ID = 'BIWK2';
+SET	@CYCLEADJ  = 178;
+SET	@XLAT_ID   = 'BIWK2';
 
-SET				@TDATE = GETDATE() - 10;
-SET				@BEG_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = @XLAT_ID);
-SET				@END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = @XLAT_ID);
-SET				@YEAR_NO = (SELECT CONVERT(VARCHAR(2),@TDATE,2) AS [YY]);
-SET 			@PERIOD_NO = (SELECT CycleNo from tblCycleXLAT WHERE @BEG_DATE = BeginDate AND XlatID = @XLAT_ID) - @CYCLEADJ;
+SET	@TDATE     = GETDATE() - 10;
+SET	@BEG_DATE  = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = @XLAT_ID);
+SET	@END_DATE  = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate AND XlatID = @XLAT_ID);
+SET	@YEAR_NO   = (SELECT CONVERT(VARCHAR(2),@TDATE,2) AS [YY]);
+SET	@PERIOD_NO = (SELECT CycleNo from tblCycleXLAT WHERE @BEG_DATE = BeginDate AND XlatID = @XLAT_ID) - @CYCLEADJ;
 
 
 SELECT			DTL.AccountNo
-				,CONVERT(MONEY,SUM(TransTotal),0) as TOTAL
-				,@YEAR_NO as YEARNO
-				,@PERIOD_NO as PERIOD
+,CONVERT(MONEY,SUM(TransTotal),0) as TOTAL
+,@YEAR_NO as YEARNO
+,@PERIOD_NO as PERIOD
 
 FROM			tblDetail as DTL
-					LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
+LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
 
 WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
 
-				/*	Ignore any potential payments that may exist in search results.
-					=============================================================== */
-					AND DTL.OutletNo NOT LIKE '1000' 
+/*	Ignore any potential payments that may exist in search results.
+=============================================================== */
+AND DTL.OutletNo NOT LIKE '1000' 
 
 
-				/*	Configure any special includes or excludes for this batch.
-					=============================================================== */
-					AND OHD.Fax NOT LIKE 'DIETARY'
+/*	Configure any special includes or excludes for this batch.
+=============================================================== */
+AND OHD.Fax NOT LIKE 'DIETARY'
 
 
-				/*	Configure TransIDs used for this batch.
-					=============================================================== */
-					AND DTL.TransID IN (1,7)
+/*	Configure TransIDs used for this batch.
+=============================================================== */
+AND DTL.TransID IN (1,7)
 
 
-				/*	Configure AccountClassID used for this batch.
-					=============================================================== */
-					AND OHD.AccountClassID IN (10,20)
+/*	Configure AccountClassID used for this batch.
+=============================================================== */
+AND OHD.AccountClassID IN (10,20)
 
 GROUP BY		DTL.AccountNo
 ORDER BY		DTL.AccountNo
@@ -74,13 +74,13 @@ Set of SQL queries created to completed the following tasks:
 2.)		Use @_TDATE to automatically determine Cycle BeginDate and EndDate.
 3.)		Assign Cycle BeginDate to @_BEGINDATE and Cycle EndDate to @_ENDDATE.
 4.)		Use dates and following filters to caclulate all existing transactions, within the date range,
-		for each account.
-			a.)	@_PAYTID 	= Payment TransID - Must align with @_CHGTID(s)
-			b.)	@_CHGTID 	= Charge TransID that are found in tblDetail.
-			c.)	@_ACID 		= AccountClassID(s) for the accounts to be searched.
+for each account.
+a.)	@_PAYTID 	= Payment TransID - Must align with @_CHGTID(s)
+b.)	@_CHGTID 	= Charge TransID that are found in tblDetail.
+c.)	@_ACID 		= AccountClassID(s) for the accounts to be searched.
 5.)		INSERTS results INTO a temporary table named RESETS with @_BadgeNo NULL.
 6.)		Second query matches all AccountNo(s) with corresponding BadgeNo(s) and
-		then SETS corresponding row in RESETS with the correct BadgeNo.
+then SETS corresponding row in RESETS with the correct BadgeNo.
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -110,11 +110,11 @@ DECLARE		@_BadgeNo char(19);
 
 SET		@_TDATE		= '03-26-2015 23:59:59';
 /*					MODIFY DATE VALUE ONLY!! DO NOT MODIFY TIME VALUE!!
-					-- The date MUST MATCH the LAST day of the cycle.
-					-- The last day of the cycle is the night before 
-					-- the BeginDate of the next cycle.
-							
-					Enclose with single quotes ('').				*/
+-- The date MUST MATCH the LAST day of the cycle.
+-- The last day of the cycle is the night before 
+-- the BeginDate of the next cycle.
+
+Enclose with single quotes ('').				*/
 
 
 SET		@_BID		= 'Payments';	
@@ -127,28 +127,28 @@ SET		@_CID		= 1;
 
 SET		@_OUTNO		= 1000;			
 /*					No single quotes ('').
-					MODIFY ONLY IF REQUIRED. 						*/
+MODIFY ONLY IF REQUIRED. 						*/
 
 
 SET		@_PAYTID	= 501;			
 /*					No single quotes ('').
 
-					 This value MUST MATCH THE CORRECT 
-					-- Payment TransID for any charge TransID(s) 
-					-- listed in the WHERE clause.
-					-- ( e.g. '501' <--> '10'; '502' <--> '20' )	*/
+This value MUST MATCH THE CORRECT 
+-- Payment TransID for any charge TransID(s) 
+-- listed in the WHERE clause.
+-- ( e.g. '501' <--> '10'; '502' <--> '20' )	*/
 
 
 SET		@_REFNO		= 'AUTO';		
 /*					Enclose with single quotes ('').
-					MODIFY ONLY IF REQUIRED. 						*/
+MODIFY ONLY IF REQUIRED. 						*/
 
 
 SET		@_CHKNO		= 'BIWK';		
 /* 					Enclose with single quotes ('').
-					This value MUST MATCH THE CORRECT XLATID
-					for this payment type.
-					( e.g. 'BIWK'; 'BIWK2'; 'MTH' ) 				*/
+This value MUST MATCH THE CORRECT XLATID
+for this payment type.
+( e.g. 'BIWK'; 'BIWK2'; 'MTH' ) 				*/
 
 
 SET		@_BadgeNo	= NULL;			
@@ -157,11 +157,11 @@ SET		@_BadgeNo	= NULL;
 
 SET 	@_CHGTID 	= ',1,2,4,15,';
 /*					Enclose with single quotes ('').
-					MUST BEGIN AND END with commas (,1,2,3,).		*/
+MUST BEGIN AND END with commas (,1,2,3,).		*/
 
 SET 	@_ACID		= ',10,40,';
 /*					Enclose with single quotes ('').
-					MUST BEGIN AND END with commas (,10,20,30,).	*/
+MUST BEGIN AND END with commas (,10,20,30,).	*/
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -177,34 +177,34 @@ SET 	@_ACID		= ',10,40,';
 
 
 SET		@_BEGINDATE	= (SELECT BeginDate FROM tblCycleXlat AS xlat 
-				WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
+WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
 SET		@_ENDDATE	= (SELECT EndDate FROM tblCycleXlat AS xlat 
-				WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
+WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
 
 SELECT	@_BID 			AS BatchID
-		,@_CID 			AS CoreID
-		,ohd.AccountNo 	AS AccountNo
-		,@_TDATE 		AS TransDate
-		,@_OUTNO 		AS OutletNo
-		,@_PAYTID 		AS TransID
-		,@_REFNO 		AS RefNum
-		,@_CHKNO 		AS ChkNum
-			
-			
-		,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS TransTotal
-		,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS Sales1
-			
-		,@_BADGENO 		AS BadgeNo
+,@_CID 			AS CoreID
+,ohd.AccountNo 	AS AccountNo
+,@_TDATE 		AS TransDate
+,@_OUTNO 		AS OutletNo
+,@_PAYTID 		AS TransID
+,@_REFNO 		AS RefNum
+,@_CHKNO 		AS ChkNum
 
-		
+
+,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS TransTotal
+,CASE WHEN SUM(dtl.TransTotal) < 0 THEN 0 ELSE SUM(dtl.TransTotal) END AS Sales1
+
+,@_BADGENO 		AS BadgeNo
+
+
 INTO	RESETS
 
 FROM	tblDetail 		AS dtl
-		LEFT JOIN tblAccountOHD AS ohd ON dtl.AccountNo = ohd.AccountNo
-		
+LEFT JOIN tblAccountOHD AS ohd ON dtl.AccountNo = ohd.AccountNo
+
 WHERE	CHARINDEX(','+CAST(TransID as VARCHAR(50))+',',@_CHGTID) > 0 AND
-		CHARINDEX(','+CAST(ohd.AccountClassID AS VARCHAR(50))+',',@_ACID) > 0 AND 
-		dtl.TransDate BETWEEN @_BEGINDATE AND @_ENDDATE
+CHARINDEX(','+CAST(ohd.AccountClassID AS VARCHAR(50))+',',@_ACID) > 0 AND 
+dtl.TransDate BETWEEN @_BEGINDATE AND @_ENDDATE
 
 GROUP BY 	ohd.AccountNo
 HAVING 		SUM(dtl.TransTotal) <> 0
@@ -230,7 +230,7 @@ UPDATE 	dbo.RESETS
 SET		BadgeNo = d.BadgeNo
 
 FROM 	(SELECT a.AccountNo, b.BadgeNo FROM tblAccountOHD AS a join tblBadgesOHD AS b on a.AccountNo = b.AccountNo) AS d 
-		,RESETS AS c
+,RESETS AS c
 
 WHERE 	c.AccountNo = d.AccountNo
 
@@ -321,17 +321,17 @@ If you also pass the AccountClass, only members of that class will get the new T
 If @AccountClassID > 0
 Begin
 
-	INSERT INTO	tblAccountTTL (AccountNo, TransClassID)
-	SELECT 		AccountNo, @TransClassID
-	FROM		tblAccountOHD
-	WHERE		AccountNo NOT IN (SELECT AccountNo FROM tblAccountTTL WHERE TransClassID = @TransClassID) and AccountClassID = @AccountClassID
+INSERT INTO	tblAccountTTL (AccountNo, TransClassID)
+SELECT 		AccountNo, @TransClassID
+FROM		tblAccountOHD
+WHERE		AccountNo NOT IN (SELECT AccountNo FROM tblAccountTTL WHERE TransClassID = @TransClassID) and AccountClassID = @AccountClassID
 End
 Else
 Begin
-	INSERT INTO	tblAccountTTL (AccountNo, TransClassID)
-	SELECT 		AccountNo, @TransClassID
-	FROM		tblAccountOHD
-	WHERE		AccountNo NOT IN (SELECT AccountNo FROM tblAccountTTL WHERE TransClassID = @TransClassID)
+INSERT INTO	tblAccountTTL (AccountNo, TransClassID)
+SELECT 		AccountNo, @TransClassID
+FROM		tblAccountOHD
+WHERE		AccountNo NOT IN (SELECT AccountNo FROM tblAccountTTL WHERE TransClassID = @TransClassID)
 End
 
 
@@ -361,9 +361,9 @@ SET 			@BEGIN_DATE = (SELECT BeginDate FROM tblCycleXLAT WHERE @TDATE BETWEEN Be
 SET 			@END_DATE = (SELECT EndDate FROM tblCycleXLAT WHERE @TDATE BETWEEN BeginDate AND EndDate);
 
 SELECT 	 		 @NOW_DATE AS RightNow
-				,@TDATE AS TransactionDate
-				,@BEGIN_DATE AS CycleBeginDate
-				,@END_DATE AS CycleEndDate
+,@TDATE AS TransactionDate
+,@BEGIN_DATE AS CycleBeginDate
+,@END_DATE AS CycleEndDate
 
 FROM			tblCycleXLAT
 
@@ -482,7 +482,7 @@ SELECT			CONVERT(VARCHAR(10),GETDATE(), 108) AS [Mon DD, YY]
 
 
 /*
-	FILTER BY VARIABLE WITH COMMA-SEPARATED 'IN' VALUES
+FILTER BY VARIABLE WITH COMMA-SEPARATED 'IN' VALUES
 =============================================================== */
 
 DECLARE			@_IDs VARCHAR(50);
@@ -508,16 +508,16 @@ WHERE 			CHARINDEX(','+CAST(someColumn as VARCHAR(50))+',', @_IDs) > 0
 =============================================================== */
 
 SELECT a.id, a.account, a.deposit, SUM(a.deposit) OVER (ORDER BY a.id) AS 'total'
-    FROM #TestData a
-    ORDER BY a.id;
+FROM #TestData a
+ORDER BY a.id;
 
 
 /*	SUM OVER : Running Totals - Separate Accts using PARTITION clause ( gte SQL 2012)
 =============================================================== */
 
 SELECT a.id, a.account, a.deposit, SUM(a.deposit) OVER (PARTITION BY a.account ORDER BY a.id) AS 'total'
-    FROM #TestData a
-    ORDER BY a.id;
+FROM #TestData a
+ORDER BY a.id;
 
 
 
