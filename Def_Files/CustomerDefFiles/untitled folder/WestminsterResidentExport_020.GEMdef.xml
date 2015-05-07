@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<GEMDefFile>
+   <Company>Common CENTS Solutions</Company>
+   <Version>1.10.28</Version>
+   <Application>GEM Export Utility</Application>
+   <Copyright>(c) Copyright 2002, All Rights Reserved</Copyright>
+   <CreateDate>3/17/2006 10:11:08 AM</CreateDate>
+   <Author>ANDwscott</Author>
+   <Description>
+      Saved by gemuser from WRCPOS at 9/1/2006 3:30:35 PM
+   </Description>
+   <ExportDefs Creator="GEM Export Utility">
+      <ExportDef>
+         <Title>Resident Charge Export 020</Title>
+         <OutputSequence></OutputSequence>
+         <Database>gemdb</Database>
+         <SQLCMD>
+            declare @AccountTTL   as int
+            declare @AccountClass as int
+            declare @DateOffset   as int
+            declare @CycleNo      as int
+            declare @BeginDate    as datetime
+            declare @EndDate      as datetime
+            declare @XrefID       as varchar(10)
+            declare @XLATID       as varchar(10)
+
+            --------------[ User Variables ]-----------------------
+            set @AccountTTL   = 10
+            set @AccountClass = 10
+            set @DateOffset   = -10
+            set @XrefID       = 'MTH'
+            set @XLATID       = 'RES'
+            -------------------------------------------------------
+
+            set @CycleNo   = dbo.GetCycleByXREF( 0 , GetDate() + @DateOffset , @XrefID )
+            set @BeginDate = dbo.GetCycleStartDateByXrefID( @XrefID , GetDate() + @DateOffset )
+            set @EndDate   = dbo.GetCycleEndDateByXREF( @CycleNo , @XrefID )
+
+            select     SubString( D.AccountNo ,1,3) as Location,
+                        SubString(D.AccountNo,4,19 ) as AccountNo,
+                        dbo.fn_WAM_RIGetARType( SubString( D.AccountNo ,1,3) , SubString(D.AccountNo,4,19 ) , D.TransDate ) as ARType,
+                        O.Category As ChargeCode,
+                        D.TransTotal,
+                        D.TransDate
+                        from tblDetail  D
+                        left join tblTransDef   TD on D.TransID = TD.TransID
+                        left join tblOutletOHD  O on O.OutletNo = D.OutletNo
+                        left join tblTransClass TC on TD.TransClassID = TC.TransClassID
+                        left join tblAccountOHD A  on D.AccountNo = A.AccountNo
+
+            where    TC.TransClassID = @AccountClass
+                     and A.AccountClassID = @AccountTTL
+                     and D.PostDate  &gt;= @BeginDate
+                     and D.PostDate  &lt;= @EndDate
+                     and SubString( D.AccountNo ,1,3) = '020'
+                     and D.TransID &lt;&gt; 50
+                     and D.TransID &lt;&gt; 51
+                     and D.TransID &lt;&gt; 56
+                     and D.TransID &lt;&gt; 60
+                     and D.TransID &lt; 500
+                     and len(D.AccountNO) &gt; 3
+         </SQLCMD>
+         <Description>
+            Export file, in detail, for the residents --
+
+            sample record;
+
+            "020",03225,"PVT",1826,6.50,"01/01/2006",,
+
+            Company Code, Account #, &lt;null&gt;, Charge Code (Outlet Category), Amount, Date, &lt;null&gt;,&lt;null&gt;
+
+            No header record.
+         </Description>
+         <Active>1</Active>
+         <Append>0</Append>
+         <Delimiter>,</Delimiter>
+         <OutputFilename>c:\gem\importexport\res020.csv</OutputFilename>
+         <UseCRLF>1</UseCRLF>
+         <UseCR>0</UseCR>
+         <UseLF>0</UseLF>
+         <GenerateCredits>0</GenerateCredits>
+         <TransID>100</TransID>
+         <Outlet>1000</Outlet>
+         <Reference>EU Auto</Reference>
+         <Fields Creator="GEM Export Utility">
+            <Field>
+               <Fieldname>Location</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>0</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars></LeadChars>
+               <TrailChars></TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>1</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation></Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+            <Field>
+               <Fieldname>AccountNo</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>1</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars></LeadChars>
+               <TrailChars></TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>0</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation></Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+            <Field>
+               <Fieldname>ARType</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>1</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars></LeadChars>
+               <TrailChars></TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>1</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation></Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+            <Field>
+               <Fieldname>ChargeCode</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>1</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars></LeadChars>
+               <TrailChars></TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>0</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation></Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+            <Field>
+               <Fieldname>TransTotal</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>0</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars></LeadChars>
+               <TrailChars></TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>0</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation></Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+            <Field>
+               <Fieldname>TransDate</Fieldname>
+               <Position>0</Position>
+               <Width>0</Width>
+               <TrimSpaces>0</TrimSpaces>
+               <Justification>0</Justification>
+               <SuppressDecimal>0</SuppressDecimal>
+               <NumDecimal>2</NumDecimal>
+               <LeadChars>"</LeadChars>
+               <TrailChars>",,</TrailChars>
+               <SpacePad></SpacePad>
+               <UseQuotes>0</UseQuotes>
+               <LeadQuote>"</LeadQuote>
+               <TrailQuote>"</TrailQuote>
+               <Transformation>mm/dd/yyyy</Transformation>
+               <SubtotalField>0</SubtotalField>
+               <CreditField>0</CreditField>
+            </Field>
+         </Fields>
+      </ExportDef>
+   </ExportDefs>
+</GEMDefFile>
