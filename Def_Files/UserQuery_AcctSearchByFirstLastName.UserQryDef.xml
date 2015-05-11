@@ -6,8 +6,8 @@
 	<Category>Accounts</Category>
 
 	<Description>
-		Search for account information based on employee's first and last name. 
-		User can search by either name or both. 
+		Search for account information based on employee's first and last name.
+		User can search by either name or both.
 		If unsure about name spelling, user can search partial names.
 	</Description>
 
@@ -22,7 +22,9 @@
 		SET		@fname = ISNULL('@#firstName#@', '');
 		SET		@lname = ISNULL('@#lastName#@', '');
 
-		SELECT	ohd.accountno as [AccountNo]
+		SELECT	ohd.inactive as [AcctStatus]
+				,ohd.accountno as [AccountNo]
+				,b.inactive as [BadgeStatus]
 				,b.badgeno as [BadgeNo]
 				,ohd.firstname as [FirstName]
 				,ohd.lastname as [LastName]
@@ -33,7 +35,7 @@
 		WHERE	ohd.firstname LIKE @fname + '%'
 				and ohd.lastname LIKE '%' + @lname + '%'
 
-		GROUP BY ohd.accountno, b.badgeno, ohd.firstname, ohd.lastname
+		GROUP BY ohd.accountno, b.badgeno, ohd.firstname, ohd.lastname, ohd.inactive, b.inactive
 		ORDER BY ohd.accountno, b.badgeno, ohd.lastname, ohd.firstname
 
 		]]></QuerySQL>
