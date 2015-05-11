@@ -121,37 +121,37 @@
 ::  'Gtype' MUST match the GEMonline log file type, located in C:\ 
 ::  'Dtype' MUST match the Daily log file type, located in C:\
 ::  -------------------------------------------------------------------------------------
-  set "glog=gemonline"
-  set "gpath=%HOMEDRIVE%%glog%.log"
+      set "glog=gemonline"
+      set "gpath=%HOMEDRIVE%%glog%.log"
 
-  set "dlog=daily"  
-  set "dpath=%HOMEDRIVE%%dlog%.cp"
+      set "dlog=daily"  
+      set "dpath=%HOMEDRIVE%%dlog%.cp"
 
-  set "apath=%HOMEDRIVE%_GEMlogs\"
+      set "apath=%HOMEDRIVE%_GEMlogs\"
 
 ::-----------------------------------------------------------------------
 :FileRotations
 ::-----------------------------------------------------------------------
-		if exist %apath%*.log08 del /f /q %apath%*.log08
-		if exist %apath%*.log07 copy %apath%*.log07 %apath%*.log08
-		if exist %apath%*.log06 copy %apath%*.log06 %apath%*.log07
-		if exist %apath%*.log05 copy %apath%*.log05 %apath%*.log06
-		if exist %apath%*.log04 copy %apath%*.log04 %apath%*.log05
-		if exist %apath%*.log03 copy %apath%*.log03 %apath%*.log04
-		if exist %apath%*.log02 copy %apath%*.log02 %apath%*.log03
-		if exist %apath%*.log01 copy %apath%*.log01 %apath%*.log02
+    if exist %apath%*.log08 del /f /q %apath%*.log08
+    if exist %apath%*.log07 copy %apath%*.log07 %apath%*.log08
+    if exist %apath%*.log06 copy %apath%*.log06 %apath%*.log07
+    if exist %apath%*.log05 copy %apath%*.log05 %apath%*.log06
+    if exist %apath%*.log04 copy %apath%*.log04 %apath%*.log05
+    if exist %apath%*.log03 copy %apath%*.log03 %apath%*.log04
+    if exist %apath%*.log02 copy %apath%*.log02 %apath%*.log03
+    if exist %apath%*.log01 copy %apath%*.log01 %apath%*.log02
 
-		if exist %gpath% move %gpath% %apath%%glog%.log01
+    if exist %gpath% move %gpath% %apath%%glog%.log01
 
 
-		if exist %apath%*.cp08 del /f /q %apath%*.cp08
-		if exist %apath%*.cp07 copy %apath%*.cp07 %apath%*.cp08
-		if exist %apath%*.cp06 copy %apath%*.cp06 %apath%*.cp07
-		if exist %apath%*.cp05 copy %apath%*.cp05 %apath%*.cp06
-		if exist %apath%*.cp04 copy %apath%*.cp04 %apath%*.cp05
-		if exist %apath%*.cp03 copy %apath%*.cp03 %apath%*.cp04
-		if exist %apath%*.cp02 copy %apath%*.cp02 %apath%*.cp03
-		if exist %apath%*.cp01 copy %apath%*.cp01 %apath%*.cp02
+    if exist %apath%*.cp08 del /f /q %apath%*.cp08
+    if exist %apath%*.cp07 copy %apath%*.cp07 %apath%*.cp08
+    if exist %apath%*.cp06 copy %apath%*.cp06 %apath%*.cp07
+    if exist %apath%*.cp05 copy %apath%*.cp05 %apath%*.cp06
+    if exist %apath%*.cp04 copy %apath%*.cp04 %apath%*.cp05
+    if exist %apath%*.cp03 copy %apath%*.cp03 %apath%*.cp04
+    if exist %apath%*.cp02 copy %apath%*.cp02 %apath%*.cp03
+    if exist %apath%*.cp01 copy %apath%*.cp01 %apath%*.cp02
 
-		if exist %dpath% move %dpath% %apath%%dlog%.cp01
+    if exist %dpath% move %dpath% %apath%%dlog%.cp01
 

@@ -43,3 +43,38 @@ elseif ($action -eq '2'){
 # Format StopWatch Elapsed Time
 #------------------------------------------------
 $resultstime.Elapsed.ToString('dd\.hh\:mm\:ss')
+
+
+
+function Prompt
+  { 
+    $promptLine = "________________________________________________________________________________"
+    $promptSpace = "|"
+    $promptString = "| ~ @ " + $(Get-Location) + ">"
+    Write-Host $promptLine -ForegroundColor Yellow
+    Write-Host $promptSpace -ForegroundColor Yellow
+    Write-Host $promptString -NoNewLine -ForegroundColor Yellow
+    return " "
+  }
+
+
+
+
+  gemLogMonitor.ps1
+
+  Get-Content C:\gemonline.log -wait
+
+  CONSOLE SETTINGS
+  Options:    Cursor Size - Smaill
+
+  FONT:
+  Lucida Console : 12
+
+  LAYOUT:
+  Screen Buffer Width: 2048    Height:  300
+  Window Size Width:  150  Height:  25
+  Window Position Left:  75  Top:  0
+
+  COLORS
+  Screen Text:  R:  0  G:   255   B:   0
+  Screen Background:    R:  0    G:  0   B:  0  
