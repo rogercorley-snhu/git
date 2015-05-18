@@ -1,4 +1,4 @@
-﻿#===============================================================================================================
+Set-Alias geminfo GetInfo -Option ReadOnly
 
 function GetInfo {
 #---------------------------------------------------------------------------------------------------------------
@@ -7,7 +7,7 @@ $mc = $ENV:COMPUTERNAME
 
 # Header / Footer
 #-------------------------------------------------------
-$header = "-----------------------[ START GET INFOMATION ]---------------------------" 
+$header = "-----------------------[ START GET INFOMATION ]---------------------------"
 $footer = "-----------------------[  END GET INFOMATION  ]---------------------------"
 
 # Formatting
@@ -97,7 +97,7 @@ $myobj.Disk = GetDriveInfo $mc
 
 # Clear Screen
 #-------------------------------------------------------
-Clear-Host
+#Clear-Host
 
 # WRITE : Header
 #-------------------------------------------------------
@@ -152,7 +152,8 @@ $space
 
 Write-Host "Application: `t" $gem.Name -ForegroundColor Yellow
 Write-Host "............................................" -ForegroundColor Yellow
-$gemtext = "Logon As: `t {0} `nProcessID: `t {1} `nStartMode: `t {2} `nState: `t`t {3} `nStatus: `t {4}" -f $gem.StartName,$gem.ProcessID,$gem.StartMode,
+$gemtext = "Logon As: `t {0} `nProcessID: `t {1} `nStartMode: `t {2} `nState: `t`t {3} `nStatus: `t {4}" -f $gem.StartName,
+$gem.ProcessID,$gem.StartMode,
 $gem.State,$gem.Status
 
 $gemtext
@@ -174,44 +175,3 @@ $space
 $space
 #---------------------------------------------------------------------------------------------------------------
 }  #End function GetInfo
-
-#
-#===============================================================================================================
-#===============================================================================================================
-#===============================================================================================================
-#
-
-function GetDriveInfo {
-#---------------------------------------------------------------------------------------------------------------
-$comp = $ENV:COMPUTERNAME
-
-# Get Disk Sizes
-#-------------------------------------------------------
-$logicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" -ComputerName $comp
-
-# Calculate Disk Info
-#-------------------------------------------------------
-foreach ($disk in $logicalDisk)
-{
-    $diskObj = "" | Select-Object Disk,Size,FreeSpace,Percent
-    $diskObj.Disk = $disk.DeviceID
-    $diskObj.Size = "{0:n0} GB" -f (( $disk | Measure-Object -Property Size -SUm).sum/1gb)
-    $diskObj.FreeSpace = "{0:n0} GB" -f (( $disk | Measure-Object -Property FreeSpace -Sum).sum/1gb)
-    $diskObj.Percent = "{0:n0}%" -f (((( $disk | Measure-Object -Property FreeSpace -Sum).sum/1gb) / (( $disk | Measure-Object -Property Size -SUm).sum/1gb) 
-)*100)
-
-# Format Disk Info
-#-------------------------------------------------------
-    $text = "{0} [Drive Size]-- {1}    [Free Space]-- {2}    [Percent Free]-- {3}" -f $diskObj.Disk,$diskObj.size,$diskObj.FreeSpace,$diskObj.Percent
-    $msg += $text + [char]13 + [char]10
-}
-
-$msg
-#---------------------------------------------------------------------------------------------------------------
-}  #End function GetDriveInfo
-
-#
-#===============================================================================================================
-#===============================================================================================================
-#===============================================================================================================
-#
