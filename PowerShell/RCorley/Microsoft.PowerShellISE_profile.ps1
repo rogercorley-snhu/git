@@ -1,4 +1,4 @@
-Set-Location C:\_gemToolbox\PowerShell
+Set-Location C:\PowerShell
 
 $Shell = $Host.UI.RawUI
 $size = $Shell.WindowSize
@@ -10,9 +10,14 @@ $size.width=1024
 $size.height=5000
 $Shell.BufferSize = $size
 
+$Shell.BackgroundColor = "Black"
+$Shell.ForegroundColor = "White"
+
+$Shell.WindowTitle="the Brain"
+
 New-Item alias:np -Value C:\Windows\System32\notepad.exe
 
-. C:\_gemToolbox\PowerShell\gemTools.ps1
+. C:\PowerShell\Functions\Tools.ps1
 
 Clear-Host
 

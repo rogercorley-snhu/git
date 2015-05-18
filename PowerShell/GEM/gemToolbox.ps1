@@ -7,20 +7,18 @@ $mc = $ENV:COMPUTERNAME
 
 # Header / Footer
 #-------------------------------------------------------
-$header = "------------------[ START GET INFOMATION ]------------------"
-$footer = "------------------[  END GET INFOMATION  ]------------------"
+$header = "-----------------------[ START GET INFOMATION ]---------------------------" 
+$footer = "-----------------------[  END GET INFOMATION  ]---------------------------"
 
 # Formatting
 #-------------------------------------------------------
-$dash = "---------------------------------------------------"
+$dash = "-------------------------------------------------------------------------"
 $space = " "
 
 #
-#
 #================================================================================================
-#
-#
-
+#--CONSTANTS
+#================================================================================================
 
 # ComputerSystem Info
 #-------------------------------------------------------
@@ -40,12 +38,12 @@ $Proc = Get-WmiObject Win32_Processor -comp $mc
 
 # GEMpay Info
 #-------------------------------------------------------
-$Gpay = Get-Service 
+$gem = Get-WmiObject Win32_service | Where-Object { $_.name -like "GEM*" }
 
 #
-#
 #================================================================================================
-#
+#--OBJECTS
+#================================================================================================
 #
 
 #Create Custom Objects
@@ -81,7 +79,7 @@ $myobj.ServicePack = $Os.servicepackmajorversion
 #-------------------------------------------------------
 $myobj.uptime = (Get-Date) - [System.DateTime]::ParseExact($Os.LastBootUpTime.Split(".")[0],'yyyyMMddHHmmss',$null)
 $myobj.uptime = "$($myobj.uptime.Days) days, $($myobj.uptime.Hours) hours," +`
-	" $($myobj.uptime.Minutes) minutes, $($myobj.uptime.Seconds) seconds"
+  " $($myobj.uptime.Minutes) minutes"
 
 # Computer Memory Calculations
 #-------------------------------------------------------
@@ -92,9 +90,9 @@ $myobj.RAM = "{0:n2} GB" -f ($CompInfo.TotalPhysicalMemory/1gb)
 $myobj.Disk = GetDriveInfo $mc
 
 #
-#
 #================================================================================================
-#
+#--SCREEN
+#================================================================================================
 #
 
 # Clear Screen
@@ -104,59 +102,76 @@ Clear-Host
 # WRITE : Header
 #-------------------------------------------------------
 Write-Host $space
-Write-Host $header
+Write-Host $header -ForegroundColor Yellow
 Write-Host $space
-$space
-$dash
+Write-Host $space
 
 # WRITE : Computer / Network Info
 #-------------------------------------------------------
-Write-Host "Server:" $myobj.Name
-Write-Host "Domain:" $myobj.Domain
+Write-Host "Computer / Domain Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
+Write-Host "Server:`t`t" $myobj.Name
+Write-Host "Domain:`t`t" $myobj.Domain
+Write-Host "Server Model:`t" $myobj.Model
 $space
-$dash
-
-# WRITE : Model / Serial Number Info
-#-------------------------------------------------------
-Write-Host "Server Model:" $myobj.Model
-Write-Host "Serial Number:" $myobj.MachineSN
-$space
-$dash
 
 # WRITE : Operating System Info
 #-------------------------------------------------------
-Write-Host "OS Version:" $myobj.OS
-Write-Host "Service Pack:" $myobj.ServicePack
+Write-Host "Operating System Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
+Write-Host "OS Version:`t" $myobj.OS
+Write-Host "Service Pack:`t" $myobj.ServicePack
 $space
-$dash
 
 # WRITE : Uptime Info
 #-------------------------------------------------------
-Write-Host "Last Reboot:" $myobj.uptime
+Write-Host "System Uptime Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
+Write-Host "Last Reboot:`t" $myobj.uptime
 $space
-$dash
 
 # WRITE : RAM Info
 #-------------------------------------------------------
-Write-Host "Total RAM (GB):" $myobj.RAM
+Write-Host "System Memory Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
+Write-Host "Total RAM (GB):`t" $myobj.RAM
 $space
-$dash
 
 # WRITE : Drive Info
 #-------------------------------------------------------
-Write-Host "Drive Info:`n"
+Write-Host "System Disk Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
 $myobj.Disk
-Write-Host $space
-Write-Host $dash
+$space
+
+# WRITE : GEM Application Info
+#-------------------------------------------------------
+Write-Host "GEM Application Info" -ForegroundColor Yellow
+Write-Host "--------------------------------------------"
+$space
+
+Write-Host "Application: `t" $gem.Name -ForegroundColor Yellow
+Write-Host "............................................" -ForegroundColor Yellow
+$gemtext = "Logon As: `t {0} `nProcessID: `t {1} `nStartMode: `t {2} `nState: `t`t {3} `nStatus: `t {4}" -f $gem.StartName,$gem.ProcessID,$gem.StartMode,
+$gem.State,$gem.Status
+
+$gemtext
+
+$space
 
 # WRITE : Footer
 #-------------------------------------------------------
 Write-Host $space
 Write-Host $space
-Write-Host $footer
+Write-Host $footer -ForegroundColor Yellow
 Write-Host $space
 Write-Host $space
 
+$space
+$space
+Read-Host "Press the [ ENTER ] key to exit script."
+$space
+$space
 #---------------------------------------------------------------------------------------------------------------
 }  #End function GetInfo
 
@@ -178,14 +193,16 @@ $logicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" -ComputerNa
 #-------------------------------------------------------
 foreach ($disk in $logicalDisk)
 {
-    $diskObj = "" | Select-Object Disk,Size,FreeSpace
+    $diskObj = "" | Select-Object Disk,Size,FreeSpace,Percent
     $diskObj.Disk = $disk.DeviceID
     $diskObj.Size = "{0:n0} GB" -f (( $disk | Measure-Object -Property Size -SUm).sum/1gb)
     $diskObj.FreeSpace = "{0:n0} GB" -f (( $disk | Measure-Object -Property FreeSpace -Sum).sum/1gb)
+    $diskObj.Percent = "{0:n0}%" -f (((( $disk | Measure-Object -Property FreeSpace -Sum).sum/1gb) / (( $disk | Measure-Object -Property Size -SUm).sum/1gb) 
+)*100)
 
 # Format Disk Info
 #-------------------------------------------------------
-    $text = "{0}  {1}  Free: {2}" -f $diskObj.Disk,$diskObj.size,$diskObj.FreeSpace
+    $text = "{0} [Drive Size]-- {1}    [Free Space]-- {2}    [Percent Free]-- {3}" -f $diskObj.Disk,$diskObj.size,$diskObj.FreeSpace,$diskObj.Percent
     $msg += $text + [char]13 + [char]10
 }
 
