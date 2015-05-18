@@ -6,7 +6,7 @@
 ::-------------------------------------------------------------------------------------------------------
 ::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ::
-::                  [ ****      DO NOT MODIFY IN THIS SECTION         ****  ]
+::                  [ ****      DO NOT MODIFY THIS SECTION         ****  ]
 ::
 ::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ::-------------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 ::
 ::
 ::=======================================================================================================
-::  ENVIRONMENT VARIABLES : Directories 
+::  ENVIRONMENT VARIABLES : Directories
 ::=======================================================================================================
 ::  VERIFY all required Environment Variables have been created in System Properties
 ::  -- To verify, right-click 'My Computer', click 'Properties', select 'Advanced' tab ...
@@ -47,48 +47,46 @@
 ::  -- and paste them into the new .bat file. Save the .bat file in the GEM directory.
 ::  !! YOU MUST SAVE AND RUN THIS .BAT FILE FROM THE GEM ROOT DIRECTORY.
 ::  -- Run 'setEnvVar.bat' and click 'space' within the command line screen when prompted.
-::  -- Verify that GEM environment variables now exist. 
+::  -- Verify that GEM environment variables now exist.
 ::
 ::  -- You may now use the environment variables in place of the full path in this script.
 ::  !! When referencing a path using these variables, DO NOT PLACE A TRAILING SLASH ' \ ' in the script.
 ::  !! Using the trailing slash ' \ ' will cause an error!
 ::
-::  -- example - CORRECT:   %GIMPEXP%employee.txt
-::  -- example - INCORRECT: %GIMPEXP%\employee.txt
+::  -- example - CORRECT:   %GEM_AIMP%employee.txt
+::  -- example - INCORRECT: %GEM_AIMP%\employee.txt
 ::
 ::-------------------------------------------------------------------------------------------------------
-::  TO CREATE '.\GEM\setEnvVar.bat' 
+::  TO CREATE '.\GEM\setEnvVar.bat'
 ::-------------------------------------------------------------------------------------------------------
 ::  -- Use this code to create the required batch file.
 ::  !! REMEMBER TO SAVE AND RUN THIS BATCH FILE FROM THE GEM DIRECTORY !!
 ::-------------------------------------------------------------------------------------------------------
-::  
+::
 ::  @echo off
-::  
+::
 ::  setx GEM %~dp0
-::  setx GIMPEXP %~dp0ImportExport\
-::  setx GARCH %~dp0ImportExport\Archive\
-::  setx GIMPEMP %~dp0ImportExport\Archive\ImportEmployees\
-::  setx GBAD %~dp0ImportExport\Archive\ImportEmployees\BadFiles\
-::  setx GSCRIPTS %~dp0ImportExport\_Scripts\
-::  
+::  setx GEM_IEX %~dp0ImportExport\
+::  setx GEM_ARC %~dp0ImportExport\Archive\
+::  setx GEM_AIMP %~dp0ImportExport\Archive\ImportEmployees\
+::  setx GEM_BFILES %~dp0ImportExport\Archive\ImportEmployees\BadFiles\
+::
 ::  pause
 ::
 ::-------------------------------------------------------------------------------------------------------
-::  ENVIRONMENT VARIABLES  
+::  ENVIRONMENT VARIABLES
 ::-------------------------------------------------------------------------------------------------------
 ::  You may now reference these variables with the following.
 ::  Only use the %...% variable. Anything past the last % is just a reference to the directory.
 ::-------------------------------------------------------------------------------------------------------
 ::
 ::  %GEM% = 'currentDrive\GEM\'
-::  %GIMPEXP% = 'currentDrive\GEM\ImportExport\'
-::  %GARCH% = 'currentDrive\GEM\ImportExport\Archive\'
-::  %GIMPEMP% = 'currentDrive\GEM\ImportExport\Archive\ImportEmployees\'
-::  %GBAD% = 'currentDrive\GEM\ImportExport\Archive\ImportEmployees\BadFiles\'
-::  %GSCRIPTS% = 'currentDrive\GEM\ImportExport\_Scripts\'
+::  %GEM_IEX% = 'currentDrive\GEM\ImportExport\'
+::  %GEM_ARC% = 'currentDrive\GEM\ImportExport\Archive\'
+::  %GEM_AIMP% = 'currentDrive\GEM\ImportExport\Archive\ImportEmployees\'
+::  %GEM_BFILES% = 'currentDrive\GEM\ImportExport\Archive\ImportEmployees\BadFiles\'
 ::
-::  
+::
 ::=======================================================================================================
 ::  /ENVIRONMENT VARIABLES : Directories
 ::=======================================================================================================
@@ -120,37 +118,37 @@
 ::  CONFIGURE VARIABLES : ENVIRONMENT : Filenames
 ::=======================================================================================================
 
-::  'filetype' MUST match the demographic import file type. 
-::  'tmptype' is a constant used in funcRemoveHeader. DO NOT MODIFY.
+::  'fileType' MUST match the demographic import file type.
+::  'tmpType' is a constant used in funcRemoveHeader. DO NOT MODIFY.
 ::  -------------------------------------------------------------------------------------
-  set "filetype=txt"  
-  set "tmptype=tmp"
+  set "fileType=txt"
+  set "tmpType=tmp"
 
-::  'impfile' MUST match the demographic file name WITHOUT file extension.  
-::  'impfull' is the full filename of 'impfile' WITH file extension.
+::  'impFile' MUST match the demographic file name WITHOUT file extension.
+::  'impFull' is the full filename of 'impFile' WITH file extension.
 ::  -------------------------------------------------------------------------------------
-  set "impfile=employee"    
-  set "impfull=%impfile%.%filetype%"
+  set "impFile=employee"
+  set "impFull=%impFile%.%fileType%"
 
-::  'imppath' is the full path and file name of the demographic file WITH file extension. 
-::  'temppath' is the full path-filename of the temporary file created in funcRemoveHeader
+::  'impPath' is the full path and file name of the demographic file WITH file extension.
+::  'tmpPath' is the full path-filename of the temporary file created in funcRemoveHeader
 ::  -------------------------------------------------------------------------------------
-  set "imppath=%GIMPEXP%%impfile%.%filetype%"
-  set "temppath=%GIMPEXP%%impfile%.%tmptype%"
+  set "impPath=%GEM_IEX%%impFile%.%fileType%"
+  set "tmpPath=%GEM_IEX%%impFile%.%tmpType%"
 
-::  'archfull' is the variable for the full archive file name WITHOUT file extension.
-::  'archpath' is the variable for the full path-filename of 'archfull' WITHOUT file extension 
+::  'archFull' is the variable for the full archive file name WITHOUT file extension.
+::  'archPath' is the variable for the full path-filename of 'archFull' WITHOUT file extension
 ::  -------------------------------------------------------------------------------------
-  set "archfull=%impfile%.%logstamp%"
-  set "archpath=%GIMPEMP%%archfull%"
-  set "log=%GIMPEMP%_%impfile%.log01"
+  set "archFull=%impFile%.%logstamp%"
+  set "archPath=%GEM_AIMP%%archFull%"
+  set "log=%GEM_AIMP%_%impFile%.log01"
 
 ::  'badfile' is the variable for the full corrupt file name WITHOUT file extension.
-::  'badpath' is the variable for the full path-filename of 'badfile' WITHOUT file extension 
+::  'badPath' is the variable for the full path-filename of 'badfile' WITHOUT file extension
 ::  -------------------------------------------------------------------------------------
-  set "badfull=bad.%impfile%.%logstamp%"
-  set "badpath=%GBAD%%badfull%"
-  set "badlog=%GBAD%_%impfile%.log01"
+  set "badFull=bad.%impFile%.%logstamp%"
+  set "badPath=%GEM_BFILES%%badFull%"
+  set "badLog=%GEM_BFILES%_%impFile%.log01"
 
 ::  Set 'exp_num_lines' value to the minimum number of expected lines in the demographic file.
 ::  -------------------------------------------------------------------------------------
@@ -163,21 +161,21 @@
 
 
 ::=======================================================================================================
-::  CONFIGURE VARIABLES : SQL SERVER : IMPORT SCRIPT 
+::  CONFIGURE VARIABLES : SQL SERVER : IMPORT SCRIPT
 ::=======================================================================================================
 
 ::  MUST match sModule in SQL table cfgScriptParams
 ::  -------------------------------------------------------------------------------------
-  set "module=171"
-    
+  set "module=170"
+
 ::  "SQLNAME=sqlservername" MUST be enclosed wihtin double-quotes ( "SQLNAME=xxxxx" )
 ::  -------------------------------------------------------------------------------------
 ::  !! If using local for SQL Server name, set variable to "SQLNAME=(local)" - Parenthesis are REQUIRED !!
 ::-------------------------------------------------------------------------------------------------------
-  set "sqlname=d109gemdb"
+  set "sqlname=OK1568PCIDB"
 
 ::=======================================================================================================
-::  /CONFIGURE VARIABLES : SQL SERVER : IMPORT SCRIPT 
+::  /CONFIGURE VARIABLES : SQL SERVER : IMPORT SCRIPT
 ::=======================================================================================================
 ::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -201,7 +199,7 @@
 :Begin_Import_Job
 ::=======================================================================================================
     echo ============================================================================== >> %log%
-    echo %fullstamp% : [ BEGIN ] Importing %impfull% >> %log%
+    echo %fullstamp% : [ BEGIN ] Importing %impFull% >> %log%
     echo ============================================================================== >> %log%
     echo. >> %log%
     echo .............................................................................. >> %log%
@@ -217,8 +215,8 @@
     echo ============================================================================== >> %log%
     echo. >> %log%
 
-  if exist %imppath% (
-    echo !fullstamp! : [ CHECK ] : '!impfull!' found. >> !log!
+  if exist %impPath% (
+    echo !fullstamp! : [ CHECK ] : '!impFull!' found. >> !log!
     echo. >> !log!
     echo ============================================================================== >> !log!
     echo !fullstamp! : [ CHECK ] : CLOSE FUNCTION: CHECK FILES EXISTS  >> !log!
@@ -227,16 +225,16 @@
     echo .............................................................................. >> !log!
     echo .............................................................................. >> !log!
     echo. >> !log!
-    goto funcRemoveHeader 
+    goto funcRemoveHeader
     ) else (
     echo ============================================================================== >> !log!
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !log!
-    echo !fullstamp! : [ CHECK : ERROR ] : '!impfull!' NOT FOUND >> !log! 
+    echo !fullstamp! : [ CHECK : ERROR ] : '!impFull!' NOT FOUND >> !log!
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !log!
     echo ============================================================================== >> !log!
     echo. >> !log!
     )
-  
+
   goto Done
 
 ::=======================================================================================================
@@ -254,15 +252,15 @@
     echo ============================================================================== >> %log%
     echo. >> %log%
 
-  for /f "skip=1 delims=*" %%a in (%imppath%) do (
-    echo %%a >> %temppath%    
+  for /f "skip=1 delims=*" %%a in (%impPath%) do (
+    echo %%a >> %tmpPath%
   )
 
-  xcopy %temppath% %imppath% /y
-  del %temppath% /f /q
+  xcopy %tmpPath% %impPath% /y
+  del %tmpPath% /f /q
 
     echo. >> %log%
-    echo %fullstamp% : [ HEADER ] Header row removed from %impfull%. >> %log%
+    echo %fullstamp% : [ HEADER ] Header row removed from %impFull%. >> %log%
     echo. >> %log%
 
     echo ============================================================================== >> %log%
@@ -287,13 +285,13 @@ goto funcLineCount
     echo %fullstamp% : [ COUNT ] BEGIN : FUNCTION: Line Count >> %log%
     echo ============================================================================== >> %log%
     echo. >> %log%
-    
-    echo %fullstamp% : [ COUNT ] Counting Number Of Lines In '%impfull%' >> %log%
 
-  set /p =COUNT: < nul 
-  for /f %%C in ('Find /V /C "" ^< %imppath%') do set COUNT=%%C 
+    echo %fullstamp% : [ COUNT ] Counting Number Of Lines In '%impFull%' >> %log%
 
-    echo %fullstamp% : [ COUNT ] %impfull% has %COUNT% lines. >> %log%
+  set /p =COUNT: < nul
+  for /f %%C in ('Find /V /C "" ^< %impPath%') do set COUNT=%%C
+
+    echo %fullstamp% : [ COUNT ] %impFull% has %COUNT% lines. >> %log%
 
   if %COUNT% GTR %exp_num_lines% (
     echo. >> !log!
@@ -303,24 +301,24 @@ goto funcLineCount
     echo. >> !log!
     echo .............................................................................. >> !log!
     echo .............................................................................. >> !log!
-    
-    goto funcSQLImport 
+
+    goto funcSQLImport
     ) else (
 
     echo. >> !log!
     echo ============================================================================== >> !log!
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !log!
-    echo !fullstamp! [ BADFILE ] : IMPORT FILE : LINE COUNT >> !log! 
+    echo !fullstamp! [ BADFILE ] : IMPORT FILE : LINE COUNT >> !log!
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !log!
     echo ============================================================================== >> !log!
     echo. >> !log!
     echo !fullstamp! : [ BADFILE ] : Line Count Test - FAILED. >> !log!
-    echo !fullstamp! : [ BADFILE ] : '!impfull!' contains !COUNT! lines. >> !log! 
+    echo !fullstamp! : [ BADFILE ] : '!impFull!' contains !COUNT! lines. >> !log!
     echo !fullstamp! : [ BADFILE ] : Expecting !exp_num_lines! lines minimum. >> !log!
-    echo !fullstamp! : [ BADFILE ] : Archiving to '\ImportEmployees\badarch' >> !log! 
+    echo !fullstamp! : [ BADFILE ] : Archiving to '\ImportEmployees\badarch' >> !log!
     echo. >> !log!
     )
-    
+
   goto funcBadFile
 
 ::=======================================================================================================
@@ -334,12 +332,12 @@ goto funcLineCount
 ::=======================================================================================================
     echo. >> %log%
     echo ============================================================================== >> %log%
-    echo %fullstamp% : [ IMPORT ] Begin SQL Import Module : '%impfull%' >> %log%
+    echo %fullstamp% : [ IMPORT ] Begin SQL Import Module : '%impFull%' >> %log%
     echo ============================================================================== >> %log%
     echo. >> %log%
 
     echo %fullstamp% : [ IMPORT ] Starting SQL Import >> %log%
-    
+
 
 
 ::  %GEM%runscript script=Import_v1_70.gsf,pw=gemie,svr=%sqlname%,core=1,module=%module%,include=gsf.txt
@@ -353,12 +351,12 @@ goto funcLineCount
     echo ============================================================================== >> %log%
     echo. >> %log%
     echo .............................................................................. >> %log%
-    echo .............................................................................. >> %log%  
+    echo .............................................................................. >> %log%
     echo. >> %log%
   goto funcArchive
 
 ::=======================================================================================================
-::  /funcSQLImport 
+::  /funcSQLImport
 ::=======================================================================================================
 ::+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -372,27 +370,27 @@ goto funcLineCount
     echo. >> %log%
 
 
-  if exist %GIMPEMP%.d08 del /Q %GIMPEMP%.d08
-  if exist %GIMPEMP%*.d07 copy %GIMPEMP%*.d07 %GIMPEMP%*.d08
-  if exist %GIMPEMP%*.d06 copy %GIMPEMP%*.d06 %GIMPEMP%*.d07
-  if exist %GIMPEMP%*.d05 copy %GIMPEMP%*.d05 %GIMPEMP%*.d06
-  if exist %GIMPEMP%*.d04 copy %GIMPEMP%*.d04 %GIMPEMP%*.d05
-  if exist %GIMPEMP%*.d03 copy %GIMPEMP%*.d03 %GIMPEMP%*.d04
-  if exist %GIMPEMP%*.d02 copy %GIMPEMP%*.d02 %GIMPEMP%*.d03
-  if exist %GIMPEMP%*.d01 copy %GIMPEMP%*.d01 %GIMPEMP%*.d02
+  if exist %GEM_AIMP%.d08 del /Q %GEM_AIMP%.d08
+  if exist %GEM_AIMP%*.d07 copy %GEM_AIMP%*.d07 %GEM_AIMP%*.d08
+  if exist %GEM_AIMP%*.d06 copy %GEM_AIMP%*.d06 %GEM_AIMP%*.d07
+  if exist %GEM_AIMP%*.d05 copy %GEM_AIMP%*.d05 %GEM_AIMP%*.d06
+  if exist %GEM_AIMP%*.d04 copy %GEM_AIMP%*.d04 %GEM_AIMP%*.d05
+  if exist %GEM_AIMP%*.d03 copy %GEM_AIMP%*.d03 %GEM_AIMP%*.d04
+  if exist %GEM_AIMP%*.d02 copy %GEM_AIMP%*.d02 %GEM_AIMP%*.d03
+  if exist %GEM_AIMP%*.d01 copy %GEM_AIMP%*.d01 %GEM_AIMP%*.d02
 
 
     echo %fullstamp% : [ ARCHIVE ] Archived Files Rotated Successfully >> %log%
 
 
-  move %imppath% %archpath%.d01
+  move %impPath% %archPath%.d01
 
-    echo %fullstamp% : [ ARCHIVE ] '%impfull%' -- '%archfull%' >> %log%
+    echo %fullstamp% : [ ARCHIVE ] '%impFull%' -- '%archFull%' >> %log%
     echo. >> %log%
 
     echo ============================================================================== >> %log%
-    echo %fullstamp% : [ ARCHIVE ] : Employee File Archive Complete >> %log% 
-    echo ============================================================================== >> %log%  
+    echo %fullstamp% : [ ARCHIVE ] : Employee File Archive Complete >> %log%
+    echo ============================================================================== >> %log%
     echo. >> %log%
     echo .............................................................................. >> %log%
     echo .............................................................................. >> %log%
@@ -410,24 +408,24 @@ goto funcLineCount
 ::=======================================================================================================
 
 ::-------------------------------------------------------------------------------------------------------
-::  ERROR MSG : BAD LOG FILE 
+::  ERROR MSG : BAD LOG FILE
 ::-------------------------------------------------------------------------------------------------------
 
-    echo ============================================================================== >> %badlog%
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo %fullstamp% : ERROR : IMPORT FILE : LINE COUNT >> %badlog%
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo ============================================================================== >> %badlog%
-    echo. >> %badlog%
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo %fullstamp% : [ BADFILE ] : Line Count Test - FAILED. >> %badlog%
-    echo %fullstamp% : [ BADFILE ] : '%impfull%' contains %COUNT% lines. >> %badlog% 
-    echo %fullstamp% : [ BADFILE ] : Expecting %exp_num_lines% lines minimum. >> %badlog%
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo. >> %badlog%
+    echo ============================================================================== >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo %fullstamp% : ERROR : IMPORT FILE : LINE COUNT >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo ============================================================================== >> %badLog%
+    echo. >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo %fullstamp% : [ BADFILE ] : Line Count Test - FAILED. >> %badLog%
+    echo %fullstamp% : [ BADFILE ] : '%impFull%' contains %COUNT% lines. >> %badLog%
+    echo %fullstamp% : [ BADFILE ] : Expecting %exp_num_lines% lines minimum. >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo. >> %badLog%
 
 
-::------------------------------------------------------------------------------------------------------- 
+::-------------------------------------------------------------------------------------------------------
 
     echo ------------------------------------------------------------------------------ >> %log%
     echo %fullstamp% : [ BADFILE ] Begin Archived Corrupt File Rotations >> %log%
@@ -436,21 +434,21 @@ goto funcLineCount
 
     ::-----------------------------------------------------------------------------------------------
 
-    echo ------------------------------------------------------------------------------ >> %badlog%
-    echo %fullstamp% : [ BADFILE ] Begin Archived Corrupt File Rotations >> %badlog%
-    echo ------------------------------------------------------------------------------ >> %badlog%
-    echo. >> %badlog%
+    echo ------------------------------------------------------------------------------ >> %badLog%
+    echo %fullstamp% : [ BADFILE ] Begin Archived Corrupt File Rotations >> %badLog%
+    echo ------------------------------------------------------------------------------ >> %badLog%
+    echo. >> %badLog%
 
 ::-------------------------------------------------------------------------------------------------------
 
-  if exist %badpath%*.d08 del /Q %badpath%*.d08
-  if exist %badpath%*.d07 copy %badpath%*.d07 %badpath%*.d08
-  if exist %badpath%*.d06 copy %badpath%*.d06 %badpath%*.d07
-  if exist %badpath%*.d05 copy %badpath%*.d05 %badpath%*.d06
-  if exist %badpath%*.d04 copy %badpath%*.d04 %badpath%*.d05
-  if exist %badpath%*.d03 copy %badpath%*.d03 %badpath%*.d04
-  if exist %badpath%*.d02 copy %badpath%*.d02 %badpath%*.d03
-  if exist %badpath%*.d01 copy %badpath%*.d01 %badpath%*.d02
+  if exist %badPath%*.d08 del /Q %badPath%*.d08
+  if exist %badPath%*.d07 copy %badPath%*.d07 %badPath%*.d08
+  if exist %badPath%*.d06 copy %badPath%*.d06 %badPath%*.d07
+  if exist %badPath%*.d05 copy %badPath%*.d05 %badPath%*.d06
+  if exist %badPath%*.d04 copy %badPath%*.d04 %badPath%*.d05
+  if exist %badPath%*.d03 copy %badPath%*.d03 %badPath%*.d04
+  if exist %badPath%*.d02 copy %badPath%*.d02 %badPath%*.d03
+  if exist %badPath%*.d01 copy %badPath%*.d01 %badPath%*.d02
 
 ::-------------------------------------------------------------------------------------------------------
 
@@ -458,33 +456,33 @@ goto funcLineCount
 
     ::-----------------------------------------------------------------------------------------------
 
-    echo %fullstamp% : [ BADFILE ] Archived corrupt files rotation successful. >> %badlog%
+    echo %fullstamp% : [ BADFILE ] Archived corrupt files rotation successful. >> %badLog%
 
 ::-------------------------------------------------------------------------------------------------------
 
-  move %imppath% %badpath%.d01    
+  move %impPath% %badPath%.d01
 
 ::-------------------------------------------------------------------------------------------------------
 
 
-    echo %fullstamp% : [ BADFILE ] Archived corrupt %impfull%. >> %log%
+    echo %fullstamp% : [ BADFILE ] Archived corrupt %impFull%. >> %log%
     echo. >> %log%
-    echo ------------------------------------------------------------------------------ >> %badlog%
+    echo ------------------------------------------------------------------------------ >> %badLog%
 
     ::-----------------------------------------------------------------------------------------------
 
-    echo %fullstamp% : [ BADFILE ] Archived corrupt %impfull%. >> %badlog%
-    echo. >> %badlog%
-    echo ------------------------------------------------------------------------------ >> %badlog%
-    echo. >> %badlog%
+    echo %fullstamp% : [ BADFILE ] Archived corrupt %impFull%. >> %badLog%
+    echo. >> %badLog%
+    echo ------------------------------------------------------------------------------ >> %badLog%
+    echo. >> %badLog%
 
 ::-------------------------------------------------------------------------------------------------------
 
     echo ============================================================================== >> %log%
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %log%
-    echo %fullstamp% : [ BADFILE ] Exiting Bad File Processes  >> %log% 
+    echo %fullstamp% : [ BADFILE ] Exiting Bad File Processes  >> %log%
     echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %log%
-    echo ============================================================================== >> %log%  
+    echo ============================================================================== >> %log%
     echo. >> %log%
     echo .............................................................................. >> %log%
     echo .............................................................................. >> %log%
@@ -493,15 +491,15 @@ goto funcLineCount
 
 ::-------------------------------------------------------------------------------------------------------
 
-    echo ============================================================================== >> %badlog%
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo %fullstamp% : [ BADFILE ] Exiting Bad File Processes >> %badlog% 
-    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badlog%
-    echo ============================================================================== >> %badlog%  
-    echo. >> %badlog%
-    echo .............................................................................. >> %badlog%
-    echo .............................................................................. >> %badlog%
-    echo. >> %badlog%
+    echo ============================================================================== >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo %fullstamp% : [ BADFILE ] Exiting Bad File Processes >> %badLog%
+    echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> %badLog%
+    echo ============================================================================== >> %badLog%
+    echo. >> %badLog%
+    echo .............................................................................. >> %badLog%
+    echo .............................................................................. >> %badLog%
+    echo. >> %badLog%
 
   goto Done
 

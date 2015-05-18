@@ -29,14 +29,14 @@
 ::  1. Comment 'goto scriptSETX' ( e.g. ::goto scriptSETX )
 ::      --  This will run the echoEnvVar script block and
 ::      --  skip the scriptSETX block.
-::   
-::      --  This script block will test if GEM Environment 
+::
+::      --  This script block will test if GEM Environment
 ::      --  Variables already exist. If they dont, goto step 2.
 ::
 ::  TO CONFIGURE NEW GEM ENVIRONMENT VARIABLES:
 ::.........................................................
 ::  2.  Uncomment '::goto scriptSETX' ( e.g. goto scriptSETX )
-::      --  This will skip the echoEnvVar script block and 
+::      --  This will skip the echoEnvVar script block and
 ::      --  run the scriptSETX block.
 ::
 ::      --  This script block will configure System Environment
@@ -50,7 +50,7 @@
 ::=====================================================================
 ::      [     ****  MODIFY THIS SECTION ONLY    ****        ]
 ::=====================================================================
-::  To skip 'echoEnvVar' and run 'scriptSETX', 
+::  To skip 'echoEnvVar' and run 'scriptSETX',
 ::  uncomment the following goto:
 ::.........................................................
 ::goto scriptSETX
@@ -60,7 +60,7 @@
 
 
 ::=====================================================================
-::      [     ----------- BEGIN SCRIPT  ------------        ] 
+::      [     ----------- BEGIN SCRIPT  ------------        ]
 ::=====================================================================
 ::      [     ****  DO NOT MODIFY SCRIPT BLOCK  ****        ]
 ::=====================================================================
@@ -75,7 +75,7 @@ echo %GEM_IEX%
 echo %GEM_ARC%
 echo %GEM_AIMP%
 echo %GEM_BFILES%
-echo.
+echo
 ::---------------------------------------------------------
 goto done
 ::.........................................................
