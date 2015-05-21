@@ -8,7 +8,10 @@ sal gemrs Restart-Gem-Service
 sal gemlogin Gem-Web-AutoLogin
 
 sal np notepad.exe
-
+sal serv services.msc
+sal ex explorer
+sal ch Clear-Host
+sal tp Test-Path
 
 
 #  Restart-Gem-Service
@@ -42,7 +45,7 @@ function Gem-Cd ($dir) {
 } #  [ END ] : Gem-Cd
 
 
-
+<#
 #  Gem-Get-Info
 #---------------------------------------------------------------------------------------------------------------
 function Gem-Get-Info {
@@ -259,6 +262,8 @@ $msg
 #---------------------------------------------------------------------------------------------------------------
 } #  [ END ] : Gem-Get-Drive-Info
 
+#>
+
 #
 #===============================================================================================================
 #===============================================================================================================
@@ -327,12 +332,43 @@ While ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
 
 # Select & Enter Variables to Site Fields
 #----------------------------------------------------
+
+if ( $serverType -eq "gempay3" -or $serverType -eq "gpay3" -or $serverType -eq "gp3" ) {
+
 $IE.Document.getElementById(“User”).value = "support"
 
 $pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
 
 $IE.Document.getElementByID(“Password”).value = $pw
 $IE.Document.getElementById(“SubmitBtn”).Click()
+}
+
+elseif ( $serverType -eq "gempay" -or $serverType -eq "gpay" -or $serverType -eq "gp" ) {
+$IE.Document.getElementById(“User”).value = "support"
+
+$pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
+
+$IE.Document.getElementByID(“Password”).value = $pw
+$IE.Document.getElementById(“SubmitBtn”).Click()
+}
+
+elseif ( $serverType -eq "gemserve" -or $serverType -eq "gserve" -or $serverType -eq "serve" ) {
+$IE.Document.getElementById("txtUserID").value = "support"
+
+$pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
+
+$IE.Document.getElementByID("txtPassword").value = $pw
+$IE.Document.getElementById("btnLogin").Click()
+}
+
+else {
+$IE.Document.getElementById("txtUserID").value = "support"
+
+$pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
+
+$IE.Document.getElementByID("txtPassword").value = $pw
+$IE.Document.getElementById("btnLogin").Click()
+}
 
 While ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
 

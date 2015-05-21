@@ -18,11 +18,7 @@ $gpay3 = “/GEMpay3/logon.htm”
 # ARGUMENT CONDITIONS : URL Ending Based Upon User Input
 #-----------------------------------------------------------------------
 Switch ($serverType) {
-    gemserve {
-                $fullurl = $sHTTP + $gserve
-
-
-             }
+    gemserve { $fullurl = $sHTTP + $gserve }
     gserve { $fullurl = $sHTTP + $gserve }
     serve { $fullurl = $sHTTP + $gserve }
     gs { $fullurl = $sHTTP + $gserve }
