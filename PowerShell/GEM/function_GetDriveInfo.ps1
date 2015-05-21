@@ -1,8 +1,8 @@
-sal gemdisk GetDriveInfo -Option ReadOnly
+sal gemdisk Gem-Get-Drive-Info -Option ReadOnly
 
 
 
-function GetDriveInfo {
+function Gem-Get-Drive-Info {
 #---------------------------------------------------------------------------------------------------------------
 $comp = $ENV:COMPUTERNAME
 
@@ -31,4 +31,4 @@ $diskObj.FreeSpace,$diskObj.Percent
 
 $msg
 #---------------------------------------------------------------------------------------------------------------
-}  #End function GetDriveInfo
+}  #End function Gem-Get-Drive-Info

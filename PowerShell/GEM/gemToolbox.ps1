@@ -1,52 +1,51 @@
-﻿Set-Location "$env:GEM"
-
-#  Set-Aliases
+﻿#  Set-Aliases
 #---------------------------------------------------------------------------------------------------------------
 
-sal gemcd Gem-Cd -Option ReadOnly
-sal gemrs Restart-GemService -Option ReadOnly
-sal geminfo GetInfo -Option ReadOnly
-sal gemdisk GetDriveInfo -Option ReadOnly
-sal gemlogin Gem-AutoLogin -Option ReadOnly
+sal geminfo Gem-Get-Info
+sal gemdisk Gem-Get-Drive-Info
+sal gemcd Gem-Cd
+sal gemrs Restart-Gem-Service
+sal gemlogin Gem-Web-AutoLogin
 
-sal np notepad.exe -Option ReadOnly
+sal np notepad.exe
 
 
 
-#  Restart-GemService
+#  Restart-Gem-Service
 #---------------------------------------------------------------------------------------------------------------
-function Restart-GemService {
+function Restart-Gem-Service {
 
   Restart-Service -Name GEMService -fo
-}
+
+} #  [ END ] : Restart-Gem-Service
 
 
 #  Gem-Cd
 #---------------------------------------------------------------------------------------------------------------
 function Gem-Cd ($dir) {
 
-  switch ($dir) {
+  Switch ($dir) {
     gimp { sl "$env:GEM\ImportExport"; break }
     gdefs { sl "$env:GEM\Defs"; break }
-    glogs { sl "$env:GEM\Log"; break }
-    archive { sl "$env:GEM\ImportExport\Archive"; break }
-    gimpemp { sl "$env:GEM\ImportExport\Archive\ImportEmployees"; break }
+    glog { sl "$env:GEM\Log"; break }
+    garc { sl "$env:GEM\ImportExport\Archive"; break }
+    gemp { sl "$env:GEM\ImportExport\Archive\Import-Employees"; break }
     desk { sl "$env:UserProfile\Desktop"; break }
-    gplog { sl "$env:SystemDrive\_GPayLogArchives"; break }
-    toolbox { sl "$env:SystemDrive\_gemToolbox"; break }
-    ps { sl "$env:SystemDrive\_gemToolbox\PowerShell"; break }
-    func { sl "$env:SystemDrive\_gemToolbox\PowerShell\Functions"; break }
-    batch { sl "$env:SystemDrive\_gemToolbox\BatchScripts"; break }
+    gplog { sl "$env:SystemDrive\_Gem-Log-Archives"; break }
+    gtb { sl "$env:GEM\_Gem-Toolbox"; break }
+    gpsh { sl "$env:GEM\_Gem-Toolbox\PowerShell"; break }
+    gpshf { sl "$env:GEM\_Gem-Toolbox\PowerShell\Functions"; break }
+    gbf { sl "$env:GEM\_Gem-Toolbox\Batch-Files"; break }
     gem { sl "$env:GEM"; break }
-    default { sl "$env:GEM" }
+    default { sl "$env:GEM"; break }
   }
-}
+} #  [ END ] : Gem-Cd
 
 
 
-#  GetInfo
+#  Gem-Get-Info
 #---------------------------------------------------------------------------------------------------------------
-function GetInfo {
+function Gem-Get-Info {
 #---------------------------------------------------------------------------------------------------------------
 $mc = $ENV:COMPUTERNAME
 
@@ -133,7 +132,7 @@ $myobj.RAM = "{0:n2} GB" -f ($CompInfo.TotalPhysicalMemory/1gb)
 
 # Computer Drive Info
 #-------------------------------------------------------
-$myobj.Disk = GetDriveInfo $mc
+$myobj.Disk = Gem-Get-Drive-Info $mc
 
 #
 #================================================================================================
@@ -219,7 +218,7 @@ Read-Host "Press the [ ENTER ] key to exit script."
 $space
 $space
 #---------------------------------------------------------------------------------------------------------------
-}  #End function GetInfo
+} #  [ END ] : Gem-Get-Info
 
 #
 #===============================================================================================================
@@ -228,10 +227,10 @@ $space
 #
 
 
-#  GetDriveInfo
+#  Gem-Get-Drive-Info
 #---------------------------------------------------------------------------------------------------------------
 
-function GetDriveInfo {
+function Gem-Get-Drive-Info {
 #---------------------------------------------------------------------------------------------------------------
 $comp = $ENV:COMPUTERNAME
 
@@ -258,7 +257,7 @@ foreach ($disk in $logicalDisk)
 
 $msg
 #---------------------------------------------------------------------------------------------------------------
-}  #End function GetDriveInfo
+} #  [ END ] : Gem-Get-Drive-Info
 
 #
 #===============================================================================================================
@@ -267,75 +266,75 @@ $msg
 #
 
 
-#  GemHelp
+#  Gem-Get-Help
 #---------------------------------------------------------------------------------------------------------------
-function GemHelp {
+function Gem-Get-Help {
 
 
-}
+} #  [ END ] : Gem-Get-Help
 
 
-#  Gem-AutoLogin
+#  Gem-Web-AutoLogin
 #---------------------------------------------------------------------------------------------------------------
-function Gem-AutoLogin ( $serverType, $sIP, $caseNo ) {
+function Gem-Web-AutoLogin ( $serverType ) {
 
-# VARIABLES
+# VARIABLE : URL Header
 #-----------------------------------------------------------------------
-$sHTTP = "http://"
+$sHTTP = "http://localhost/"
 
 
-
-# USER INPUT : IP Address of Server Hosting GEM Product
+# VARIABLES : GEM Product Site Pages
 #-----------------------------------------------------------------------
-$sIP = Read-Host "Enter server IP address: "
-
-
-# Different GEM Product URL Endings
-#-----------------------------------------------------------------------
-$gemURL = "/GEM/Login.aspx"
-$gpayURL = "/gempay/logon.aspx"
-$gpay3URL = “/gempay3/logon.htm”
-
+$gem = "/GEM/Login.aspx"
+$gserve = "/GEMserve4"
+$gpay = "/GEMpay/logon.aspx"
+$gpay3 = “/GEMpay3/logon.htm”
 
 
 # ARGUMENT CONDITIONS : URL Ending Based Upon User Input
 #-----------------------------------------------------------------------
-if ($serverType -eq "gem") { $fullurl = $sHTTP + $sIP + $gemURL }
-elseif ($serverType -eq "gpay") { $fullurl = $sHTTP + $sIP + $gpayURL }
-else { $fullurl = $sHTTP + $sIP + $gpay3URL }
+Switch ($serverType) {
+    gemserve { $fullurl = $sHTTP + $gserve }
+    gserve { $fullurl = $sHTTP + $gserve }
+    serve { $fullurl = $sHTTP + $gserve }
+    gs { $fullurl = $sHTTP + $gserve }
+    gempay3 { $fullurl = $sHTTP + $gpay3 }
+    gpay3 { $fullurl = $sHTTP + $gpay3 }
+    gp3 { $fullurl = $sHTTP + $gpay3 }
+    gempay { $fullurl = $sHTTP + $gpay }
+    gpay { $fullurl = $sHTTP + $gpay }
+    gp { $fullurl = $sHTTP + $gpay }
+    gem { $fullurl = $sHTTP + $gem }
+}
 
 
 # VARIABLES : Website Related
 #-----------------------------------------------------------------------
-$Username=”support”
-$Password=Read-Host("Enter GEMpay Password")
-
-
-# OPEN NOTEPAD - Append DateTimeStamp for Start & End Work Times
-#                               This can be used to take notes while working on the sites
-#-----------------------------------------------------------------------
-$Executable = "c:\windows\system32\notepad.exe"
+$sitePW=Read-Host("Enter Site Password") -AsSecureString
 
 
 # INVOKE INTERNET EXPLORER - Open URL and log into the site
 #-----------------------------------------------------------------------
-$IE = New-Object -com internetexplorer.application;
+$IE = New-Object -Com internetexplorer.application;
 $IE.visible = $true;
 $IE.navigate($fullurl);
 
 
 # Wait a few seconds and then launch the executable.
 #----------------------------------------------------
-while ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
+While ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
 
 
 # Select & Enter Variables to Site Fields
 #----------------------------------------------------
-$IE.Document.getElementById(“User”).value = $Username
-$IE.Document.getElementByID(“Password”).value=$Password
+$IE.Document.getElementById(“User”).value = "support"
+
+$pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
+
+$IE.Document.getElementByID(“Password”).value = $pw
 $IE.Document.getElementById(“SubmitBtn”).Click()
 
-while ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
+While ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
 
 
-} #exit Function Gem-AutoLogin
+} #exit Function Gem-Web-AutoLogin
