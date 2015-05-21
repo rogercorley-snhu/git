@@ -3,15 +3,13 @@
 #  Variables : Required Drives & Directories
 #..........................................................................
 
-$sysd = gci env:HOMEDRIVE
-$sys = $sysd.Value
-$groot = "F:"
-$gem = "$groot\GEM"
+$sys = "$env:HOMEDRIVE"
+$gemd = "$env:GEM"
 
-$gimp = "$gem\ImportExport"
+$gimp = "$gemd\ImportExport"
 $garc = "$gimp\Archive"
 
-$gtb = "$gem\_Gem-Toolbox\"
+$gtb = "$gemd\_Gem-Toolbox\"
 $gbs = "$gtb\Batch-Files"
 $gpsh = "$gtb\PowerShell"
 
@@ -30,7 +28,7 @@ $loga = "$sys\_Gem-Log-Archives"
 $log = "$gemp\Import-Employee.log"
 $im = "$gimp\Import-Master.ps1"
 
-$rotate = "$gbs\Rotate-GOGD-Logs-WEEKLY.bat"
+$rotate = "$gbs\Rotate-Gem-Logs-Weekly.bat"
 
 $gt = "$gpsh\Gem-Tools.ps1"
 $gm = "$gpsf\Gem-Online-Monitor.ps1"
@@ -42,7 +40,7 @@ $fl = "$gpsf\Gem-Function-List.ps1"
 #  Array : Create Required Directories
 #..........................................................................
 
-$dir = @( 
+$dir = @(
           "$gemp",
           "$gbad",
           "$goef",
@@ -52,7 +50,7 @@ $dir = @(
           "$gpsh",
           "$gpsf"
         )
-        
+
 ForEach ($item in $dir) {
     if ( !( test-path($item) ) ) {
     New-Item -Path $item -ItemType directory
