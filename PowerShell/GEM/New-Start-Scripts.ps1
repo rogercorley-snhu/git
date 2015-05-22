@@ -1,10 +1,15 @@
-﻿clear
+﻿
+
+clear
 
 #  Variables : Required Drives & Directories
 #..........................................................................
 
 $sys = "$env:HOMEDRIVE"
+$sysTest = "$sys\_TEST-Gem-C"
+
 $gemd = "$env:GEM"
+
 
 $gimp = "$gemd\ImportExport"
 $garc = "$gimp\Archive"
@@ -55,7 +60,11 @@ ForEach ($item in $dir) {
     if ( !( test-path($item) ) ) {
     New-Item -Path $item -ItemType directory
     }
-    else { Write-Host "$item exists" }
+    else {
+            Write-Host "$item exists. Deleting $item"
+            Remove-Item -Path $item -Recurse
+            New-Item -Path $item -ItemType Directory
+    }
 }
 
 #  Array : Create Required Files
@@ -75,7 +84,11 @@ ForEach ($file in $files) {
     if ( !( test-path($file) ) ) {
     New-Item -Path $file -ItemType file
   }
-    else { Write-Host "$file exists" }
+    else {
+            Write-Host "$file exists. Deleting $file"
+            Remove-Item -Path $file
+            New-Item -Path $file -ItemType file
+    }
 }
 
-Read-Host("Enter Key")
+Read-Host("Press [ ENTER ] to exit script")

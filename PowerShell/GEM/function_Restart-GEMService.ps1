@@ -1,6 +1,6 @@
-sal gemrs Restart-GEMService -Option ReadOnly
+sal gemrs Restart-GemService -Option ReadOnly
 
-function Restart-GEMService {
+function Restart-GemService {
 
   Restart-Service -Name GEMService -fo
 

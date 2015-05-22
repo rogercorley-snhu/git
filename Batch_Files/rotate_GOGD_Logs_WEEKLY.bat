@@ -13,17 +13,17 @@
 :: Description:
 ::========================================================================================================================================
 ::
-::	A log rotation batch file to be run on a weekly basis. This batch will rotate and archive 
-::	the 'gemonline.log' and 'GEMdaily.cp' log files stored on the system drive (C:\). Without 
-::	an archival process, these files continue to grow, which will eventually begin to slow any 
-::	transactions between Micros and GEMpay. 
+::	A log rotation batch file to be run on a weekly basis. This batch will rotate and archive
+::	the 'gemonline.log' and 'GEMdaily.cp' log files stored on the system drive (C:\). Without
+::	an archival process, these files continue to grow, which will eventually begin to slow any
+::	transactions between Micros and GEMpay.
 ::
 ::
 ::---------------------------------------------------------------------------------------------------------------------------------------
-:: ---[ Archives]--- 
+:: ---[ Archives]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	These logs are archived to a directory located on the C:\ drive named _'GPayLogArchives'. 
+::	These logs are archived to a directory located on the C:\ drive named _'GPayLogArchives'.
 ::	The archive logs will be renamed and timestamped with the following nomenclature:
 ::
 ::.......................................................................................................................................
@@ -34,7 +34,7 @@
 ::
 ::.......................................................................................................................................
 ::
-::	Each archived log will be stored for a maximum of twelve (12) weeks before being deleted 
+::	Each archived log will be stored for a maximum of twelve (12) weeks before being deleted
 ::	through the rotation process.
 ::
 ::
@@ -42,7 +42,7 @@
 ::  ---[ Archive Location ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	If the directory 'C:\_gemToolbox' with a subdirectory 'BatchScripts' doesn't exist, create 
+::	If the directory 'C:\_gemToolbox' with a subdirectory 'BatchScripts' doesn't exist, create
 ::	these directories first. Save this batch file as:
 ::
 ::.......................................................................................................................................
@@ -51,7 +51,7 @@
 ::
 ::
 ::---------------------------------------------------------------------------------------------------------------------------------------
-:: ---[ Scheduled Task ]--- 
+:: ---[ Scheduled Task ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
 ::	Create a Scheduled Task named 'rotate_GO_GD_LOGS_WEEKLY' with the following properties:
@@ -120,7 +120,7 @@
 ::---------------------------------------------------------------------------------------
 ::
 	set "dtype=.cp"
-  
+
 ::========================================================================================================================================
 :: DATE CONSTANTS
 ::========================================================================================================================================
@@ -193,7 +193,7 @@
 		echo .............................................................................. >> %rlog%
 		echo %fullstamp% : [ MSG ] : Starting Log Rotations >> %rlog%
 		echo .............................................................................. >> %rlog%
-		
+
 
 	goto chkGO
 
@@ -203,22 +203,22 @@
 
 	if exist %gpath% (
 		echo .............................................................................. >> !rlog!
-		echo !fullstamp! : [ CHECKFILE ] : Checking Exist : !gpath! >> !rlog! 
+		echo !fullstamp! : [ CHECKFILE ] : Checking Exist : !gpath! >> !rlog!
 		echo !fullstamp! : [ CHECKFILE ] : !gpath! found. >> !rlog!
 		echo !fullstamp! : [ CHECKFILE ] : Starting GEMonline Log Rotations >> !rlog!
 		echo .............................................................................. >> !rlog!
-		
+
 
 	goto rotateGO
 
 	) else (
 		echo ============================================================================== >> !rlog!
 		echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !rlog!
-		echo !fullstamp! : [ CHECK : ERROR ] : '!gpath!' NOT FOUND >> !rlog! 
+		echo !fullstamp! : [ CHECK : ERROR ] : '!gpath!' NOT FOUND >> !rlog!
 		echo !fullstamp! : [ CHECK : ERROR ] : Moving to Check GEMDaily >> !rlog!
 		echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !rlog!
 		echo ============================================================================== >> !rlog!
-		echo. >> !rlog! 
+		echo. >> !rlog!
 	)
 
 	goto chkGD
@@ -246,7 +246,7 @@
 		echo !fullstamp! : [ ROTATE ] : GEMonline Log Rotations Complete. >> %rlog%
 		echo !fullstamp! : [ ROTATE ] : Moving to Check GEMDaily. >> %rlog%
 		echo .............................................................................. >> %rlog%
-		
+
 
 	goto chkGD
 
@@ -256,22 +256,22 @@
 
 	if exist %dpath% (
 		echo .............................................................................. >> !rlog!
-		echo !fullstamp! : [ CHECKFILE ] : Checking Exist : !dpath! >> !rlog! 
+		echo !fullstamp! : [ CHECKFILE ] : Checking Exist : !dpath! >> !rlog!
 		echo !fullstamp! : [ CHECKFILE ] : !dpath! found. >> !rlog!
 		echo !fullstamp! : [ CHECKFILE ] : Starting GEMDaily Log Rotations >> !rlog!
 		echo .............................................................................. >> !rlog!
-		
+
 
 	goto rotateGD
 
 	) else (
 		echo ============================================================================== >> !rlog!
 		echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !rlog!
-		echo !fullstamp! : [ CHECK : ERROR ] : '!dpath!' NOT FOUND >> !rlog! 
+		echo !fullstamp! : [ CHECK : ERROR ] : '!dpath!' NOT FOUND >> !rlog!
 		echo !fullstamp! : [ CHECK : ERROR ] : Ending Log Rotation Script >> !rlog!
 		echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !rlog!
 		echo ============================================================================== >> !rlog!
-		echo. >> !rlog! 
+		echo. >> !rlog!
 	)
 
 	goto done
@@ -299,7 +299,7 @@
 		echo !fullstamp! : [ ROTATE ] : GEMDaily Log Rotations Complete. >> %rlog%
 		echo !fullstamp! : [ ROTATE ] : Ending Log Rotation Script. >> %rlog%
 		echo .............................................................................. >> %rlog%
-		
+
 
 	goto done
 
