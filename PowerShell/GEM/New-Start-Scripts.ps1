@@ -5,26 +5,29 @@ clear
 #  Variables : Required Drives & Directories
 #..........................................................................
 
-$sys = "$env:HOMEDRIVE"
-$sysTest = "$sys\_TEST-Gem-C"
+$sysd = "$env:HOMEDRIVE"
+$sysdTest = "$env:TESTC"
 
 $gemd = "$env:GEM"
+$gemdTest = "$env:TESTD"
 
-
-$gimp = "$gemd\ImportExport"
+$gimp = "$gemdTest\ImportExport"
+#$gimp = "$gemd\ImportExport"
 $garc = "$gimp\Archive"
 
-$gtb = "$gemd\_Gem-Toolbox\"
-$gbs = "$gtb\Batch-Files"
-$gpsh = "$gtb\PowerShell"
+$gtb = "$gemdTest\_Gem-Toolbox"
+#$gtb = "$gemd\_Gem-Toolbox"
+$gbf = "$gtb\Batch-Files"
+$gps = "$gtb\PowerShell"
 
-$gpsf = "$gpsh\Functions"
+$gpf = "$gps\Functions"
 
 $gemp = "$garc\Import-Employees"
 $gbad = "$gemp\Bad-Files"
 $goef = "$gemp\Original-Emp-Files"
 
-$loga = "$sys\_Gem-Log-Archives"
+$loga = "$sysdTest\_Gem-Log-Archives"
+#$loga = "$sysd\_Gem-Log-Archives"
 
 
 #  Variables : Required Files
@@ -35,10 +38,10 @@ $im = "$gimp\Import-Master.ps1"
 
 $rotate = "$gbs\Rotate-Gem-Logs-Weekly.bat"
 
-$gt = "$gpsh\Gem-Tools.ps1"
-$gm = "$gpsf\Gem-Online-Monitor.ps1"
-$gi = "$gpsf\Gem-Get-Info.ps1"
-$fl = "$gpsf\Gem-Function-List.ps1"
+$gt = "$gps\Gem-Tools.ps1"
+$gm = "$gpf\Gem-Online-Monitor.ps1"
+$gi = "$gpf\Gem-Get-Info.ps1"
+$fl = "$gpf\Gem-Function-List.ps1"
 
 
 
@@ -46,14 +49,16 @@ $fl = "$gpsf\Gem-Function-List.ps1"
 #..........................................................................
 
 $dir = @(
+          "$sysTest",
+          "$gemTest",
           "$gemp",
           "$gbad",
           "$goef",
           "$loga",
           "$gtb",
           "$gbs",
-          "$gpsh",
-          "$gpsf"
+          "$gps",
+          "$gpf"
         )
 
 ForEach ($item in $dir) {
