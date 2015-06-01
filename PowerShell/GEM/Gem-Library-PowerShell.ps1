@@ -672,13 +672,25 @@ function Gem-Web-AutoLogin ( $serverType ) {
 
 # VARIABLE : URL Header
 #-----------------------------------------------------------------------
-$sHTTP = "http://localhost/"
+$sHTTP = Read-Host('Enter Server IP Address ( or localhost )')
 
+if ( $sHTTP -eq  "localhost" ) {
+    $sHTTP = "http://localhost/"
+}
+elseif ($sHTTP -eq "" ) {
+    $sHTTP = "http://localhost/"
+}
+else {
+    $sHTTP
+}
 
 # VARIABLES : GEM Product Site Pages
 #-----------------------------------------------------------------------
 $gem = "/GEM/Login.aspx"
-$gserve = "/GEMserve4"
+
+$gserve4 = "/GEMserve4"
+$gserve = "/GEMserve"
+
 $gpay = "/GEMpay/logon.aspx"
 $gpay3 = “/GEMpay3/logon.htm”
 
@@ -686,17 +698,27 @@ $gpay3 = “/GEMpay3/logon.htm”
 # ARGUMENT CONDITIONS : URL Ending Based Upon User Input
 #-----------------------------------------------------------------------
 Switch ($serverType) {
+
+    gemserve4 { $fullurl = $sHTTP + $gserve4 }
+    gserve4 { $fullurl = $sHTTP + $gserve4 }
+    serve4 { $fullurl = $sHTTP + $gserve4 }
+    gs4 { $fullurl = $sHTTP + $gserve4 }
+
     gemserve { $fullurl = $sHTTP + $gserve }
     gserve { $fullurl = $sHTTP + $gserve }
     serve { $fullurl = $sHTTP + $gserve }
     gs { $fullurl = $sHTTP + $gserve }
+
     gempay3 { $fullurl = $sHTTP + $gpay3 }
     gpay3 { $fullurl = $sHTTP + $gpay3 }
     gp3 { $fullurl = $sHTTP + $gpay3 }
+
     gempay { $fullurl = $sHTTP + $gpay }
     gpay { $fullurl = $sHTTP + $gpay }
     gp { $fullurl = $sHTTP + $gpay }
+
     gem { $fullurl = $sHTTP + $gem }
+
 }
 
 
@@ -739,7 +761,16 @@ $IE.Document.getElementByID(“Password”).value = $pw
 $IE.Document.getElementById(“SubmitBtn”).Click()
 }
 
-elseif ( $serverType -eq "gemserve" -or $serverType -eq "gserve" -or $serverType -eq "serve" ) {
+elseif ( $serverType -eq "gemserve4" -or $serverType -eq "gserve4" -or $serverType -eq "serve4"  -or $serverType -eq "gs4" ) {
+$IE.Document.getElementById("txtUserID").value = "support"
+
+$pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
+
+$IE.Document.getElementByID("txtPassword").value = $pw
+$IE.Document.getElementById("btnLogin").Click()
+}
+
+elseif ( $serverType -eq "gemserve" -or $serverType -eq "gserve" -or $serverType -eq "serve"  -or $serverType -eq "gs" ) {
 $IE.Document.getElementById("txtUserID").value = "support"
 
 $pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
@@ -871,14 +902,12 @@ function Gem-Rotate-Files {
 
         param( [string] $fileType )
 
+        $log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
+
         switch ($fileType) {
 
-            golog   {   $file = "C:\gemonline.log"
-                    $log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
-                }
-            gdlog   {   $file = "C:\GEMDaily.cp
-                    $log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
-                }
+            golog   {   $file = "C:\gemonline.log" }
+            gdlog   {   $file = "C:\GEMDaily.cp" }
         }
 
         $fileObj = Get-Item $file
@@ -902,8 +931,8 @@ function Gem-Rotate-Files {
             Rename-Item "$fileName" "$name.$date$ext"
         }
 
-        $newFile = $name.$date$ext
-        "New Filename: $newFile"
+        $newFile = "$name.$date$ext"
+        Write-Host "New Filename: $newFile"
 
 
         Move-Item $newFile -Destination C:\_Archive\
