@@ -3,18 +3,21 @@
 	setlocal ENABLEDELAYEDEXPANSION
 
 ::========================================================================================================================================
-:: Title:    Rotate GEMonline & GEMdaily Logs -- Weekly
+:: Title:    Rotate GEMonline & GEMDaily Logs -- Weekly
 ::========================================================================================================================================
 ::
-::	Author:   Roger Corley
-::	Created:  May 14, 2015  11:39:53 AM
+::	Author:		Roger Corley
+::	Created:	May 14, 2015  11:39:53 AM
+::
+::	Version:	1.20
+::	Updated:	Roger Corley - June 1, 2015 12:29:00 AM
 ::
 ::========================================================================================================================================
 :: Description:
 ::========================================================================================================================================
 ::
 ::	A log rotation batch file to be run on a weekly basis. This batch will rotate and archive
-::	the 'gemonline.log' and 'GEMdaily.cp' log files stored on the system drive (C:\). Without
+::	the 'gemonline.log' and 'GEMDaily.cp' log files stored on the system drive (C:\). Without
 ::	an archival process, these files continue to grow, which will eventually begin to slow any
 ::	transactions between Micros and GEMpay.
 ::
@@ -28,9 +31,15 @@
 ::
 ::.......................................................................................................................................
 ::
+<<<<<<< HEAD
 ::	'gemonline' = 'C:\Gem-Logs-Archives\gemonline.<datetime>.log0<#>'
 ::------------------------------------------------------------------------
 ::	'GEMdaily.cp' = 'C:\Gem-Logs-Archives\GEMdaily.<datetime>.cp0<#>'
+=======
+::	'gemonline' = 'C:\_Gem-Log-Archives\gemonline.<datetime>.log0<#>'
+::------------------------------------------------------------------------
+::	'GEMDaily.cp' = 'C:\_Gem-Log-Archives\GEMDaily.<datetime>.cp0<#>'
+>>>>>>> origin/master
 ::
 ::.......................................................................................................................................
 ::
@@ -42,11 +51,19 @@
 ::  ---[ Archive Location ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
+<<<<<<< HEAD
 ::	If the directory '.\GEM\_Gem-Toolbox' with a subdirectory 'BatchScripts' doesn't exist, create
 ::	these directories first. Save this batch file as:
 ::
 ::.......................................................................................................................................
 ::		'.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
+=======
+::	If the directory 'C:\_Gem-Toolbox' with a subdirectory 'Batch-Files' doesn't exist, create
+::	these directories first. Save this batch file as:
+::
+::.......................................................................................................................................
+::		'C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
+>>>>>>> origin/master
 ::.......................................................................................................................................
 ::
 ::
@@ -73,7 +90,11 @@
 ::
 ::.......................................................................................................................................
 ::
+<<<<<<< HEAD
 ::	[ ACTIONS ]	Start A Program: '.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
+=======
+::	[ ACTIONS ]	Start A Program: 'C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Files-Weekly.bat'
+>>>>>>> origin/master
 ::
 ::.......................................................................................................................................
 ::
@@ -111,11 +132,11 @@
 	set "gotype=.log"
 
 ::========================================================================================================================================
-:: EXTENSION: GEMdaily
+:: EXTENSION: GEMDaily
 ::========================================================================================================================================
 ::
 ::---------------------------------------------------------------------------------------
-:: ---[ **NOTE** ]---	'dtype' MUST match the GEMdaily log file extension in C:\
+:: ---[ **NOTE** ]---	'dtype' MUST match the GEMDaily log file extension in C:\
 ::			ALWAYS include the dot ( . ) before the type!
 ::---------------------------------------------------------------------------------------
 ::
@@ -148,10 +169,10 @@
 	set "gpath=C:\%gfile%"
 
 ::========================================================================================================================================
-::FILES: GEMdaily
+::FILES: GEMDaily
 ::========================================================================================================================================
 ::
-	set "dname=GEMdaily"
+	set "dname=GEMDaily"
 	set "dfile=%dname%.cp"
 	set "dpath=C:\%dfile%"
 
@@ -159,7 +180,11 @@
 ::FILES: Archives
 ::========================================================================================================================================
 ::
+<<<<<<< HEAD
 	set "apath=C:\Gem-Logs-Archives\"
+=======
+	set "apath=C:\_Gem-Log-Archives\"
+>>>>>>> origin/master
 	set "apathgo=%apath%%gname%.%logstamp%.log01"
 	set "apathgd=%apath%%dname%.%logstamp%.cp01"
 	set "alog=%apath%*.log"
@@ -169,7 +194,7 @@
 ::FILES: Import Log File
 ::========================================================================================================================================
 ::
-	set "rlog=%apath%_rotateGOGDLogs.log"
+	set "rlog=%apath%_Rotate-Gem-Logs-Weekly.log"
 
 
 ::========================================================================================================================================
