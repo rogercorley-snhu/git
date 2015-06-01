@@ -31,15 +31,9 @@
 ::
 ::.......................................................................................................................................
 ::
-<<<<<<< HEAD
-::	'gemonline' = 'C:\Gem-Logs-Archives\gemonline.<datetime>.log0<#>'
-::------------------------------------------------------------------------
-::	'GEMdaily.cp' = 'C:\Gem-Logs-Archives\GEMdaily.<datetime>.cp0<#>'
-=======
 ::	'gemonline' = 'C:\_Gem-Log-Archives\gemonline.<datetime>.log0<#>'
 ::------------------------------------------------------------------------
 ::	'GEMDaily.cp' = 'C:\_Gem-Log-Archives\GEMDaily.<datetime>.cp0<#>'
->>>>>>> origin/master
 ::
 ::.......................................................................................................................................
 ::
@@ -51,19 +45,11 @@
 ::  ---[ Archive Location ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-<<<<<<< HEAD
-::	If the directory '.\GEM\_Gem-Toolbox' with a subdirectory 'BatchScripts' doesn't exist, create
-::	these directories first. Save this batch file as:
-::
-::.......................................................................................................................................
-::		'.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
-=======
 ::	If the directory 'C:\_Gem-Toolbox' with a subdirectory 'Batch-Files' doesn't exist, create
 ::	these directories first. Save this batch file as:
 ::
 ::.......................................................................................................................................
 ::		'C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
->>>>>>> origin/master
 ::.......................................................................................................................................
 ::
 ::
@@ -90,11 +76,7 @@
 ::
 ::.......................................................................................................................................
 ::
-<<<<<<< HEAD
-::	[ ACTIONS ]	Start A Program: '.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
-=======
 ::	[ ACTIONS ]	Start A Program: 'C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Files-Weekly.bat'
->>>>>>> origin/master
 ::
 ::.......................................................................................................................................
 ::
@@ -180,13 +162,10 @@
 ::FILES: Archives
 ::========================================================================================================================================
 ::
-<<<<<<< HEAD
-	set "apath=C:\Gem-Logs-Archives\"
-=======
-	set "apath=C:\_Gem-Log-Archives\"
->>>>>>> origin/master
-	set "apathgo=%apath%%gname%.%logstamp%.log01"
-	set "apathgd=%apath%%dname%.%logstamp%.cp01"
+	set "apath=C:\_Gem-Log-Archives"
+	set "apathgo=%apath%\%gname%.%logstamp%.log01"
+	set "apathgd=%apath%\%dname%.%logstamp%.cp01"
+
 	set "alog=%apath%*.log"
 	set "acp=%apath%*.cp"
 
