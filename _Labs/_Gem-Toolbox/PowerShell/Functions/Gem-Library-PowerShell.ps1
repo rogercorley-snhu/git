@@ -4,33 +4,33 @@
 #-----[ ALIASES ]
 #.................................................................
 
-    Set-Alias gemnew Gem-Start-New
-    Set-Alias gemnewlog Gem-New-Logfiles
+	Set-Alias gemnew Gem-Start-New
+	Set-Alias gemnewlog Gem-New-Logfiles
 
-    Set-Alias gemtp Gem-Test-Path
-    Set-Alias gemgetenv Gem-Get-Env
-    Set-Alias gemcd Gem-Cd
+	Set-Alias gemtp Gem-Test-Path
+	Set-Alias gemgetenv Gem-Get-Env
+	Set-Alias gemcd Gem-Cd
 
 
-    Set-Alias gemldt Gem-Log-DateTimeStamp
-    Set-Alias gemcalcdate Gem-Calculate-Date
-    Set-Alias stamp Gem-Stamp-Log
-    Set-Alias gemdts Gem-Log-DateTime
+	Set-Alias gemldt Gem-Log-DateTimeStamp
+	Set-Alias gemcalcdate Gem-Calculate-Date
+	Set-Alias stamp Gem-Stamp-Log
+	Set-Alias gemdts Gem-Log-DateTime
 
-    Set-Alias gemmon Gem-Online-Monitor
-    Set-Alias geminfo Gem-Get-Info
-    Set-Alias getinfo Gem-Get-Info
-    Set-Alias gemdrives Gem-Get-Drive-Info
-    Set-Alias gemdisks Gem-Get-Disks
-    Set-Alias getdisks Gem-Get-Disks
+	Set-Alias gemmon Gem-Online-Monitor
+	Set-Alias geminfo Gem-Get-Info
+	Set-Alias getinfo Gem-Get-Info
+	Set-Alias gemdrives Gem-Get-Drive-Info
+	Set-Alias gemdisks Gem-Get-Disks
+	Set-Alias getdisks Gem-Get-Disks
 
-    Set-Alias gemrotate Gem-Rotate-Files
+	Set-Alias gemrotate Gem-Rotate-Files
 
-    Set-Alias gemrestart Restart-Gem-Service
+	Set-Alias gemrestart Restart-Gem-Service
 
-    Set-Alias gemlogin Gem-Web-AutoLogin
+	Set-Alias gemlogin Gem-Web-AutoLogin
 
-    Set-Alias gemrefresh Gem-Refresh-PowerShell
+	Set-Alias gemrefresh Gem-Refresh-PowerShell
 
 
 
@@ -41,9 +41,9 @@
 #  Gem-Refresh-PowerShell
 #---------------------------------------------------------------------------------------------------------------
 function Gem-Refresh-PowerShell {
-    Set-Location E:\GEM\_Gem-Toolbox\PowerShell\Functions
+	Set-Location E:\GEM\_Gem-Toolbox\PowerShell\Functions
 
-    & ".\Gem-Library-PowerShell.ps1"
+	& ".\Gem-Library-PowerShell.ps1"
 
 }
 
@@ -79,38 +79,38 @@ function Gem-Cd ($dir) {
 
 function Gem-Get-Disks {
 
-    $comp = "$env:COMPUTERNAME"
-    $logicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" -ComputerName $comp
+	$comp = "$env:COMPUTERNAME"
+	$logicalDisk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" -ComputerName $comp
 
-    $count = 1
+	$count = 1
 
-    foreach ($disk in $logicalDisk) {
-        $diskObj = "" | Select Disk, Name
-        $diskObj.Disk = $disk.DeviceID
-        $diskObj.Name = $disk.VolumeName
+	foreach ($disk in $logicalDisk) {
+		$diskObj = "" | Select Disk, Name
+		$diskObj.Disk = $disk.DeviceID
+		$diskObj.Name = $disk.VolumeName
 
-        if ($diskObj.Disk -eq "C:") {
-            $text = "Drive {0} `tSystem`n" -f $diskObj.Disk
-        }
-        else {
-            $text = "Drive {0} `t{1}`n" -f $diskObj.Disk, $diskObj.Name
-        }
+		if ($diskObj.Disk -eq "C:") {
+			$text = "Drive {0} `tSystem`n" -f $diskObj.Disk
+		}
+		else {
+			$text = "Drive {0} `t{1}`n" -f $diskObj.Disk, $diskObj.Name
+		}
 
-        $msg += $text
-    }
+		$msg += $text
+	}
 
-    foreach ($disks in $logicalDisk) {
-        $search = "" | Select Disk, Name
-        $search.Disk = $disks.DeviceID
-        $search.Name = $disks.Name
+	foreach ($disks in $logicalDisk) {
+		$search = "" | Select Disk, Name
+		$search.Disk = $disks.DeviceID
+		$search.Name = $disks.Name
 
-        $search = dir $dSearch.Disk
-        $search
-    }
+		$search = dir $dSearch.Disk
+		$search
+	}
 
-    $msg | Where {$_.Disk -eq $search.Disk} | $msg = "{0} `tGEM DIRECTORY" -f $msg
+	$msg | Where {$_.Disk -eq $search.Disk} | $msg = "{0} `tGEM DIRECTORY" -f $msg
 
-    $msg
+	$msg
 
 }  # -----[ END ]----- Gem-Get-Disks
 
@@ -246,7 +246,7 @@ function Gem-Start-New {
             Write-Host "[ TEST-DIR ] : $item exists."
             Write-Host "[ TEST-DIR ] : Deleting $item."
         }
-
+        
     }
 
     #  Array : Create Required Files
@@ -271,7 +271,7 @@ function Gem-Start-New {
             Write-Host "[ TEST-DIR ] : $file exists."
             Write-Host "[ TEST-DIR ] : Deleting $file."
         }
-
+        
     }
 
     gemnewlog
@@ -413,8 +413,8 @@ function Gem-Test-Path {
 
 function Gem-Online-Monitor {
 
-    Clear
-    Get-Content C:\gemonline.log -wait
+	Clear
+	Get-Content C:\gemonline.log -wait
 
 }
 
@@ -645,8 +645,8 @@ foreach ($disk in $logicalDisk)
     $diskObj.Disk = $disk.DeviceID
     $diskObj.Size = "{0:n0} GB" -f (( $disk | Measure-Object -Property Size -SUm).sum/1gb)
     $diskObj.FreeSpace = "{0:n0} GB" -f (( $disk | Measure-Object -Property FreeSpace -Sum).sum/1gb)
-    $diskObj.Percent = "{0:n0}%" -f ( (( $disk |
-        Measure-Object -Property FreeSpace -Sum).sum/1gb) / ((( $disk | Measure-Object -Property Size -SUm).sum/1gb)*100) )
+    $diskObj.Percent = "{0:n0}%" -f ( (( $disk | 
+		Measure-Object -Property FreeSpace -Sum).sum/1gb) / ((( $disk | Measure-Object -Property Size -SUm).sum/1gb)*100) )
 # Format Disk Info
 #-------------------------------------------------------
     $text = "{0} [Drive Size]-- {1}    [Free Space]-- {2}    [Percent Free]-- {3}" -f $diskObj.Disk,$diskObj.size,
@@ -680,7 +680,7 @@ $sHTTP = "http://localhost/"
 $gem = "/GEM/Login.aspx"
 $gserve = "/GEMserve4"
 $gpay = "/GEMpay/logon.aspx"
-$gpay3 = ‚Äú/GEMpay3/logon.htm‚Äù
+$gpay3 = ì/GEMpay3/logon.htmî
 
 
 # ARGUMENT CONDITIONS : URL Ending Based Upon User Input
@@ -722,21 +722,21 @@ While ($IE.Busy -eq $true) { Start-Sleep -Milliseconds 2000; }
 
 if ( $serverType -eq "gempay3" -or $serverType -eq "gpay3" -or $serverType -eq "gp3" ) {
 
-$IE.Document.getElementById(‚ÄúUser‚Äù).value = "support"
+$IE.Document.getElementById(ìUserî).value = "support"
 
 $pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
 
-$IE.Document.getElementByID(‚ÄúPassword‚Äù).value = $pw
-$IE.Document.getElementById(‚ÄúSubmitBtn‚Äù).Click()
+$IE.Document.getElementByID(ìPasswordî).value = $pw
+$IE.Document.getElementById(ìSubmitBtnî).Click()
 }
 
 elseif ( $serverType -eq "gempay" -or $serverType -eq "gpay" -or $serverType -eq "gp" ) {
-$IE.Document.getElementById(‚ÄúUser‚Äù).value = "support"
+$IE.Document.getElementById(ìUserî).value = "support"
 
 $pw = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sitePW))
 
-$IE.Document.getElementByID(‚ÄúPassword‚Äù).value = $pw
-$IE.Document.getElementById(‚ÄúSubmitBtn‚Äù).Click()
+$IE.Document.getElementByID(ìPasswordî).value = $pw
+$IE.Document.getElementById(ìSubmitBtnî).Click()
 }
 
 elseif ( $serverType -eq "gemserve" -or $serverType -eq "gserve" -or $serverType -eq "serve" ) {
@@ -778,7 +778,7 @@ function Gem-Rotate-Files {
 
 #
 #---------------------------------------------------------------------------------------
-# Parameter Options:
+# Parameter Options: 
 #---------------------------------------------------------------------------------------
 #
 # To rotate files in the _Gem-Log-Archives directory, use the 'golog' argument.
@@ -788,68 +788,68 @@ function Gem-Rotate-Files {
 # To rotate files in the Archive\Import-Employees directory, use the 'import' argument.
 #---------------------------------------------------------------------------------------
 
-    param( [Parameter(Mandatory=$true)][string] $directory )
+	param( [Parameter(Mandatory=$true)][string] $directory )
 
 
-    if ($directory -eq $NULL) {
-        Read-Host "You must enter 'golog' for Gem-Pay-Logs or 'import' for ImportEmployees"
-    }
+	if ($directory -eq $NULL) {
+		Read-Host "You must enter 'golog' for Gem-Pay-Logs or 'import' for ImportEmployees"
+	}
 
-    switch ($directory) {
+	switch ($directory) {
 
-        golog {
-            $LOG = "C:\_Gem-Log-Archives\_Rotate-Gem-Logs.log"
-            $sysd = "C:\"
-            $archd = "C:\_Gem-Log-Archives"
-        }
+		golog {
+			$LOG = "C:\_Gem-Log-Archives\_Rotate-Gem-Logs.log"
+			$sysd = "C:\"
+			$archd = "C:\_Gem-Log-Archives"
+		}
 
-        import {
-            $LOG = "C:\GEM\ImportExport\Archive\Import-Employees\Import-Employee.log"
-            $sysd = "E:\GEM\ImportExport"
-            $archd = "E:\GEM\ImportExport\Archive\Import-Employees"
-        }
+		import {
+			$LOG = "C:\GEM\ImportExport\Archive\Import-Employees\Import-Employee.log"
+			$sysd = "E:\GEM\ImportExport"
+			$archd = "E:\GEM\ImportExport\Archive\Import-Employees"
+		}
 
-    }
+	}
 
-    $KeepDays = 30
-    $LimitTest = (Get-Date).addDays(-$KeepDays)
-    $LogNow = Get-Date -Format "yyyy/MM/dd hh:mm:ss"
+	$KeepDays = 30
+	$LimitTest = (Get-Date).addDays(-$KeepDays)
+	$LogNow = Get-Date -Format "yyyy/MM/dd hh:mm:ss"
 
+	
+	
+	#-------[ Array : Test Archive File .lastWriteTime ]------------------------------
+	$files = Get-ChildItem $archd -Include $fileExtFull -Recurse | 
+	  Where-Object {$_.lastWriteTime -le "$LimitTest"}
 
+	#-------[ Loop : Rotate Archived Files in $files Array ]--------------------------		
+	foreach ($file in $files) {
+		if ($file -ne $NULL) {
 
-    #-------[ Array : Test Archive File .lastWriteTime ]------------------------------
-    $files = Get-ChildItem $archd -Include $fileExtFull -Recurse |
-      Where-Object {$_.lastWriteTime -le "$LimitTest"}
+			#-------[ Log : File Rotation : Older Than $Keep-Days ]-----------
+			Add-Content -Path $LOG "==============================================================================="
+			Add-Content -Path $LOG " "
+				Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : $file is older than $KeepDays days."
+				Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : $file has been deleted." 
+			Add-Content -Path $LOG " "
+			Add-Content -Path $LOG  "==============================================================================="
 
-    #-------[ Loop : Rotate Archived Files in $files Array ]--------------------------
-    foreach ($file in $files) {
-        if ($file -ne $NULL) {
+			#-------[ Delete : Files Older Than $Keep-Days ]------------------
+			Remove-Item -Path  $file.FullName | Out-Null
+		}
 
-            #-------[ Log : File Rotation : Older Than $Keep-Days ]-----------
-            Add-Content -Path $LOG "==============================================================================="
-            Add-Content -Path $LOG " "
-                Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : $file is older than $KeepDays days."
-                Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : $file has been deleted."
-            Add-Content -Path $LOG " "
-            Add-Content -Path $LOG  "==============================================================================="
+		else {
+			#-------[ Log : File Rotation : No Files To Rotate ]--------------
+			Add-Content -Path $LOG " "		
+			Add-Content -Path $LOG "==============================================================================="
+			Add-Content -Path $LOG " "
+				Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : All files are less than $KeepDays days old."
+				Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : No files to delete!"
+			Add-Content -Path $LOG " "
+			Add-Content -Path $LOG "==============================================================================="	
+				
+		} # End If-Else
 
-            #-------[ Delete : Files Older Than $Keep-Days ]------------------
-            Remove-Item -Path  $file.FullName | Out-Null
-        }
-
-        else {
-            #-------[ Log : File Rotation : No Files To Rotate ]--------------
-            Add-Content -Path $LOG " "
-            Add-Content -Path $LOG "==============================================================================="
-            Add-Content -Path $LOG " "
-                Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : All files are less than $KeepDays days old."
-                Add-Content -Path $LOG "$LogNow : [ CLEANUP ] : No files to delete!"
-            Add-Content -Path $LOG " "
-            Add-Content -Path $LOG "==============================================================================="
-
-        } # End If-Else
-
-    } # End foreach
+	} # End foreach			
 
 }
 
@@ -864,52 +864,52 @@ function Gem-Rotate-Files {
 #-------[ Rename & Move Files - Archive ]-----------------------------------------------------------------------
 #...............................................................................................................
 
-
+	
 #-------[ FUNCTION ] : Rename-Move Files To Archive Directory
 #--------------------------------------------------------------------------------------------------
-    function Gem-Rename-Files {
+	function Gem-Rename-Files {
+		
+		param( [string] $fileType )
 
-        param( [string] $fileType )
+		switch ($fileType) {
+		
+			golog 	{ 	$file = "C:\gemonline.log" 	
+					$log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
+				}
+			gdlog 	{	$file = "C:\GEMDaily.cp	
+					$log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
+				}
+		}
 
-        switch ($fileType) {
+		$fileObj = Get-Item $file
 
-            golog   {   $file = "C:\gemonline.log"
-                    $log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
-                }
-            gdlog   {   $file = "C:\GEMDaily.cp
-                    $log = "C:\_Gem-Pay-Archives\_Rotate-Gem-Logs.log"
-                }
-        }
+		$date = Get-Date -Format "yyyy-MM-dd_hh.mm.sss"
 
-        $fileObj = Get-Item $file
+		$fileFull = $fileObj.FullName
+		$fileName = $fileObj.Name
+		$fileName = $fileObj.DirectoryName
+		$fileExt = $fileObj.Extension
 
-        $date = Get-Date -Format "yyyy-MM-dd_hh.mm.sss"
+		$name = $fileObj.FullName
+			Move-Item "$name" -Destination "C:\_Gem-Pay-Archives"
 
-        $fileFull = $fileObj.FullName
-        $fileName = $fileObj.Name
-        $fileName = $fileObj.DirectoryName
-        $fileExt = $fileObj.Extension
+		if ( $fileExt.Length -eq 0) {
+			$name = $fileObj.Name
+			Rename-Item "$fileObj" "$name.$date"
+		}
+		else {
+			$name = $fileObj.Name
+			Rename-Item "$fileName" "$name.$date$ext"
+		}
 
-        $name = $fileObj.FullName
-            Move-Item "$name" -Destination "C:\_Gem-Pay-Archives"
+		$newFile = $name.$date$ext
+		"New Filename: $newFile"
 
-        if ( $fileExt.Length -eq 0) {
-            $name = $fileObj.Name
-            Rename-Item "$fileObj" "$name.$date"
-        }
-        else {
-            $name = $fileObj.Name
-            Rename-Item "$fileName" "$name.$date$ext"
-        }
+		
+		Move-Item $newFile -Destination C:\_Archive\
 
-        $newFile = $name.$date$ext
-        "New Filename: $newFile"
-
-
-        Move-Item $newFile -Destination C:\_Archive\
-
-
-    }   #-----[ END : function Gem-RenameMove-Item ]-----------------------------------------------
+		
+	}	#-----[ END : function Gem-RenameMove-Item ]-----------------------------------------------
 
 
 

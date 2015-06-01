@@ -23,14 +23,14 @@
 :: ---[ Archives]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	These logs are archived to a directory located on the C:\ drive named _'GPayLogArchives'.
+::	These logs are archived to a directory located on the C:\ drive named '_Gem-Log-Archives'.
 ::	The archive logs will be renamed and timestamped with the following nomenclature:
 ::
 ::.......................................................................................................................................
 ::
-::	'gemonline' = 'C:\_GPayLogArchives\gemonline.<datetime>.log0<#>'
+::	'gemonline' = 'C:\Gem-Logs-Archives\gemonline.<datetime>.log0<#>'
 ::------------------------------------------------------------------------
-::	'GEMdaily.cp' = 'C:\_GPayLogArchives\GEMdaily.<datetime>.cp0<#>'
+::	'GEMdaily.cp' = 'C:\Gem-Logs-Archives\GEMdaily.<datetime>.cp0<#>'
 ::
 ::.......................................................................................................................................
 ::
@@ -42,11 +42,11 @@
 ::  ---[ Archive Location ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	If the directory 'C:\_gemToolbox' with a subdirectory 'BatchScripts' doesn't exist, create
+::	If the directory '.\GEM\_Gem-Toolbox' with a subdirectory 'BatchScripts' doesn't exist, create
 ::	these directories first. Save this batch file as:
 ::
 ::.......................................................................................................................................
-::		'C:\_gemToolbox\BatchScripts\rotate_GOGD_Logs_WKLY.bat'
+::		'.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
 ::.......................................................................................................................................
 ::
 ::
@@ -54,7 +54,7 @@
 :: ---[ Scheduled Task ]---
 ::---------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	Create a Scheduled Task named 'rotate_GO_GD_LOGS_WEEKLY' with the following properties:
+::	Create a Scheduled Task named 'Rotate-Gem-Logs-Weekly' with the following properties:
 ::.......................................................................................................................................
 ::
 ::	[ GENERAL ]	Run whether user is logged on or not: 'selected'
@@ -73,7 +73,7 @@
 ::
 ::.......................................................................................................................................
 ::
-::	[ ACTIONS ]	Start A Program: 'C:\_gemToolbox\BatchScripts\rotate_GOGD_Logs_WKLY.bat'
+::	[ ACTIONS ]	Start A Program: '.\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat'
 ::
 ::.......................................................................................................................................
 ::
@@ -159,7 +159,7 @@
 ::FILES: Archives
 ::========================================================================================================================================
 ::
-	set "apath=C:\_GPayLogArchives\"
+	set "apath=C:\Gem-Logs-Archives\"
 	set "apathgo=%apath%%gname%.%logstamp%.log01"
 	set "apathgd=%apath%%dname%.%logstamp%.cp01"
 	set "alog=%apath%*.log"

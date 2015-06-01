@@ -1,4 +1,4 @@
-﻿
+
 
 clear
 
@@ -6,17 +6,17 @@ clear
 #..........................................................................
 
 $sysd = "$env:HOMEDRIVE"
-$sysdTest = "$env:TESTC"
+#$sysdTest = "$env:TESTC"
 
 $gemd = "$env:GEM"
-$gemdTest = "$env:TESTD"
+#$gemdTest = "$env:TESTD"
 
-$gimp = "$gemdTest\ImportExport"
-#$gimp = "$gemd\ImportExport"
+#$gimp = "$gemdTest\ImportExport"
+$gimp = "$gemd\ImportExport"
 $garc = "$gimp\Archive"
 
-$gtb = "$gemdTest\_Gem-Toolbox"
-#$gtb = "$gemd\_Gem-Toolbox"
+#$gtb = "$gemdTest\_Gem-Toolbox"
+$gtb = "$gemd\_Gem-Toolbox"
 $gbf = "$gtb\Batch-Files"
 $gps = "$gtb\PowerShell"
 
@@ -26,8 +26,8 @@ $gemp = "$garc\Import-Employees"
 $gbad = "$gemp\Bad-Files"
 $goef = "$gemp\Original-Emp-Files"
 
-$loga = "$sysdTest\_Gem-Log-Archives"
-#$loga = "$sysd\_Gem-Log-Archives"
+#$loga = "$sysdTest\_Gem-Log-Archives"
+$loga = "$sysd\_Gem-Log-Archives"
 
 
 #  Variables : Required Files

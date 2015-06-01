@@ -1,0 +1,515 @@
+
+#=========================================================================================================
+#-------[ TITLE     ] : POWERSHELL : MASTER : Import Employee Demographic File
+#=========================================================================================================
+#
+#-------[ AUTHOR     ] : Roger Corley
+#-------[ CREATED    ] : May 15, 2015 10:23 AM
+#-------[ COPYRIGHT  ] : Common CENTS Solutions - 2015
+#
+#-------[ VERSION    ] : 0.2.001 
+#
+#-------[ REVISED    ] : May 28, 2015 11:56 AM
+#-------[ REVISED BY ] : Roger Corley
+#
+#---------------------------------------------------------------------------------------------------------
+
+
+#=========================================================================================================
+#-------[ DESCRIPTION ]
+#=========================================================================================================
+#
+#  A PowerShell script created to import an employee demographic .CSV file and its objects into a .TMP.CSV file
+#  In the process of creating the new file, this script will strip the header row and any trailing spaces.
+#  The script will create an object array to store each record's values and create an OutTXT string for each 
+#  record. A new "employee.txt" will be created and each row's string will be added to that file. The old  
+#  "employee.csv" file will be removed and "employee.txt" will be converted to "employee.csv" From there,
+#  "RunScript.exe" will execute with the arguments assigned by the user. All employees will be imported 
+#  into dbo.GEMdb.tblAccountImport and processed by SQL into GEMpay.
+
+#*********************************************************************************************************
+#-------[ WARNING 		 	] : DO NOT MODIFY THESE VARIABLES!
+#*********************************************************************************************************
+#-------[ CONSTANTS			] : Gem-Dates 
+#---------------------------------------------------------------------------------------------------------
+#-------[ DESCRIPTION 		] : Constants used for script date calculations.
+#---------------------------------------------------------------------------------------------------------	
+	$date = (Gem-Dates arch)
+	$dateLogStamp = (Gem-Dates log)
+	$LimitTest = (Gem-Dates limit)
+
+	
+	
+#=========================================================================================================
+#@@@@@@@[ MODIFY THIS SECTION ]@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#=========================================================================================================		
+#-------[ VARIABLE : DATE   ] : Set $DaysKeep
+#-------[ DESCRIPTION 		] : Used in the Gem-Dates function to calculate number of days to keep files.
+#---------------------------------------------------------------------------------------------------------
+	$DaysKeep = "30"
+
+	
+#=========================================================================================================
+#@@@@@@@[ MODIFY THIS SECTION ]@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#=========================================================================================================		
+#-------[ VARIABLE : DATE   ] : Set $DaysKeep
+#---------------------------------------------------------------------------------------------------------
+#-------[ DESCRIPTION 		] : Used in the Gem-Dates function to calculate how long to keep archived files.
+#*********************************************************************************************************
+#-------[ NOTES 		 	] : VERIFY $GEMd! If needed, modify the DRIVE LETTER ONLY. (e.g. "D" not "D:\")
+#*********************************************************************************************************
+#---------------------------------------------------------------------------------------------------------
+	$GEMd = "D:\GEM"	
+	
+
+#*********************************************************************************************************
+#-------[ WARNING 		 	] : DO NOT MODIFY THESE VARIABLES!
+#*********************************************************************************************************
+#-------[ VARIABLES			] : Directory Paths
+#---------------------------------------------------------------------------------------------------------
+#-------[ NOTES 		 	] : Verify sub-directories exist in .\GEM\ and that full pathnames are correct,
+#---------------------------] : but DO NOT MODIFY THE PATHS. Create the required sub-directories if needed.
+#---------------------------------------------------------------------------------------------------------	
+	$GEMd = "D:\GEM"
+	
+	$gemIExp = "$GEMd\ImportExport\"
+	
+	$gemIEmp = "$GEMd\ImportExport\Archive\Import-Employees\"
+	$gemOEF = "$GEMd\ImportExport\Archive\ImportEmployees\Original-Employee-Files\"
+
+	$fileName = "employee"
+	$fileExt = "csv"
+	$fileExtFull = ".csv"
+	
+	
+#*********************************************************************************************************
+#-------[ WARNING 		 	] : DO NOT MODIFY THESE VARIABLES!
+#*********************************************************************************************************
+#-------[ CONSTANTS			] : FileNames
+#---------------------------------------------------------------------------------------------------------
+#-------[ DESCRIPTION 		] : Required FileNames used to create paths for this script.
+#---------------------------------------------------------------------------------------------------------	
+	$nameFull = "{0}.{1}" -f $fileName, $fileExt
+	$csvTemp = "{0}.tmp.{1}" -f $fileName, $fileExt
+	$textTmp = "{0}.txt" -f $fileName
+	$oefFull = "{0}.{1}.{2}" -f $fileName, $date, $fileExt
+	
+	$impLog = "Import-Employee.{0}.log" -f $date
+
+
+
+#=========================================================================================================
+#@@@@@@@[ MODIFY THIS SECTION ]@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#=========================================================================================================	
+#-------[ VARIABLES 		] : Import .CSV File : Header Names
+#---------------------------------------------------------------------------------------------------------
+#-------[ DESCRIPTION 		] : Required .CSV header names listed in the import file.
+#-------[ NOTES 		 	] : For each header column in the import file, uncomment the variable and 
+#---------------------------] : reference it within double-quotes. Leave any unused variables commented. ( # )
+#---------------------------------------------------------------------------------------------------------	
+	$h0 = "EMPNO"
+	$h1 = "LAST_NAME"
+	$h2 = "FIRST_NAME"
+	$h3 = "HID"
+#	$h4 = ""
+#	$h5 = ""
+#	$h6 = ""
+
+
+#=========================================================================================================
+#@@@@@@@[ MODIFY THIS SECTION ]@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#=========================================================================================================	
+#-------[ VARIABLES 		] : RunScript Arguments
+#---------------------------------------------------------------------------------------------------------
+#-------[ DESCRIPTION 		] : Required arguments used when running RunScript.exe to import employees into SQL.
+#-------[ NOTES 		 	] : Make sure values are enclosed with double-quotes.
+#-------[ NOTES 		 	] : If the SQL Server instance name is "local", set the value to "(local)"
+#*********************************************************************************************************
+#-------[ WARNING 		 	] : VERIFY that $rsModule matches the sModule number in [GEMdb].cgfScriptParams.
+#-------[ WARNING 		 	] : ONLY MODIFY $rsSvr and $rsModule as required. DO NOT MODIFY OTHER VARIABLES!
+#*********************************************************************************************************
+#---------------------------------------------------------------------------------------------------------
+
+	$rsScript = "Import_v1_70.gsf"
+	$rsPw = "gemie"
+	$rsSvr = "OK1568PCIDB"
+	$rsCore = "1"
+	$rsModule = "170"
+	$rsInclude = "gsf.txt"
+	
+	
+	
+
+##########################################################################################################
+#---------------------------------------------------------------------------------------------------------
+#
+#   ---{{{  *** DO NOT MODIFY SCRIPT BEYOND THIS POINT ***  }}}---
+#
+#---------------------------------------------------------------------------------------------------------
+##########################################################################################################
+
+#-------[ Formatting: Import Log File ]-------------------------------------
+#...............................................................................
+	$space = " "
+	$dash = "-------------------------------------------------------------------------------"
+	$dots = "..............................................................................."
+	$plus = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	$equals = "==============================================================================="
+	$ats = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	
+	
+
+
+#-------[ CONSTANTS ] : Full Path Names     
+#---------------------------------------------------------------------------------------------------------
+
+	$PathOrgFileFull = $gemIExp + $nameFull
+	$PathTempCsvFull = $gemIExp + $csvTemp
+	$PathTempTextFull = $gemIExp + $textTmp
+	$PathArchOrgFileFull = $gemOEF + $oefFull
+
+	$LOG = $gemIEmp + $impLog
+
+
+#-------[ CONSTANTS ] : Full Path Name : RunScript.exe and RunScript variable with arguments
+#---------------------------------------------------------------------------------------------------------
+
+	$rs = "D:\GEM\runscript.exe"
+	$rsArg = "script=$rsScript,pw=$rsPw,svr=$rsSvr,core=$rsCore,module=$rsModule,include=$rsInclude"
+
+
+
+#---------------------------------------------------------------------------------------------------------
+#-------[  BEGIN SCRIPT  ]--------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------
+  
+	Clear
+
+#-------[ BEGIN : Import Processes ]-------------------------------------
+#...............................................................................
+	Out-File -FilePath $LOG -Append -InputObject $space
+	Out-File -FilePath $LOG -Append -InputObject $plus
+	Out-File -FilePath $LOG -Append -InputObject $equals
+		Add-Content -Path $LOG "$Log-Now : [ BEGIN ] : Import Employee Demographic File"
+	Out-File -FilePath $LOG -Append -InputObject $equals
+	Out-File -FilePath $LOG -Append -InputObject $plus
+	Out-File -FilePath $LOG -Append -InputObject $space
+	
+
+#-------[ Test-Path: Employee.csv = $true ]-------------------------------------
+#...............................................................................
+
+	if ( Test-Path $PathOrgFileFull ) {
+		
+		Out-File -FilePath $LOG -Append -InputObject $dots
+			Add-Content -Path $LOG "$Log-Now : [ TEST ] : $nameFull exists."
+
+
+#-------[ Test-Path : Employee.tmp.csv = $true ]--------------------------------
+#...............................................................................
+
+		if ( Test-Path $PathTempCsvFull ) {
+		
+			Add-Content -Path $LOG "$Log-Now : [ TEST ] : $csvTemp exists. Deleting this file."
+	
+			Remove-Item $PathTempCsvFull -Force | Out-Null
+
+		} #-----END Test-Path Employee.tmp.csv
+
+
+#-------[ Test-Path : Employee.txt = $true ]------------------------------------
+#...............................................................................
+
+		if ( Test-Path $PathTempTextFull ) {
+		
+			Out-File -FilePath $LOG -Append -InputObject $space
+				Add-Content -Path $LOG "$Log-Now : [ TEST ] : $PathTempTextFull exists. Deleting this file."
+			Out-File -FilePath $LOG -Append -InputObject $space
+
+			Remove-Item -Path $PathTempTextFull -Force | Out-Null
+
+		} #-----END Test-Path  Employee.txt
+
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ SCRIPT ] : Starting Import Employees script processes."
+		Out-File -FilePath $LOG -Append -InputObject $dash
+
+		New-Item -Path $PathTempTextFull -Type file -Force
+
+			Add-Content -Path $LOG "$Log-Now : [ FILE ] : $PathTempTextFull created."
+
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ TASK ] : Removing invalid characters from objects."
+		Out-File -FilePath $LOG -Append -InputObject $dash
+
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ TASK ] : Creating $PathTempCsvFull."
+			Add-Content -Path $LOG "$Log-Now : [ TASK ] : This temp file is used to hold the processed version of the import file."
+		Out-File -FilePath $LOG -Append -InputObject $dash
+		
+		Import-Csv -Path $PathOrgFileFull | 
+			Convertto-Csv -NoTypeInformation | 
+			% { $_ -replace ' *",', '",'} | 
+			Out-File $PathTempCsvFull -Force
+
+
+#-------[ Archive Original Import File ]----------------------------------------
+#...............................................................................
+
+
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ ARCHIVE ] : Archiving $."
+		Out-File -FilePath $LOG -Append -InputObject $dash
+		Out-File -FilePath $LOG -Append -InputObject $space
+
+		Gem-RenameMove-Item -oefDir "$GEMd\ImportExport\" -oefName $fileName -oefExtFull $fileExtFull -archiveDir "$GEMd\ImportExport\Archive\ImportEmployees\Original-Employee-Files\"
+		
+
+#-------[ Import-Csv : $PathTempCsvFull ]------------------------------------
+#...............................................................................
+
+
+			Add-Content -Path $LOG "$Log-Now : [ CSV ] : Importing $Path-Temp-Csv"
+		Out-File -FilePath $LOG -Append -InputObject $dash
+
+		$csvTMP = Import-Csv -Path $PathTempCsvFull -Force
+
+
+#-------[ Loop : Create myObj Object Array ]------------------------------------
+#...............................................................................
+
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ ARRAY ] : Creating Object Array."
+			Add-Content -Path $LOG "$Log-Now : [ ARRAY ] : Creating Object String."
+
+		:myObjArray foreach ($row in $csvTMP) {
+
+			#Construct Object Array
+			#-----------------------------------
+    			$myObj = "" | Select EMPNO,LAST_NAME,FIRST_NAME,HID
+	
+			#Fill Object Array
+			#-----------------------------------
+			$myObj.EMPNO = $row.EMPNO
+			$myObj.LAST_NAME = $row.LAST_NAME
+			$myObj.FIRST_NAME = $row.FIRST_NAME
+			$myObj.HID = $row.HID
+
+			#Add Object to the array
+			$outTXT = "{0},{1},{2},{3}" -f $myObj.EMPNO,$myObj.LAST_NAME,$myObj.FIRST_NAME,$myObj.HID
+	
+			Out-File -FilePath $PathTempTextFull -Append -InputObject $outTXT
+
+		} # end foreach Loop : myObj
+	
+		Out-File -FilePath $LOG -Append -InputObject $dash
+			Add-Content -Path $LOG "$Log-Now : [ CONTENT ] : Adding records to .TXT file."
+			Add-Content -Path $LOG "$Log-Now : [ CONVERT ] : Converting .TXT file to .CSV file."
+		Out-File -FilePath $LOG -Append -InputObject $space
+
+		Convertto-Csv -InputObject $PathTempTextFull -Delimiter "," -NoTypeInformation
+
+				
+#-------[ Rename $PathTempTextFull File ]------------------------------------
+#...............................................................................
+	
+		#-------[ Test: Temp Text File Not Empty : Remove Temp-Csv File ]-------
+		if ( $PathTempTextFull -ne $NULL ) {
+			Test-Path ($PathTempCsvFull) | 
+				Where ( ! $_.PSIsContainer ) | 
+					Remove-Item -Path $PathTempCsvFull -Force | 
+						Out-Null
+
+			#-------[ Test: Org Import File ! Exists : Rename Temp Txt File ]---
+			if ( !( Test-Path ($PathOrgFileFull) )) {
+				Rename-Item -Path $PathTempTextFull -NewName $PathOrgFileFull -Force -Confirm
+			}
+			
+			#-------[ TEST-ERROR: Original Import File Still Exists ]-----------
+			else {
+					Out-File -FilePath $LOG -Append -InputObject $dash
+					Out-File -FilePath $LOG -Append -InputObject $ats
+				Add-Content -Path $LOG "$Log-Now : [ ERROR-MOVE ] : $PathOrgFileFull archive failed."
+					Out-File -FilePath $LOG -Append -InputObject $ats
+					Out-File -FilePath $LOG -Append -InputObject $dash
+			}
+		}
+		
+		
+
+#-------[ Execute RunScript With Arguments ]------------------------------------
+#...............................................................................
+
+		#-------[ File Tests : Execute RunScript With Arguments ]---------------
+		
+		#-------[ Test : Test Original Import File Exists ]---------------------
+		if ( Test-Path($PathOrgFileFull) ) {
+		
+			#-------[ Test : Test Original Import File Not Empty ]--------------
+			if ( $PathOrgFileFull -ne $NULL ) {
+				Out-File -FilePath $LOG -Append -InputObject $dash
+					Add-Content -Path $LOG "$Log-Now : [ RUNSCRIPT ] : Starting RunScript.exe"
+
+				#-------[ RunScript : Execute RunScript.exe With Arguments ]----
+				& $rs $rsArg
+		
+					Add-Content -Path $LOG "$Log-Now : [ RUNSCRIPT ] : Import completed."
+				Out-File -FilePath $LOG -Append -InputObject $dash
+				Out-File -FilePath $LOG -Append -InputObject $space
+			}
+			
+			#-------[ ERROR-TEST : Original Import File : Empty ]---------------
+			else {
+				Out-File -FilePath $LOG -Append -InputObject $equals
+				Out-File -FilePath $LOG -Append -InputObject $ats
+				Out-File -FilePath $LOG -Append -InputObject $space
+					Add-Content -Path $LOG "$Log-Now : [ ERROR-RUNSCRIPT ] : $PathOrgFileFull is empty!"
+					Add-Content -Path $LOG "$Log-Now : [ ERROR-RUNSCRIPT ] : RunScript import process aborted!"
+				Out-File -FilePath $LOG -Append -InputObject $space
+				Out-File -FilePath $LOG -Append -InputObject $ats
+				Out-File -FilePath $LOG -Append -InputObject $equals
+			}
+		}
+		
+		#-------[ ERROR-TEST : Original Import File : Not Found ]---------------
+		else {
+			Out-File -FilePath $LOG -Append -InputObject $equals
+			Out-File -FilePath $LOG -Append -InputObject $ats
+			Out-File -FilePath $LOG -Append -InputObject $space
+				Add-Content -Path $LOG "$Log-Now : [ ERROR-RUNSCRIPT ] : $PathOrgFileFull does not exist!"
+				Add-Content -Path $LOG "$Log-Now : [ ERROR-RUNSCRIPT ] : RunScript import process aborted!"
+			Out-File -FilePath $LOG -Append -InputObject $space
+			Out-File -FilePath $LOG -Append -InputObject $ats
+			Out-File -FilePath $LOG -Append -InputObject $equals
+			}
+
+  
+
+#-------[ Archive File Rotations ]----------------------------------------------
+#...............................................................................
+
+		#-------[ Array : Test Archive File .lastWriteTime ]--------------------
+		$files = Get-ChildItem $gemIEmp -Include $fileExtFull -Recurse | 
+		  Where-Object {$_.lastWriteTime -le "$LimitTest"}
+
+		#-------[ Loop : Rotate Archived Files in $files Array ]----------------		
+		foreach ($file in $files) {
+			if ($file -ne $NULL) {
+
+				#-------[ Log : File Rotation : Older Than $Keep-Days ]---------
+				Out-File -FilePath $LOG -Append -InputObject $equals
+				Out-File -FilePath $LOG -Append -InputObject $space
+					Add-Content -Path $LOG "$Log-Now : [ CLEANUP ] : $file is older than $Keep-Days days."
+					Add-Content -Path $LOG "$Log-Now : [ CLEANUP ] : $file has been deleted."
+				Out-File -FilePath $LOG -Append -InputObject $space
+				Out-File -FilePath $LOG -Append -InputObject $equals
+
+				#-------[ Delete : Files Older Than $Keep-Days ]----------------
+				Remove-Item -Path  $file.FullName | Out-Null
+			}
+
+			else {
+				#-------[ Log : File Rotation : No Files To Rotate ]------------
+				Out-File -FilePath $LOG -Append -InputObject $space
+				Out-File -FilePath $LOG -Append -InputObject $equals
+				Out-File -FilePath $LOG -Append -InputObject $space
+					Add-Content -Path $LOG "$Log-Now : [ CLEANUP ] : All files are less than $Keep-Days days old."
+					Add-Content -Path $LOG "$Log-Now : [ CLEANUP ] : No files to delete!"
+				Out-File -FilePath $LOG -Append -InputObject $space
+				Out-File -FilePath $LOG -Append -InputObject $equals
+				Out-File -FilePath $LOG -Append -InputObject $space
+				
+			} # End If-Else
+		} # End foreach
+
+
+  
+#-------[ END SCRIPT ]----------------------------------------------------------
+#...............................................................................
+
+		Out-File -FilePath $LOG -Append -InputObject $space
+		Out-File -FilePath $LOG -Append -InputObject $plus
+		Out-File -FilePath $LOG -Append -InputObject $equals
+			Add-Content -Path $LOG "$Log-Now : [ END ] : Import Employee Demographic File"
+		Out-File -FilePath $LOG -Append -InputObject $equals
+		Out-File -FilePath $LOG -Append -InputObject $plus
+		Out-File -FilePath $LOG -Append -InputObject $space
+
+	} #----- end Test-Path $nameFull = $true
+
+
+#-------[ Else : Test-Path $false ]---------------------------------------------
+#...............................................................................
+
+	else {
+  
+		#Ending Script
+		#...............................................................
+	
+		Out-File -FilePath $LOG -Append -InputObject $equals
+		Out-File -FilePath $LOG -Append -InputObject $ats
+		Out-File -FilePath $LOG -Append -InputObject $space
+			Add-Content -Path $LOG "$Log-Now : [ ERROR-FILECHECK ] : $nameFull does not exist. Closing script."
+		Out-File -FilePath $LOG -Append -InputObject $space
+		Out-File -FilePath $LOG -Append -InputObject $ats
+		Out-File -FilePath $LOG -Append -InputObject $equals
+
+
+	} #----- end Test-Path $nameFull = $false
+
+
+#--------------------------------------------------------------------------------------------------
+#-------[ END SCRIPT ]-----------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------
+
+
+#-------[ FUNCTION ] : Date Calculations
+#--------------------------------------------------------------------------------------------------
+	function Gem-Dates($date) {
+
+		$KeepDays = "$DaysKeep"
+
+		switch ($date) {
+			now { Get-Date; break }
+			log { Get-Date -Format "yyyy-MM-dd HH:mm:ss"; break }
+			arch { Get-Date -Format "yyyy-MM-dd"; break }	
+			limit { (Get-Date).AddDays(-$KeepDays); break }
+			default { Get-Date; break }
+		}
+	}  #-----[ END : function Gem-Dates ]
+	
+	
+#-------[ FUNCTION ] : Rename-Move Files To Archive Directory
+#--------------------------------------------------------------------------------------------------
+	function Gem-Archive-File {
+		
+		param( [string] $fileName )
+
+		"Original Filename: $fileName"
+
+		$fileObj = Get-Item $fileName
+
+		$date = Get-Date -Format "yyyy-MM-dd_hh.mm.sss"
+
+		$ext = $fileObj.Extension
+
+		if ( $ext.Length -eq 0) {
+			$name = $fileObj.Name
+			Rename-Item "$fileObj" "$name.$date"
+		}
+		else {
+			$name = $fileObj.Name
+			Rename-Item "$fileName" "$name.$date$ext"
+		}
+
+		$newFile = $name.$date$ext
+		"New Filename: $newFile"
+
+		
+		Move-Item $newFile -Destination C:\_Archive\
+
+		
+	}	#-----[ END : function Gem-RenameMove-Item ]-----------------------------------------------
+	
+#		Rename-Item $oefPath -NewName $renFull -Force -Confirm
+#		Move-Item -Path $renPath -Destination $arcvDir -Force -Confirm

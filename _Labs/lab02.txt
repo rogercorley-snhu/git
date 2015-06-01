@@ -1,0 +1,338 @@
+
+#=========================================================================================================
+#-------[ TITLE     ] : POWERSHELL : MASTER : Import Employee Demographic File
+#=========================================================================================================
+#
+#-------[ AUTHOR    ] : Roger Corley
+#-------[ CREATED   ] : May 15, 2015 10:23:31 AM
+#-------[ COPYRIGHT ] : Common CENTS Solutions - 2015
+#
+#---------------------------------------------------------------------------------------------------------
+
+
+#=========================================================================================================
+#-------[ DESCRIPTION ]
+#=========================================================================================================
+#
+#  A PowerShell script created to import an employee demographic .CSV file and its objects intto a .TMP.CSV file
+#  In the process of creating the new file, this script will strip the header row and any trailing spaces.
+#  The script will create an object array to store each record's values and create an OutTXT string for each 
+#  record. A new "employee.txt" will be created and each row's string will be added to that file. The old  
+#  "employee.csv" file will be removed and "employee.txt" will be converted to "employee.csv" From there,
+#  "RunScript.exe" will execute with the arguments assigned by the user. All employees will be imported 
+#  into dbo.GEMdb.tblAccountImport and processed by SQL into GEMpay.
+
+
+#-------[ VARIABLES ] : Path and File Names
+#---------------------------------------------------------------------------------------------------------
+	$gdir = $env:GEM
+
+	$gemIExp = "$gdir\ImportExport\"
+	$gemIEmp = "$gdir\ImportExport\Archive\Import-Employees\"
+	$gemOEF = "$gdir\ImportExport\Archive\Import-Employees\OrginalEmpFiles\"
+
+	$fileName = "CCDEMO"	
+	$fileFull = "CCDEMO.00146"
+	$fileType = "00146"
+
+	$tempFull = "CCDEMO.00146.tmp.csv"
+	$textFull = "CCDEMO.00146.txt"
+
+	$fileLOG = "Import-Employee.log"
+
+
+
+#-------[ VARIABLES ] : Header Names
+#---------------------------------------------------------------------------------------------------------
+
+	$h0 = "FicaNbr"
+	$h1 = "BadgeNbr"
+	$h2 = "EmpStatus"
+	$h3 = "LastName"
+ 	$h4 = "FirstName"
+# 	$h5 = ""
+# 	$h6 = ""
+
+
+#-------[ VARIABLES ] : RunScript Arguments
+#---------------------------------------------------------------------------------------------------------
+
+	$rsScript = "Import_v1_70.gsf"
+	$rsPw = "gemie"
+	$rsSvr = "(local)"
+	$rsCore = "1"
+	$rsModule = "300"
+	$rsInclude = "gsf.txt"
+
+
+
+
+##########################################################################################################
+#---------------------------------------------------------------------------------------------------------
+#
+#   ---{{{  *** DO NOT MODIFY SCRIPT BEYOND THIS POINT ***  }}}---
+#
+#---------------------------------------------------------------------------------------------------------
+##########################################################################################################
+
+
+
+
+
+
+#-------[ CONSTANTS ] : Full Path Names     
+#---------------------------------------------------------------------------------------------------------
+
+	$pathGIMP = $gemIExp + $fileFull
+	$pathTEMP = $gemIExp + $tempFull
+	$pathTEXT = $gemIExp + $textFull
+
+	$impLOG = $gemIEmp + $fileLOG
+
+
+#-------[ CONSTANTS ] : Date Calculations
+#---------------------------------------------------------------------------------------------------------
+
+	$now = Get-Date
+
+	$logNow = Get-Date -format "yyyy-MM-dd HH:mm:ss"
+	$archNow = Get-Date -format "yyyy-MM-dd"
+
+	$keepDays = 30
+	$lastWrite = $now.AddDays(-$keepDays)
+
+
+#-------[ CONSTANTS ] : Full Path Name : RunScript.exe
+#---------------------------------------------------------------------------------------------------------
+
+	$rs = "D:\GEM\runscript.exe"
+	$rsArg = "script=$rsScript,pw=$rsPw,svr=$rsSvr,core=$rsCore,module=$rsModule,include=$rsInclude"
+
+
+
+#---------------------------------------------------------------------------------------------------------
+#-------[  BEGIN SCRIPT  ]--------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------
+	
+	Clear
+
+	Add-Content -Path $impLOG " "
+	Add-Content -Path $impLOG "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	Add-Content -Path $impLOG "==============================================================================="
+			Add-Content -Path $impLOG "$lognow : [ BEGIN ] : Import Employee Demographic File"
+	Add-Content -Path $impLOG "==============================================================================="
+	Add-Content -Path $impLOG "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	Add-Content -Path $impLOG " "
+	
+
+#-------[ Test-Path: Employee.csv = $true ]-------------------------------------
+#...............................................................................
+
+	if ( Test-Path $pathGIMP ) {
+
+		Add-Content -Path $impLOG "..............................................................................."
+			Add-Content -Path $impLOG "$lognow : [ TEST ] : $fileFull exists. Testing path for $tempFull."
+
+
+#-------[ Test-Path : Employee.tmp.csv = $true ]--------------------------------
+#...............................................................................
+
+	if ( Test-Path $pathTEMP ) {
+
+			Add-Content -Path $impLOG "$lognow : [ TEST ] : $tempFull exists. Deleting old file."
+
+		rd $pathTEMP
+
+	} #-----END Test-Path Employee.tmp.csv
+
+
+#-------[ Test-Path : Employee.txt = $true ]------------------------------------
+#...............................................................................
+
+	if ( Test-Path $pathTEXT ) {
+		Add-Content -Path $impLOG " "
+			Add-Content -Path $impLOG "$lognow : [ TEST ] : $pathTEXT exists. Deleting old file."
+		Add-Content -Path $impLOG " "
+
+		rd $pathTEXT | Out-Null
+
+	} #-----END Test-Path  Employee.txt
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$lognow : [ SCRIPT ] : Starting import script processes."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+
+	ni $pathTEXT -type file
+
+		Add-Content -Path $impLOG "$lognow : [ FILE ] : $pathTEXT created."
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ TASK ] : Removing trailing whitespace from objects."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+
+	ipcsv $pathGIMP | 
+		Convertto-Csv -NoTypeInformation | 
+		Where { $_ -replace ' *",', '",'} | Out-File $pathTEMP  
+
+
+#-------[ Import-Csv : $pathTEMP ]----------------------------------------------
+#...............................................................................
+
+		Add-Content -Path $impLOG "$logNow : [ CSV ] : Importing .CSV file."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+
+	$csvTMP = ipcsv $pathTEMP
+
+
+#-------[ Loop : Create myObj Object Array ]------------------------------------
+#...............................................................................
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ ARRAY ] : Creating Object Array."
+		Add-Content -Path $impLOG "$logNow : [ ARRAY ] : Creating Object String."
+
+	foreach ($row in $csvTMP) {
+
+		#Construct Object Array
+		#-----------------------------------
+		$myObj = "" | Select FicaNbr,BadgeNbr,EmpStatus,LastName,FirstName
+
+		#Fill Object Array
+		#-----------------------------------
+		$myObj.FicaNbr = $row.FicaNbr
+		$myObj.BadgeNbr = $row.BadgeNbr
+		$myObj.EmpStatus = $row.EmpStatus
+		$myObj.LastName = $row.LastName
+		$myObj.FirstName = $row.FirstName
+
+		#Add Object to the array
+		$outTXT = "{0},{1},{2},{3},{4}" -f $myObj.FicaNbr,$myObj.BadgeNbr,$myObj.EmpStatus,$myObj.LastName,$myObj.FirstName
+
+		$outTXT | ac $pathTEXT
+
+	} # end foreach Loop : myObj
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ CONTENT ] : Adding records to .TXT file."
+		Add-Content -Path $impLOG "$logNow : [ CONVERT ] : Converting .TXT file to .CSV file."
+	Add-Content -Path $impLOG " "
+
+	Convertto-Csv -inputobject $pathTEXT -delimiter "," -notypeinformation  
+
+
+#-------[ Rename Files ]--------------------------------------------------------
+#...............................................................................
+
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ CLEANUP ] : Cleaning up temporary files."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+	Add-Content -Path $impLOG " "
+
+	$orgItem = "{0}\{1}.{2}.{3}" -f $gemOEF, $fileName, $archNow, $fileType
+	Move-Item -Path $pathGIMP -Destination $orgItem 
+
+	Rename-Item -Path $pathTEXT -NewName $pathGIMP
+	Remove-Item -Path $pathTEMP -Force | Out-Null
+
+
+#-------[ RunScript ]-----------------------------------------------------------
+#...............................................................................
+
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ RUNSCRIPT ] : Starting RunScript.exe"
+
+	& $rs $rsArg
+
+		Add-Content -Path $impLOG "$logNow : [ RUNSCRIPT ] : Import completed."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+	Add-Content -Path $impLOG " "
+
+	
+
+#-------[ Archive Clean Up ]----------------------------------------------------
+#...............................................................................
+
+	$files = Get-ChildItem $gemIEmp -Include $fileType -Recurse | 
+		Where-Object {$_.lastWriteTime -le "$lastWrite"}
+
+	foreach ($file in $files) {
+		if ($file -ne $NULL) {
+
+			Add-Content -Path $impLOG "==============================================================================="
+			Add-Content -Path $impLOG "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			Add-Content -Path $impLOG " "
+				Add-Content -Path $impLOG "$logNow : [ CLEANUP ] : $file is older than $keepDays days."
+				Add-Content -Path $impLOG "$logNow : [ CLEANUP ] : $file has been deleted."
+			Add-Content -Path $impLOG " "
+			Add-Content -Path $impLOG "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			Add-Content -Path $impLOG "==============================================================================="
+
+			rm $file.FullName | Out-Null
+		}
+
+		else {
+			Add-Content -Path $impLOG " "
+			Add-Content -Path $impLOG "==============================================================================="
+			Add-Content -Path $impLOG " "
+				Add-Content -Path $impLOG "$logNow : [ CLEANUP ] : All files are less than $keepDays days old."
+				Add-Content -Path $impLOG "$logNow : [ CLEANUP ] : No files to delete!"
+			Add-Content -Path $impLOG " "
+			Add-Content -Path $impLOG "==============================================================================="
+			Add-Content -Path $impLOG " "
+		}
+	}
+
+
+
+#-------[ Archive Import File ]-------------------------------------------------
+#...............................................................................
+	
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+		Add-Content -Path $impLOG "$logNow : [ ARCHIVE ] : Moving $fileFull to $gemIEmp."
+	Add-Content -Path $impLOG " "
+
+	$archItem = "{0}\{1}.{2}.{3}" -f $gemIEmp,$fileName,$archNow,$fileType
+
+	mv -path $pathGIMP -destination $archItem
+	
+		Add-Content -Path $impLOG "$logNow : [ ARCHIVE ] : $fileFull archive completed."
+	Add-Content -Path $impLOG "-------------------------------------------------------------------------------"
+	Add-Content -Path $impLOG " "
+	
+#-------[ END SCRIPT ]----------------------------------------------------------
+#...............................................................................
+
+	Add-Content -Path $impLOG " "
+	Add-Content -Path $impLOG "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	Add-Content -Path $impLOG "==============================================================================="
+		Add-Content -Path $impLOG "$lognow : [ END ] : Import Employee Demographic File"
+	Add-Content -Path $impLOG "==============================================================================="
+	Add-Content -Path $impLOG "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	Add-Content -Path $impLOG " "
+
+	} #----- end Test-Path $fileFull = $true
+
+
+#-------[ Else : Test-Path $false ]---------------------------------------------
+#...............................................................................
+
+	else {
+	
+		#Ending Script
+		#...............................................................
+		Add-Content -Path $impLOG "==============================================================================="
+		Add-Content -Path $impLOG "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		Add-Content -Path $impLOG " "
+			Add-Content -Path $impLOG "$logNow : [ ERROR ] : $fileFull does not exist. Closing script."
+		Add-Content -Path $impLOG " "
+		Add-Content -Path $impLOG "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		Add-Content -Path $impLOG "==============================================================================="
+
+
+	} #----- end Test-Path $fileFull = $false
+
+
+#---------------------------------------------------------------------------------------------------------
+#-------[ END SCRIPT ]------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------
