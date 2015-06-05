@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UserQryDef>
 
-	<DefFile>D:\GEM\User Queries\AccountSearchByFirstLastName.UserQryDef</DefFile>
+	<DefFile>D:\GEM\User Queries\AccountSearchByFullName.UserQryDef</DefFile>
 	<QueryName>Find Account By Employee Name</QueryName>
 	<Category>Accounts</Category>
 
