@@ -25,11 +25,11 @@ SELECT			DTL.AccountNo
 FROM			tblDetail as DTL
 LEFT JOIN tblAccountOHD as OHD ON DTL.AccountNo = OHD.AccountNo
 
-WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE 
+WHERE			DTL.TransDate BETWEEN @BEG_DATE AND @END_DATE
 
 /*	Ignore any potential payments that may exist in search results.
 =============================================================== */
-AND DTL.OutletNo NOT LIKE '1000' 
+AND DTL.OutletNo NOT LIKE '1000'
 
 
 /*	Configure any special includes or excludes for this batch.
@@ -55,7 +55,7 @@ ORDER BY		DTL.AccountNo
 
 /*
 ------------------------------------------------------------------------------------------------------------------
-[	BALANCE RESET QUERIES - TEMPLATE				]				  										 
+[	BALANCE RESET QUERIES - TEMPLATE				]
 ------------------------------------------------------------------------------------------------------------------
 
 
@@ -66,7 +66,7 @@ ORDER BY		DTL.AccountNo
 Author:		Roger Corley
 Created:	March 31, 2015
 
-Description:	
+Description:
 
 Set of SQL queries created to completed the following tasks:
 
@@ -92,8 +92,8 @@ USE [GEMdb];
 GO
 
 DECLARE		@_TDATE datetime, @_BEGINDATE datetime, @_ENDDATE datetime;
-DECLARE		@_CID int, @_OUTNO int, @_PAYTID int; 
-DECLARE		@_BID char(8), @_REFNO char(4), @_CHKNO char(6); 
+DECLARE		@_CID int, @_OUTNO int, @_PAYTID int;
+DECLARE		@_BID char(8), @_REFNO char(4), @_CHKNO char(6);
 DECLARE		@_ACID varchar(50), @_CHGTID varchar(50);
 DECLARE		@_BadgeNo char(19);
 
@@ -111,47 +111,47 @@ DECLARE		@_BadgeNo char(19);
 SET		@_TDATE		= '03-26-2015 23:59:59';
 /*					MODIFY DATE VALUE ONLY!! DO NOT MODIFY TIME VALUE!!
 -- The date MUST MATCH the LAST day of the cycle.
--- The last day of the cycle is the night before 
+-- The last day of the cycle is the night before
 -- the BeginDate of the next cycle.
 
 Enclose with single quotes ('').				*/
 
 
-SET		@_BID		= 'Payments';	
+SET		@_BID		= 'Payments';
 /*		 		 	!! DO NOT MODIFY !!								*/
 
 
-SET		@_CID		= 1;			
+SET		@_CID		= 1;
 /* 					!! DO NOT MODIFY !!								*/
 
 
-SET		@_OUTNO		= 1000;			
+SET		@_OUTNO		= 1000;
 /*					No single quotes ('').
 MODIFY ONLY IF REQUIRED. 						*/
 
 
-SET		@_PAYTID	= 501;			
+SET		@_PAYTID	= 501;
 /*					No single quotes ('').
 
-This value MUST MATCH THE CORRECT 
--- Payment TransID for any charge TransID(s) 
+This value MUST MATCH THE CORRECT
+-- Payment TransID for any charge TransID(s)
 -- listed in the WHERE clause.
 -- ( e.g. '501' <--> '10'; '502' <--> '20' )	*/
 
 
-SET		@_REFNO		= 'AUTO';		
+SET		@_REFNO		= 'AUTO';
 /*					Enclose with single quotes ('').
 MODIFY ONLY IF REQUIRED. 						*/
 
 
-SET		@_CHKNO		= 'BIWK';		
+SET		@_CHKNO		= 'BIWK';
 /* 					Enclose with single quotes ('').
 This value MUST MATCH THE CORRECT XLATID
 for this payment type.
 ( e.g. 'BIWK'; 'BIWK2'; 'MTH' ) 				*/
 
 
-SET		@_BadgeNo	= NULL;			
+SET		@_BadgeNo	= NULL;
 /*					!! DO NOT MODIFY !! EVER !!!					*/
 
 
@@ -176,9 +176,9 @@ MUST BEGIN AND END with commas (,10,20,30,).	*/
 
 
 
-SET		@_BEGINDATE	= (SELECT BeginDate FROM tblCycleXlat AS xlat 
+SET		@_BEGINDATE	= (SELECT BeginDate FROM tblCycleXlat AS xlat
 WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
-SET		@_ENDDATE	= (SELECT EndDate FROM tblCycleXlat AS xlat 
+SET		@_ENDDATE	= (SELECT EndDate FROM tblCycleXlat AS xlat
 WHERE @_TDATE BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @_CHKNO);
 
 SELECT	@_BID 			AS BatchID
@@ -203,7 +203,7 @@ FROM	tblDetail 		AS dtl
 LEFT JOIN tblAccountOHD AS ohd ON dtl.AccountNo = ohd.AccountNo
 
 WHERE	CHARINDEX(','+CAST(TransID as VARCHAR(50))+',',@_CHGTID) > 0 AND
-CHARINDEX(','+CAST(ohd.AccountClassID AS VARCHAR(50))+',',@_ACID) > 0 AND 
+CHARINDEX(','+CAST(ohd.AccountClassID AS VARCHAR(50))+',',@_ACID) > 0 AND
 dtl.TransDate BETWEEN @_BEGINDATE AND @_ENDDATE
 
 GROUP BY 	ohd.AccountNo
@@ -229,7 +229,7 @@ GO
 UPDATE 	dbo.RESETS
 SET		BadgeNo = d.BadgeNo
 
-FROM 	(SELECT a.AccountNo, b.BadgeNo FROM tblAccountOHD AS a join tblBadgesOHD AS b on a.AccountNo = b.AccountNo) AS d 
+FROM 	(SELECT a.AccountNo, b.BadgeNo FROM tblAccountOHD AS a join tblBadgesOHD AS b on a.AccountNo = b.AccountNo) AS d
 ,RESETS AS c
 
 WHERE 	c.AccountNo = d.AccountNo
@@ -248,7 +248,7 @@ WHERE 	c.AccountNo = d.AccountNo
 
 /*		UPDATE: Modify Badge Expiration Dates
 =================================================*/
-USE [GEMdb] 
+USE [GEMdb]
 GO
 
 DECLARE	@_NewExpDate datetime, @_OldExpDateBeg datetime, @_OldExpDateEnd datetime;
@@ -267,7 +267,7 @@ UPDATE	tblAccountOHD
 SET 	ExpireDate = @_NewExpDate
 WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
-UPDATE 	tblBadgesOHD	
+UPDATE 	tblBadgesOHD
 SET 	ExpireDate = @_NewExpDate
 WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
@@ -300,9 +300,9 @@ IF EXISTS (SELECT * FROM dbo.sysobjects WHERE ID = object_ID(N'[dbo].[CreateAcco
 DROP PROCEDURE [dbo].[ad_Create_TTL_Manually]
 GO
 
-SET QUOTED_IDENTIFIER ON 
+SET QUOTED_IDENTIFIER ON
 GO
-SET ANSI_NULLS ON 
+SET ANSI_NULLS ON
 GO
 
 
@@ -336,9 +336,9 @@ End
 
 
 GO
-SET QUOTED_IDENTIFIER OFF 
+SET QUOTED_IDENTIFIER OFF
 GO
-SET ANSI_NULLS ON 
+SET ANSI_NULLS ON
 GO
 
 ------------------------------------------------------------------------------------
@@ -379,13 +379,13 @@ FROM			tblCycleXLAT
 =============================================================== */
 
 --				Format DATE as:	Jan 1 2015 1:29PM  --  DEFAULT
-SELECT			CONVERT(VARCHAR(20),GETDATE(), 100)	
+SELECT			CONVERT(VARCHAR(20),GETDATE(), 100)
 
 --				Format DATE as:	01/01/15  --  Standard: USA
 SELECT			CONVERT(VARCHAR(8),GETDATE(), 1) AS [MM/DD/YY]
 
 --				Format DATE as:	01/01/2015  --  Standard: USA
-SELECT			CONVERT(VARCHAR(10),GETDATE(), 101) AS [MM/DD/YYYY]	
+SELECT			CONVERT(VARCHAR(10),GETDATE(), 101) AS [MM/DD/YYYY]
 
 --				Format DATE as:	15.01.01  --  Standard: ANSI
 SELECT			CONVERT(VARCHAR(8),GETDATE(), 2) AS [YY.MM.DD]
@@ -411,19 +411,19 @@ SELECT			CONVERT(VARCHAR(8),GETDATE(), 5) AS [DD-MM-YY]
 --				Format DATE as:	01-01-2015  --  Standard: Italian
 SELECT			CONVERT(VARCHAR(10),GETDATE(), 105) AS [DD-MM-YYYY]
 
---				Format DATE as:	01 Jan 15 
+--				Format DATE as:	01 Jan 15
 SELECT			CONVERT(VARCHAR(9),GETDATE(), 6) AS [DD MON YY]
 
---				Format DATE as:	01 Jan 2015 
+--				Format DATE as:	01 Jan 2015
 SELECT			CONVERT(VARCHAR(11),GETDATE(), 106) AS [DD MON YYYY]
 
---				Format DATE as:	Jan 01, 15 
+--				Format DATE as:	Jan 01, 15
 SELECT			CONVERT(VARCHAR(10),GETDATE(), 7) AS [Mon DD, YY]
 
---				Format DATE as:	Jan 01, 2015 
+--				Format DATE as:	Jan 01, 2015
 SELECT			CONVERT(VARCHAR(12),GETDATE(), 107) AS [Mon DD, YYYY]
 
---				Format DATE/TIME as:	Jan 01 2015 01:23:45:123PM 
+--				Format DATE/TIME as:	Jan 01 2015 01:23:45:123PM
 SELECT			CONVERT(VARCHAR(26),GETDATE(), 109)
 
 --				Format DATE as:	01-01-15	--	Standard: USA
@@ -469,7 +469,7 @@ SELECT			DATENAME(MM, GETDATE()) + ' ' + CAST(DAY(GETDATE()) AS VARCHAR(2)) AS [
 
 /*	Standard Time Formats
 =============================================================== */
---				Format TIME as:	01:23:45 
+--				Format TIME as:	01:23:45
 SELECT			CONVERT(VARCHAR(10),GETDATE(), 108) AS [Mon DD, YY]
 
 
@@ -544,3 +544,12 @@ WHERE 	user_id = 'ccents'
 =============================================================== */
 UPDATE 	micros.rest_def
 SET 		ob_classic_security = ‘T’
+
+
+/*  FORCE CLOSE ALL OPEN CHECKS ( ** WILL CLOSE ALL OPEN CHEKCS ** )
+=============================================================== */
+begin
+declare @mychk int;
+Set @mychk = (select chk_seq from micros.chk_dtl where chk_open = 'T');
+call micros.sp_forcechkclose(@mychk);
+end

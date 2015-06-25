@@ -101,39 +101,5 @@ BULK
 	)
 GO
 
-IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'tblBatch'))
-	BEGIN
-		PRINT '[ERROR] : Required table, tblBatch, does not exist.'
-		PRINT '[ERROR] : Stopping bulk import process.'
-	END
 
-ELSE
-	BEGIN
-		PRINT '[IMPORT] : The required table, tblBatch, exists.'
-		PRINT '[IMPORT] : Testing to see if the table, GCImport, exists.'
-
-		IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'GCImport'))
-
-			BEGIN
-				PRINT '[ERROR] : The temporary table, GCImport, does not exist.'
-				PRINT '[ERROR] : Stopping Bulk GiftCard Load import.'
-			END
-		ELSE
-
-			BEGIN
-				PRINT '[IMPORT] : The temporary table, GCImport, exists.'
-				PRINT '[IMPORT] : Beginning import from table GCImport into tblBatch.'
-
-				INSERT INTO tblBatch (BatchID, CoreID, AccountNo, BadgeNo, TransDate, OutletNo, TransID, ChkNum, TransTotal)
-
-				SELECT gc.BatchID, gc.CoreID, gc.AccountNo, gc.BadgeNo, gc.TransDate, gc.OutletNo, gc.TransID, gc.ChkNum, gc.TransTotal
-				FROM GCImport as gc
-
-				PRINT '[IMPORT] : Batch GiftCard Load import into tblBatch complete.'
-			END
-
-	END
-GO
-
-SELECT * FROM tblBatch WHERE BatchID = 'GCLOAD'
 GO
