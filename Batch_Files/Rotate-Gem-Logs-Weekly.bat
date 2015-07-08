@@ -106,7 +106,7 @@
 ::			ALWAYS include the colon ( : ) after the drive letter!  e.g. D:
 ::-------------------------------------------------------------------------------------
 ::
-	set "archD=E:"
+	set "archD=C:"
 
 	set "archP=%archD%\_Gem-Log-Archives"
 ::
