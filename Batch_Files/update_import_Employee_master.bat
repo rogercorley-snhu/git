@@ -1,4 +1,4 @@
-  @echo off
+bbbbb  @echo off
   cls
   setlocal ENABLEDELAYEDEXPANSION
 

@@ -1,9 +1,9 @@
-::	Job Notes
+::  Job Notes
+::========================================================================================================================================
 ::Configured Weekly GEM Log Rotations:
-::Every Monday at 4:45 AM - Runs E:\GEM\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat
-::Archives to E:\GEM\_Gem-Log-Archives
+::Every Monday at 4:45 AM - Runs C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat
+::Archives to C:\_Gem-Log-Archives
 ::Job Log file lives there for troubleshooting.
-
 
 	@echo off
 	cls
@@ -13,12 +13,12 @@
 :: Title:    Rotate GEMonline & GEMDaily Logs -- Weekly
 ::========================================================================================================================================
 ::
-::	Author:		Roger Corley
+::	Author:	Roger Corley
 ::	Created:	May 14, 2015  11:39:53 AM
 ::............................................................
 ::
-::	Version: 	1.30
-::	Updated:	Roger Corley - June 11, 2015  2:29 PM
+::	Version: 	1.40
+::	Updated:	Roger Corley - June 11, 2015  11:23 AM
 ::
 ::========================================================================================================================================
 :: Description:
