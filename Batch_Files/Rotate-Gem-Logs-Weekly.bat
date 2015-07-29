@@ -1,9 +1,12 @@
-::  Job Notes
-::========================================================================================================================================
-::Configured Weekly GEM Log Rotations:
-::Every Monday at 4:45 AM - Runs C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat
-::Archives to C:\_Gem-Log-Archives
-::Job Log file lives there for troubleshooting.
+Job Notes
+========================================================================================================================================
+Configured Weekly GEM Log Rotations:
+Every Monday at 4:45 AM - Runs C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat
+Archives to C:\_Gem-Log-Archives
+Job Log file lives there for troubleshooting.
+
+
+
 
 	@echo off
 	cls
@@ -18,7 +21,7 @@
 ::............................................................
 ::
 ::	Version: 	1.40
-::	Updated:	Roger Corley - June 11, 2015  11:23 AM
+::	Updated:	Roger Corley - July 14, 2015  11:23 AM
 ::
 ::========================================================================================================================================
 :: Description:
@@ -255,17 +258,17 @@
 ::---------------------------------------------------------------------------------------------------------------------------------------
 
 	if exist %ago%12 del /f /q %ago%12
-	if exist %ago%11 copy %ago%07 %ago%12
-	if exist %ago%10 copy %ago%07 %ago%11
-	if exist %ago%09 copy %ago%07 %ago%10
-	if exist %ago%08 copy %ago%08 %ago%09
-	if exist %ago%07 copy %ago%07 %ago%08
-	if exist %ago%06 copy %ago%06 %ago%07
-	if exist %ago%05 copy %ago%05 %ago%06
-	if exist %ago%04 copy %ago%04 %ago%05
-	if exist %ago%03 copy %ago%03 %ago%04
-	if exist %ago%02 copy %ago%02 %ago%03
-	if exist %ago%01 copy %ago%01 %ago%02
+	if exist %ago%11 rename %ago%11 %ago%12
+	if exist %ago%10 rename %ago%10 %ago%11
+	if exist %ago%09 rename %ago%09 %ago%10
+	if exist %ago%08 rename %ago%08 %ago%09
+	if exist %ago%07 rename %ago%07 %ago%08
+	if exist %ago%06 rename %ago%06 %ago%07
+	if exist %ago%05 rename %ago%05 %ago%06
+	if exist %ago%04 rename %ago%04 %ago%05
+	if exist %ago%03 rename %ago%03 %ago%04
+	if exist %ago%02 rename %ago%02 %ago%03
+	if exist %ago%01 rename %ago%01 %ago%02
 
 	if exist %gopath% move %gopath% %agofull%
 
@@ -308,17 +311,17 @@
 ::---------------------------------------------------------------------------------------------------------------------------------------
 
 	if exist %agd%12 del /f /q %agd%12
-	if exist %agd%11 copy %agd%07 %agd%12
-	if exist %agd%10 copy %agd%07 %agd%11
-	if exist %agd%09 copy %agd%07 %agd%10
-	if exist %agd%08 copy %agd%08 %agd%09
-	if exist %agd%07 copy %agd%07 %agd%08
-	if exist %agd%06 copy %agd%06 %agd%07
-	if exist %agd%05 copy %agd%05 %agd%06
-	if exist %agd%04 copy %agd%04 %agd%05
-	if exist %agd%03 copy %agd%03 %agd%04
-	if exist %agd%02 copy %agd%02 %agd%03
-	if exist %agd%01 copy %agd%01 %agd%02
+	if exist %agd%11 rename %agd%11 %agd%12
+	if exist %agd%10 rename %agd%10 %agd%11
+	if exist %agd%09 rename %agd%09 %agd%10
+	if exist %agd%08 rename %agd%08 %agd%09
+	if exist %agd%07 rename %agd%07 %agd%08
+	if exist %agd%06 rename %agd%06 %agd%07
+	if exist %agd%05 rename %agd%05 %agd%06
+	if exist %agd%04 rename %agd%04 %agd%05
+	if exist %agd%03 rename %agd%03 %agd%04
+	if exist %agd%02 rename %agd%02 %agd%03
+	if exist %agd%01 rename %agd%01 %agd%02
 
 	if exist %gdpath% move %gdpath% %agdfull%
 
