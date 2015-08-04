@@ -4,6 +4,12 @@ Configured Weekly GEM Log Rotations:
 Every Monday at 4:45 AM - Runs C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Weekly.bat
 Archives to C:\_Gem-Log-Archives
 Job Log file lives there for troubleshooting.
+Configured to also RESTART GemService as part of the weekly rotation job
+
+PowerShell
+========================================================================================================================================
+
+Setup Monitor-GemService.ps1 - Configured Desktop and Startup shortcuts - Tested and Worked
 
 
 

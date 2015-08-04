@@ -1,4 +1,4 @@
-clear
+Clear-Host
 
 
 #-----[ Script Variables ]
