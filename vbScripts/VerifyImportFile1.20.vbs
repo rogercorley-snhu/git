@@ -65,22 +65,22 @@
 '  Name       Config Array to use   Description
 '------------------------------------------------------------------------------------------------------------------------------------------
 '
-'  * Minimum number of lines: none        There must be at least this number of lines in the file.
-'                           **Use the MIN_NUMBER_OF_LINES constant to set this minimum
+'  * Minimum number of lines: none			There must be at least this number of lines in the file.
+'							**Use the MIN_NUMBER_OF_LINES constant to set this minimum
 '..........................................................................................................................................
-'  * Expected number of fields: none        Each line must have the specified number of fields
+'  * Expected number of fields: none			Each line must have the specified number of fields
 '..........................................................................................................................................
-'  * Max Field Length:    MaxLengthArray      Length of each field in each line must be less than or equal to the specified
-'               length as defined in the config array
+'  * Max Field Length: MaxLengthArray			Length of each field in each line must be less than or equal to the specified
+'							length as defined in the config array
 '..........................................................................................................................................
-'  * Min Field Length:    MinLengthArray      Length of each field in each line must be greater than or equal to the specified
-'               length as defined in the config array
+'  * Min Field Length: MinLengthArray			Length of each field in each line must be greater than or equal to the specified
+'							length as defined in the config array
 '..........................................................................................................................................
-'  * Numeric Field Only:    NumericOnlyArray    Each field can be checked to be only numeric data or not checked.
+'  * Numeric Field Only: NumericOnlyArray		Each field can be checked to be only numeric data or not checked.
 '..........................................................................................................................................
-'  * Must contain value:    MustContainValueArray   Each field can be compared to be one of several exact values (not case sensitive).
+'  * Must contain value: MustContainValueArray		Each field can be compared to be one of several exact values (not case sensitive).
 '..........................................................................................................................................
-'  * Must NOT contain value:  MustNotContainValueArray  Each field can be compared to NOT be one of several exact values (not case sensitive).
+'  * Must NOT contain value: MustNotContainValueArray	Each field can be compared to NOT be one of several exact values (not case sensitive).
 '..........................................................................................................................................
 '
 '
@@ -113,13 +113,13 @@
 '
 '..........................................................................................................................................
 '
-'  Version 1.21         21-July-15 Roger Corley
+'  Version 1.21         05-August-15 Roger Corley
 '..........................................................................................................................................
-'   ISSUE:   	When configuring the MinLengthArray array and running the script, it appears that the script is not using the MinLengthArray.
+'   ISSUE:	When configuring the MinLengthArray array and running the script, it appears that the script is not using the MinLengthArray.
 '
-'   FIX:		In the subroutine, Sub RunLineVerifications, didn't contain a reference to MinLengthArray. When I added it and tested
-' 		the script against a file with a known field under the MinLengthArray setting, the script added it to the BadRecords file and
-'		removed it from the GoodRecords file. Submitted to QA for testing on 2015-07-21
+'   FIX:	In the subroutine, Sub RunLineVerifications, didn't contain a reference to MinLengthArray. When I added it and tested
+'		the script against a file with a known field under the MinLengthArray setting, the script added it to the BadRecords file
+'		and removed it from the GoodRecords file. Submitted to QA for testing on 2015-08-05
 '
 '==========================================================================================================================================
 '  ----[[ Array Variables to be used below ]]----
@@ -143,15 +143,15 @@ Dim GoodFileBackup
 '..........................................................................................................................................
 
 
-LineCountInvalid = False
+LineCountInvalid	= False
 '..........................................................................................................................................
 
 
 '.............................................
 'some ado constants ** DO NOT CHANGE THESE **
 '.............................................
-Const FOR_READING = 1
-Const FOR_APPENDING = 8
+Const FOR_READING	= 1
+Const FOR_APPENDING	= 8
 
 
 '==========================================================================================================================================
@@ -161,58 +161,61 @@ Const FOR_APPENDING = 8
 '............................................................................
 'Change the following constants to values you need for your import file, etc.
 '............................................................................
-
-'............................................................................
-	 Const FILE_DIRECTORY     = "F:\GEM\ImportExport"
 '
-'  DO NOT include a '\' at end. empty string means current dir
+	 Const FILE_DIRECTORY			= "D:\GEM\ImportExport"
+'						** DO NOT include a '\' at end. empty string means current dir **
 '............................................................................
 
 
-	 Const INPUT_FILE_NAME    = "meds.csv"
+	 Const INPUT_FILE_NAME			= "GemPay-Nebraska-Demo.txt"
 
-	 Const BAD_FILE_NAME      = "_BadRecords\BadRecords-301-Meds.csv"
+	 Const BAD_FILE_NAME			= "_Bad-Records\Bad-GemPay-Nebraska-Demo.csv"
 
-	 Const GOOD_FILE_NAME     = "_GoodRecords\GoodRecords-301-Meds.csv"
+	 Const GOOD_FILE_NAME			= "_Good-Records\GemPay-Nebraska-Demo.csv"
 
-	 Const LOG_FILE_NAME      = "_Logs\ERROR_VerifyImport-301-Meds.log"
+	 Const LOG_FILE_NAME			= "_Logs\ERROR_VerifyImport-GemPay-Nebraska-Demo.log"
 
-	 Const FIELD_DELIMITER    = ","
+	 Const FIELD_DELIMITER			= ","
 
-	 Const INCLUDE_EXPLAINATION_FIELD   = True
+	 Const INCLUDE_EXPLAINATION_FIELD	= True
 
-	 Const EXPECTED_NUMBER_OF_FIELDS    = 4
+	 Const EXPECTED_NUMBER_OF_FIELDS	= 5
 
 '............................................................................
-	 Const MIN_NUMBER_OF_LINES    = 10
 '
-'  Must be set to a minimum number. if the number of lines in the file are
-'  less than this, a backup is created and the "Good File" will be an empty
-'  file that should be refused for import in the import sproc. The Bad File
-'  will contain a line describing the failure
+	 Const MIN_NUMBER_OF_LINES		= 10
+'
+'						** Must be set to a minimum number. if the number of lines in the file are
+'						less than this, a backup is created and the "Good File" will be an empty
+'						file that should be refused for import in the import sproc. The Bad File
+'						will contain a line describing the failure
+'
 '............................................................................
 
 
 '------------------------------------------------------------------------------------------------------------------------------------------
 '  ----[ Test Config Arrays ]----
 '------------------------------------------------------------------------------------------------------------------------------------------
-
-'  * Uncomment (remove LEADING apostrophe) from each line of test arrays you
-'    need to use.
-'  * Add an apostrophe to the BEGINNING of any test array line that you do not
-'    wish to test.
-'  * Format: Array(value, value, value, value). A comma must separate each value.
-'    No comma at the end of the value list.
-'  * The number of values in the array must match the number of fields in each
-'    line of the file
+'
+'
+'  * Uncomment (remove LEADING apostrophe) from each line of test arrays you need to use.
+'
+'  * Add an apostrophe to the BEGINNING of any test array line that you do not wish to test.
+'
+'  * Format: Array(value, value, value, value). A comma must separate each value. No comma at the end of the value list.
+'
+'  * The number of values in the array must match the number of fields in each line of the file
+'
 '  * Each array has a commented description at the end of the line.
-'    i.e. '<-- comments... The apostrophe MUST be in front of the description,
-'    or the script will error.
+'    i.e. '<-- comments... The apostrophe MUST be in front of the description, or the script will error.
+'
 '  * String (text) values must be surrounded by double quotes ("my text")
-'  * Boolean (true, false) values must be capitolized (True,False) and NOT
-'    surrounded by quotes
-'  * Numeric values must NOT be surrounded by quotes, unless the entire array is
-'    intended to be text values
+'
+'  * Boolean (true, false) values must be capitolized (True,False) and NOT surrounded by quotes
+'
+'  * Numeric values must NOT be surrounded by quotes, unless the entire array is intended to be text values
+'
+'
 '------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -220,25 +223,35 @@ Const FOR_APPENDING = 8
 '  ----[[ BEGIN Test Config Arrays ]]----
 '------------------------------------------------------------------------------------------------------------------------------------------
 
-	MaxLengthArray  = Array(10, 5, 999, 999)      '<-- Numeric - to NOT test the max length,
-												'    use a high number like 999
+	MaxLengthArray			= Array(8, 10, 999, 999, 999)
+'
+'					** Numeric - to NOT test the max length,
+'					** use a high number like 999
 '............................................................................
 
-	MinLengthArray  = Array(10, 4, 2, 2)        '<-- Numeric - to NOT test the min length,
-												'    use 0 (the number zero)
+	MinLengthArray			= Array(5, 7, 2, 2, 2)
+'
+'					** Numeric - to NOT test the min length,
+'					** use 0 (the number zero)
 '............................................................................
 
-	NumericOnlyArray  = Array(False, True, False, False)    '<-- Boolean - True = Must contain only numeric
-												'    characters, False = Don't test field
+	NumericOnlyArray		= Array(True, True, False, False, False)
+'
+'					** Boolean - True = Must contain only numeric
+'					** characters, False = Don't test field
 '............................................................................
 
-	MustContainValueArray = Array("", "", "", "")       '<-- Text - provide empty string for fields not
-									'    being tested, Pipe char as delimiter
-									'    (i.e. "Employee|Department|Admin")
+	MustContainValueArray		= Array("", "", "", "", "")
+'
+'					** Text - provide empty string for fields not
+'					** being tested, Pipe char as delimiter
+'					** (i.e. "Employee|Department|Admin")
 '............................................................................
 
-	MustNotContainValueArray  = Array("", "", "", "")     '<-- Text - provide empty string for fields not
-									'    being tested, Pipe char as delimiter
+	MustNotContainValueArray	= Array("", "2200000", "", "", "")
+'
+'					** Text - provide empty string for fields not
+'					** being tested, Pipe char as delimiter
 
 
 '==========================================================================================================================================
