@@ -1,0 +1,1 @@
+shutdown.exe /l /r /f /t 30 /c "Script: Manual Reboot of Server"

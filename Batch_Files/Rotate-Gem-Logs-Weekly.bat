@@ -105,13 +105,13 @@ Configured to also RESTART GemService as part of the weekly rotation job
 ::========================================================================================================================================
 ::
 ::-------------------------------------------------------------------------------------
-:: ---[ **NOTE** ]---	'archD' MUST match the Drive Letter hosting the GEM directory
+:: ---[ **NOTE** ]---	'sysD' MUST match the Drive Letter hosting the GEM directory
 ::			ALWAYS include the colon ( : ) after the drive letter!  e.g. D:
 ::-------------------------------------------------------------------------------------
 ::
-	set "archD=C:"
+	set "sysD=C:"
 
-	set "archP=%archD%\_Gem-Log-Archives"
+	set "archD=%sysD%\_Gem-Log-Archives"
 ::
 ::
 ::
@@ -189,17 +189,17 @@ Configured to also RESTART GemService as part of the weekly rotation job
 ::FILES: Archives
 ::========================================================================================================================================
 
-	set "agofull=%archP%\%goname%.%logstamp%.%gotype%01"
-	set "agdfull=%archP%\%gdname%.%logstamp%.%gdtype%01"
+	set "agofull=%archD%\%goname%.%logstamp%.%gotype%01"
+	set "agdfull=%archD%\%gdname%.%logstamp%.%gdtype%01"
 
-	set "ago=%archP%\*.%gotype%"
-	set "agd=%archP%\*.%gdtype%"
+	set "ago=%archD%\gemonline.*.%gotype%"
+	set "agd=%archD%\GEMDaily.*.%gdtype%"
 
 ::========================================================================================================================================
 ::FILES: Import Log File
 ::========================================================================================================================================
 ::
-	set "log=%archP%\_Rotate-Gem-Logs-Weekly.log"
+	set "log=%archD%\_Rotate-Gem-Logs-Weekly.log"
 
 
 ::========================================================================================================================================
@@ -257,18 +257,20 @@ Configured to also RESTART GemService as part of the weekly rotation job
 :rotateGO
 ::---------------------------------------------------------------------------------------------------------------------------------------
 
-	if exist %ago%12 del /f /q %ago%12
-	if exist %ago%11 rename %ago%11 %ago%12
-	if exist %ago%10 rename %ago%10 %ago%11
-	if exist %ago%09 rename %ago%09 %ago%10
-	if exist %ago%08 rename %ago%08 %ago%09
-	if exist %ago%07 rename %ago%07 %ago%08
-	if exist %ago%06 rename %ago%06 %ago%07
-	if exist %ago%05 rename %ago%05 %ago%06
-	if exist %ago%04 rename %ago%04 %ago%05
-	if exist %ago%03 rename %ago%03 %ago%04
-	if exist %ago%02 rename %ago%02 %ago%03
-	if exist %ago%01 rename %ago%01 %ago%02
+cd C:\_Gem-Log-Archives
+
+	if exist gemonline.*.log12 del /f /q gemonline.*.log12
+	if exist gemonline.*.log11 rename gemonline.*.log11 gemonline.*.log12
+	if exist gemonline.*.log10 rename gemonline.*.log10 gemonline.*.log11
+	if exist gemonline.*.log09 rename gemonline.*.log09 gemonline.*.log10
+	if exist gemonline.*.log08 rename gemonline.*.log08 gemonline.*.log09
+	if exist gemonline.*.log07 rename gemonline.*.log07 gemonline.*.log08
+	if exist gemonline.*.log06 rename gemonline.*.log06 gemonline.*.log07
+	if exist gemonline.*.log05 rename gemonline.*.log05 gemonline.*.log06
+	if exist gemonline.*.log04 rename gemonline.*.log04 gemonline.*.log05
+	if exist gemonline.*.log03 rename gemonline.*.log03 gemonline.*.log04
+	if exist gemonline.*.log02 rename gemonline.*.log02 gemonline.*.log03
+	if exist gemonline.*.log01 rename gemonline.*.log01 gemonline.*.log02
 
 	if exist %gopath% move %gopath% %agofull%
 
@@ -310,18 +312,18 @@ Configured to also RESTART GemService as part of the weekly rotation job
 :rotateGD
 ::---------------------------------------------------------------------------------------------------------------------------------------
 
-	if exist %agd%12 del /f /q %agd%12
-	if exist %agd%11 rename %agd%11 %agd%12
-	if exist %agd%10 rename %agd%10 %agd%11
-	if exist %agd%09 rename %agd%09 %agd%10
-	if exist %agd%08 rename %agd%08 %agd%09
-	if exist %agd%07 rename %agd%07 %agd%08
-	if exist %agd%06 rename %agd%06 %agd%07
-	if exist %agd%05 rename %agd%05 %agd%06
-	if exist %agd%04 rename %agd%04 %agd%05
-	if exist %agd%03 rename %agd%03 %agd%04
-	if exist %agd%02 rename %agd%02 %agd%03
-	if exist %agd%01 rename %agd%01 %agd%02
+	if exist GEMDaily.*.cp12 del /f /q GEMDaily.*.cp12
+	if exist GEMDaily.*.cp11 rename GEMDaily.*.cp11 GEMDaily.*.cp12
+	if exist GEMDaily.*.cp10 rename GEMDaily.*.cp10 GEMDaily.*.cp11
+	if exist GEMDaily.*.cp09 rename GEMDaily.*.cp09 GEMDaily.*.cp10
+	if exist GEMDaily.*.cp08 rename GEMDaily.*.cp08 GEMDaily.*.cp09
+	if exist GEMDaily.*.cp07 rename GEMDaily.*.cp07 GEMDaily.*.cp08
+	if exist GEMDaily.*.cp06 rename GEMDaily.*.cp06 GEMDaily.*.cp07
+	if exist GEMDaily.*.cp05 rename GEMDaily.*.cp05 GEMDaily.*.cp06
+	if exist GEMDaily.*.cp04 rename GEMDaily.*.cp04 GEMDaily.*.cp05
+	if exist GEMDaily.*.cp03 rename GEMDaily.*.cp03 GEMDaily.*.cp04
+	if exist GEMDaily.*.cp02 rename GEMDaily.*.cp02 GEMDaily.*.cp03
+	if exist GEMDaily.*.cp01 rename GEMDaily.*.cp01 GEMDaily.*.cp02
 
 	if exist %gdpath% move %gdpath% %agdfull%
 

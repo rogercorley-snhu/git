@@ -1,3 +1,6 @@
+USE GEMserve4
+GO
+
 DECLARE @PatientVisitID  varchar(50),
   @PatientID   int,
   @IncludeDiet  bit,
