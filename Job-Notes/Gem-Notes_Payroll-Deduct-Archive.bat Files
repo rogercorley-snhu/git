@@ -1,0 +1,14 @@
+Job Notes
+=======================================================================================================================
+​
+-- Created \ImportExport\Archive\Import-Employees-Archives directory
+
+-- Created the following Payroll Deduction Archive batch files:
+---- Archive-Rotate-Payroll-Deduct-Files_CCDEDCAF.bat
+---- Archive-Rotate-Payroll-Deduct-Files_CCDEDGIF.bat
+---- Archive-Rotate-Payroll-Deduct-Files_CCDEDMSC.bat
+
+
+-- Setup Scheduled Jobs to run the batch files at the end of every pay cycle
+
+-- Tested / Worked

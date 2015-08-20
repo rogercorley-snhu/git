@@ -1,0 +1,6 @@
+Job Notes
+=======================================================================================================================
+-- Created GEM\ImportExport\Archive directory -- Created \ImportExport\Archive\Import-Employees-Archives directory
+-- Modified the ImportMaster.bat to include the updated scripts to archive and rotate archived files - Renamed <filename>
+-- Setup Scheduled Job to run the batch file daily
+-- Tested / Worked
