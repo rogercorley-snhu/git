@@ -54,22 +54,54 @@ function Gem-Refresh-PowerShell {
 #---------------------------------------------------------------------------------------------------------------
 function Gem-Cd ($dir) {
 
+
+    $list = {
+            'gologs = Gem-Log-Archives',
+            'gem = GEM Directory',
+            'gdef = GEM Defs Directory',
+            'glogs = GEM Logs Directory',
+            'imp = GEM ImportExport Directory',
+            'iarc = GEM ImpExp Archive Directory',
+            'iemp = GEM Import-Employees-Archives',
+            'gtb = GEM-Toolbox',
+            'gpshell = GEM PowerShell Directory',
+            'gpsf = GEM PowerShell Functions',
+            'gbf = GEM Batch-Files Directory',
+            'user = Current UserProfile Directory',
+            'desk = User Desktop',
+            'docs = Current UserProfile Documents',
+            'psprofile = Current User PowerShell Profile Directory'
+            }
+
   Switch ($dir) {
-    gimp { sl "$env:GEM\ImportExport"; break }
-    gdef { sl "$env:GEM\Defs"; break }
-    gemlogs { sl "$env:GEM\Log"; break }
-    garc { sl "$env:GEM\ImportExport\Archive"; break }
-    gemp { sl "$env:GEM\ImportExport\Archive\Import-Employees"; break }
-    desk { sl "$env:UserProfile\Desktop"; break }
+
     gologs { sl "$env:SystemDrive\_Gem-Log-Archives"; break }
-    gtb { sl "$env:GEM\_Gem-Toolbox"; break }
-    gps { sl "$env:GEM\_Gem-Toolbox\PowerShell"; break }
-    gpf { sl "$env:GEM\_Gem-Toolbox\PowerShell\Functions"; break }
-    gbf { sl "$env:GEM\_Gem-Toolbox\Batch-Files"; break }
+
     gem { sl "$env:GEM"; break }
-    default { sl "$env:GEM"; break }
+
+    gdef { sl "$env:GEM\Defs"; break }
+    glogs { sl "$env:GEM\Log"; break }
+
+
+    imp { sl "$env:GEM\ImportExport"; break }
+    iarc { sl "$env:GEM\ImportExport\Archive"; break }
+    iemp { sl "$env:GEM\ImportExport\Archive\Import-Employees-Archives"; break }
+
+    gtb { sl "$sysD\_Gem-Toolbox"; break }
+    gpshell { sl "$sysD\_Gem-Toolbox\PowerShell"; break }
+    gpsf { sl "$sysD\_Gem-Toolbox\PowerShell\Functions"; break }
+    gbf { sl "$sysD\_Gem-Toolbox\Batch-Files"; break }
+
+
+    user { sl "$env:UserProfile"; break }
+    desk { sl "$env:UserProfile\Desktop"; break }
+    docs { sl "$env:UserProfile\Documents"; break }
+    psprofile { sl "$env:UserProfile\Documents\WindowsPowershell"; break }
+
+    default { $list; break }
   }
 } #  [ END ] : Gem-Cd
+
 
 
 #

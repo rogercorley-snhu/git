@@ -1,0 +1,1 @@
+select * into dbo.<tablename>_<date> from dbo.<tablename>

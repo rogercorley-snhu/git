@@ -1,6 +1,18 @@
-Job Notes
-=======================================================================================================================
+Job Notes -- Archive-Import-Employee-Rotate.bat
+=============================================================================================================
 -- Created GEM\ImportExport\Archive directory -- Created \ImportExport\Archive\Import-Employees-Archives directory
 -- Modified the ImportMaster.bat to include the updated scripts to archive and rotate archived files - Renamed <filename>
 -- Setup Scheduled Job to run the batch file daily
+-- Tested / Worked
+
+
+
+
+
+Job Notes -- Archive-Rotate-<fileName>-Import-File.bat
+=============================================================================================================
+-- Created GEM\ImportExport\Archive directory
+-- Created \ImportExport\Archive\Import-Employees-Archives directories for Employee, Meds, Volunteers, and EMS
+-- Created Archive-Rotate-<filename>-Import-File.bat" scripts for each filename
+-- Reconfigured each SQL Agent import job to start with the archive script for that filename
 -- Tested / Worked

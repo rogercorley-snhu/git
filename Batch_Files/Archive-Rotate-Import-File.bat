@@ -6,7 +6,7 @@
 
 ::========================================================================================================================================
 ::
-::-------[ TITLE 		]  :  BATCH SCRIPT : IMPORT, ARCHIVE & ROTATE : <****** FILE-NAME ******> Demographic File - Daily
+::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE & ROTATE : "<***** FILE-NAME *****>" Demographic File - Daily
 ::
 ::========================================================================================================================================
 
@@ -14,7 +14,7 @@
 ::----------------------------------------------------------------------------------------------------------------------------------------
 ::
 ::-------[ AUTHOR		] : Roger Corley
-::-------[ CREATED		] : August 20, 2015 1:46:37 PM
+::-------[ CREATED		] : August 27, 2015 12:05:07 PM
 ::-------[ COPYRIGHT		] : Common CENTS Solutions - 2015
 ::
 ::----------------------------------------------------------------------------------------------------------------------------------------
@@ -38,12 +38,6 @@
 ::
 ::	SET "gemDRIVE=C:\"	Enter the DRIVE LETTER when the GEM directory is located
 ::				**  ONLY CHANGE THE DRIVE LETTER! DO NOT MODIFY OR REMOVE THE ' :\ '
-::
-::	SET "rsSVR=(local)"	Enter the COMPUTERNAME\SQLNAME of the SQL Server hosting the GEMdb database.
-::				**  If the GEMdb is on the local machine, enter (local) -- with parenthesis -- within double-quotes.
-::
-::	SET "rsMODULE=300"	Enter the sModule number that will be used for this import file.
-::				**  You can locate this value in SQL Server\GEMdb --> cfgScriptParams --> KeyValue 'sModule'
 ::
 ::	This batch file will also rotate any existing archived demographic files. You can set the number
 ::	of archived files to keep by changing the 'skip' number in the FOR statement towards the end of this script.
@@ -70,16 +64,6 @@
 
 	SET "fileName=<****** FILE-NAME ******>"
 	SET "archExt=.SAV"
-
-
-::========================================================================================================================================
-::
-::-------[ SCRIPT VARIABLES ] : RunScript Variables
-::========================================================================================================================================
-
-	SET "rsSVR=(local)"
-	SET "rsMODULE=300"
-
 
 
 
@@ -135,7 +119,7 @@
 	SET "gemDIR=%GEM%"
 
 	SET "ieDIR=%gemDIR%\ImportExport"
-	SET "arcDIR=%ieDIR%\Archive\Import-Employees-Archives"
+	SET "arcDIR=%ieDIR%\Archive\Import-Employees-Archives\<****** DIRECTORY-NAME ******>"
 
 
 
@@ -145,7 +129,7 @@
 ::========================================================================================================================================
 
 
-	echo Beginning Import Employee File and Archive Rotataton ...
+	echo Beginning Archive %fileName% Import File Rotatation ...
 
 
 ::-------[  TEST-FILE-EXISTS ] : Import-Employee-File
@@ -153,13 +137,7 @@
 
 	if not exist %ieDIR%\%fileName% goto NOFILE
 
-
-
-::-------[  IMPORT-FILE ] : RUNSCRIPT
-::----------------------------------------------------------------------------------------------------------------------------------------
-
-	%gemDIR%\runscript script=Import_v1_70.gsf,pw=gemie,svr=%rsSVR%,core=1,module=%rsMODULE%,include=gsf.txt
-
+	echo [MESSAGE] : %ieDIR%\%fileName% exists
 
 
 
@@ -168,21 +146,25 @@
 
 	CD /d %arcDIR%
 
+	echo [MESSAGE] : Changing directory to %arcDIR%
 
 
 
 ::-------[  COPY ORIGINAL ] : If Original File Exists, Copy to Archive Directory and Rename
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
-	if exist "%ieDIR%\%fileName%" (
+	if exist %ieDIR%\%fileName% (
 
-		move "!ieDIR!\!fileName!" "!arcDIR!\!fileName!!stamp!!archExt!"
+		echo [MESSAGE] : Start File Copy
 
-		goto Rotate
+		copy "!ieDIR!\!fileName!" "!arcDIR!\!fileName!!stamp!!archExt!"
+
+
+		goto ROTATE
 
 	) else (
 
-		goto Done
+		goto DONE
 	)
 
 
@@ -196,8 +178,13 @@
 ::-------[  ROTATE SCRIPT ] : Rotate Archived Files
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
-	for /f "skip=14 eol=: delims=" %%F in ('dir /b /o-d %fileName%_*') do @del "%%F"
+	echo [MESSAGE] : Beginning Archive Rotations.
 
+
+	for /f "skip=7 eol=: delims=" %%F in ('dir /b /o-d %fileName%_*') do @del "%%F"
+
+
+	goto DONE
 
 
 
@@ -206,13 +193,13 @@
 :NOFILE
 ::========================================================================================================================================
 
-
+	echo [ERROR] :  %ieDIR%\%filename% Not Found : Exiting Script
 
 
 ::========================================================================================================================================
 
 :DONE
 ::========================================================================================================================================
-	echo Import Employee File and Archive Rotate Complete...
+	echo Archive %fileName% Import File Rotatation Complete...
 
 

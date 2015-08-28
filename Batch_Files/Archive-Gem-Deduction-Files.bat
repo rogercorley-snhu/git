@@ -6,7 +6,7 @@
 
 ::===========================================================================================================
 ::
-::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE : Payroll Deduction Files
+::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE : <****** FILE-NAME ******> Payroll Deduction Files
 ::
 ::===========================================================================================================
 ::
@@ -67,7 +67,7 @@
 ::-------[ ENVIRONMENT VARIABLES ] : Directories & FileNames
 ::========================================================================================================================================
 
-	SET "fileName=CCDEDCAF.CSV"
+	SET "fileName=<****** FILE-NAME ******>"
 	SET "archExt=.SAV"
 
 ::	## If a System Environmental Variable for the GEM Directory location is not set,
@@ -152,7 +152,7 @@
 ::========================================================================================================================================
 
 	SET "ieDIR=%gemDIR%\ImportExport"
-	SET "arcDIR=%ieDIR%\Archive\Payroll-Deduct-Archives"
+	SET "arcDIR=%ieDIR%\Archive\Payroll-Deduct-Archives\<****** DIRECTORY-NAME ******>"
 
 
 

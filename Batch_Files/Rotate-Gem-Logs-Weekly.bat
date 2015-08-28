@@ -8,11 +8,18 @@
 ::========================================================================================================================================
 ::
 ::	Author:	Roger Corley
-::	Created:	May 14, 2015  11:39:53 AM
+::	Created:	May 14, 2015  11:39: AM
 ::............................................................
 ::
 ::	Version: 	1.40
 ::	Updated:	Roger Corley - July 14, 2015  11:23 AM
+::
+::............................................................
+::
+::	Version: 	1.50
+::	Updated:	Roger Corley - August 27, 2015  1:56 AM
+::
+::	Description:	Changed number of archived files from twelve (12) to nine (9).
 ::
 ::========================================================================================================================================
 :: Description:
@@ -39,7 +46,7 @@
 ::
 ::.......................................................................................................................................
 ::
-::	Each archived log will be stored for a maximum of twelve (12) weeks before being deleted
+::	Each archived log will be stored for a maximum of nine (9) weeks before being deleted
 ::	through the rotation process.
 ::
 ::
@@ -250,10 +257,7 @@
 
 cd C:\_Gem-Log-Archives
 
-	if exist gemonline.*.log12 del /f /q gemonline.*.log12
-	if exist gemonline.*.log11 rename gemonline.*.log11 gemonline.*.log12
-	if exist gemonline.*.log10 rename gemonline.*.log10 gemonline.*.log11
-	if exist gemonline.*.log09 rename gemonline.*.log09 gemonline.*.log10
+	if exist gemonline.*.log09 del /f /q gemonline.*.log09
 	if exist gemonline.*.log08 rename gemonline.*.log08 gemonline.*.log09
 	if exist gemonline.*.log07 rename gemonline.*.log07 gemonline.*.log08
 	if exist gemonline.*.log06 rename gemonline.*.log06 gemonline.*.log07
@@ -303,10 +307,7 @@ cd C:\_Gem-Log-Archives
 :rotateGD
 ::---------------------------------------------------------------------------------------------------------------------------------------
 
-	if exist GEMDaily.*.cp12 del /f /q GEMDaily.*.cp12
-	if exist GEMDaily.*.cp11 rename GEMDaily.*.cp11 GEMDaily.*.cp12
-	if exist GEMDaily.*.cp10 rename GEMDaily.*.cp10 GEMDaily.*.cp11
-	if exist GEMDaily.*.cp09 rename GEMDaily.*.cp09 GEMDaily.*.cp10
+	if exist GEMDaily.*.cp09 del /f /q GEMDaily.*.cp09
 	if exist GEMDaily.*.cp08 rename GEMDaily.*.cp08 GEMDaily.*.cp09
 	if exist GEMDaily.*.cp07 rename GEMDaily.*.cp07 GEMDaily.*.cp08
 	if exist GEMDaily.*.cp06 rename GEMDaily.*.cp06 GEMDaily.*.cp07

@@ -1,21 +1,31 @@
 USE GEMserve4
+-- USE GEMserve3
+
 GO
+
 
 DECLARE @PatientVisitID  varchar(50),
   @PatientID   int,
   @IncludeDiet  bit,
   @IncludePatientNotes bit,
+  @IncludePatientAllergens bit,
   @IncludeOrderInfo bit,
-  @IncludePatientLog  bit
+  @IncludePatientLog bit
 
  SET @PatientVisitID = '11693552'
  SET @IncludeDiet = 1
  SET @IncludePatientNotes = 1
+ SET @IncludePatientAllergens = 1
  SET @IncludeOrderInfo = 1
  SET @IncludePatientLog = 1
 
  IF (@PatientVisitID = '')
   GOTO Finish
+
+ --Get the Patient ID
+ SELECT @PatientID = PatientID
+ FROM dbo.tblPatientVisit
+ WHERE PatientVisitID = @PatientVisitID
 
  --Get the Patient Information
  SELECT PV.PatientVisitID,
@@ -50,6 +60,13 @@ DECLARE @PatientVisitID  varchar(50),
   WHERE PatientVisitID = @PatientVisitID
   ORDER BY ActiveDate DESC, PostDate DESC
 
+ --Get the patient allergens
+ IF (@IncludePatientAllergens = 1)
+  SELECT PA.AllergenID, A.Description AS Allergy
+  FROM dbo.tblPatientAllergens AS PA
+  JOIN dbo.cfgAllergens AS A ON PA.AllergenID = A.AllergenID
+  WHERE PatientID = @PatientID
+
  --Get the order information
  IF (@IncludeOrderInfo = 1)
   SELECT *
@@ -59,15 +76,10 @@ DECLARE @PatientVisitID  varchar(50),
 
  IF (@IncludePatientLog = 1)
  BEGIN
-  SELECT @PatientID = PatientID
-  FROM dbo.tblPatientVisit
-  WHERE PatientVisitID = @PatientVisitID
-
   SELECT *
   FROM dbo.tblPatientLog
   WHERE PatientID = @PatientID
   ORDER BY Date DESC
  END
-
 
  Finish:
