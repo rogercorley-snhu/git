@@ -12,11 +12,11 @@ DECLARE @PatientVisitID  varchar(50),
   @IncludeOrderInfo bit,
   @IncludePatientLog bit
 
- SET @PatientVisitID = '11693552'
- SET @IncludeDiet = 1
- SET @IncludePatientNotes = 1
- SET @IncludePatientAllergens = 1
- SET @IncludeOrderInfo = 1
+ SET @PatientVisitID = 'Y25002601818'
+ SET @IncludeDiet = 0
+ SET @IncludePatientNotes = 0
+ SET @IncludePatientAllergens = 0
+ SET @IncludeOrderInfo = 0
  SET @IncludePatientLog = 1
 
  IF (@PatientVisitID = '')
@@ -35,6 +35,8 @@ DECLARE @PatientVisitID  varchar(50),
    P.FullName,
    R.RoomNumber,
    PV.Bed,
+   R2.RoomNumber AS PreviousRoom,
+   PV.PreviousBed,
    PV.EntryDate,
    PV.DischargeDate,
    P.Notes
@@ -42,6 +44,7 @@ DECLARE @PatientVisitID  varchar(50),
  JOIN dbo.tblPatientOHD AS P ON PV.PatientID = P.PatientID
  JOIN dbo.tblRoomOHD AS R ON PV.RoomID = R.RoomID
  JOIN dbo.tblPatientClass AS PC ON PV.PatientClassID = PC.PatientClassID
+ LEFT JOIN dbo.tblRoomOHD AS R2 ON PV.PreviousRoomID = R2.RoomID
  WHERE PV.PatientVisitID = @PatientVisitID
 
  IF (@@ROWCOUNT = 0)
