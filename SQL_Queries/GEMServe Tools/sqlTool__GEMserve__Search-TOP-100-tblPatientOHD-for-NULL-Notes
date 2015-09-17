@@ -1,0 +1,8 @@
+--SEARCH TOP 100 tblPATIENTOHD FOR NULL NOTES
+---------------------------------------------------------------------------------------------------
+SELECT
+	TOP 100 *
+FROM
+	tblPatientOHD
+WHERE
+	CAST(Notes AS VARCHAR(4000)) != ''
