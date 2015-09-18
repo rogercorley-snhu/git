@@ -12,11 +12,11 @@ DECLARE @PatientVisitID  varchar(50),
   @IncludeOrderInfo bit,
   @IncludePatientLog bit
 
- SET @PatientVisitID = 'Y25002601818'
- SET @IncludeDiet = 0
- SET @IncludePatientNotes = 0
- SET @IncludePatientAllergens = 0
- SET @IncludeOrderInfo = 0
+ SET @PatientVisitID = '< VISIT NUMBER >'
+ SET @IncludeDiet = 1
+ SET @IncludePatientNotes = 1
+ SET @IncludePatientAllergens = 1
+ SET @IncludeOrderInfo = 1
  SET @IncludePatientLog = 1
 
  IF (@PatientVisitID = '')

@@ -1,4 +1,4 @@
-FIND DUPLICATE ACCOUNTNOs in tblACCOUNTIMPORT
+--FIND DUPLICATE ACCOUNTNOs in tblACCOUNTIMPORT
 --------------------------------------------------------------------------------------------------
 
 SELECT
