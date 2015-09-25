@@ -515,13 +515,13 @@ INTO				PAYMENTS
 FROM
 ----------------------------------------------------------------------------------------
 	tblDetail			AS dtl
-	LEFT JOIN tblAccountOHD AS ohd ON dtl.AccountNo = ohd.AccountNo
+	LEFT JOIN tblAccountOHD 	AS ohd ON dtl.AccountNo = ohd.AccountNo
 
 
 
 WHERE
 ----------------------------------------------------------------------------------------
-	CHARINDEX(','+CAST(TransID as VARCHAR(50))+',',@ctid) > 0
+	CHARINDEX(','+CAST(dtl.TransID as VARCHAR(50))+',',@ctid) > 0
 	AND CHARINDEX(','+CAST(ohd.AccountClassID AS VARCHAR(50))+',',@acid) > 0
 	AND dtl.TransDate BETWEEN @bdate AND @edate
 
