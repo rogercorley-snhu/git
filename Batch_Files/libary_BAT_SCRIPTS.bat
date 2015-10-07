@@ -1,5 +1,20 @@
+:: REMOVE HEADER ROW
+::----------------------------------------------------------------------------------
+
+for /f "skip=1 delims=*" %%a in (D:\GEM\ImportExport\NBTX_EMP_CENSUS.TXT) do (
+    echo %%a >> D:\GEM\ImportExport\NBTX_EMP_CENSUS.COPY
+)
+
+xcopy D:\GEM\ImportExport\NBTX_EMP_CENSUS.COPY D:\GEM\ImportExport\NBTX_EMP_CENSUS.TXT /y
+
+del D:\GEM\ImportExport\NBTX_EMP_CENSUS.COPY /f /q
+
+
+
+
+
 ::-------------------------------------------------------------------------------------------------------------------------------------
-::				BATCH : Set TimeStamp																								
+::				BATCH : Set TimeStamp
 ::-------------------------------------------------------------------------------------------------------------------------------------
 
 @ECHO OFF
@@ -24,7 +39,7 @@ pause
 
 
 ::-------------------------------------------------------------------------------------------------------------------------------------
-::				BATCH : Set DateTimeStamp ( GTE WIN07 )																								
+::				BATCH : Set DateTimeStamp ( GTE WIN07 )
 ::-------------------------------------------------------------------------------------------------------------------------------------
 @ECHO OFF
 setlocal EnableDelayedExpansion
@@ -36,7 +51,7 @@ echo %datetime%
 pause
 
 ::-------------------------------------------------------------------------------------------------------------------------------------
-::				BATCH : MASTER : RotateGEMLogs ( GTE WIN07 )																								
+::				BATCH : MASTER : RotateGEMLogs ( GTE WIN07 )
 ::-------------------------------------------------------------------------------------------------------------------------------------
 
 	@ECHO OFF
@@ -52,7 +67,7 @@ pause
 	set "datetime=[ %date% %time% ] "
 
 ::	Configure Batch Variables
-::	[ ** Modify AS NEEDED 						** ] 
+::	[ ** Modify AS NEEDED 						** ]
 ::	[ ** Be Sure To Create Archive & ImportEmployees Directories 	** ]
 ::---------------------------------------------------------
 	set _SYS_ROOT=C:
@@ -75,20 +90,20 @@ pause
 ::-----------------------------------------------------------------------
 	if exist %_SYS_ROOT%\%_GOnline%.log (
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		
+
 		echo !datetime! : [ MSG ] : !_GOnline!.log found. >> !_IMPORT_LOG!
-		
+
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		goto RotateGOnlineLogs) 
+		goto RotateGOnlineLogs)
 	else (
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		
+
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
-		
-		echo !datetime! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG! 
-		
+
+		echo !datetime! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG!
+
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
-		
+
 		)
 		goto CHK_GDaily
 
@@ -97,22 +112,22 @@ pause
 ::-----------------------------------------------------------------------
 	if exist %_SYS_ROOT%\%_GDaily%.cp (
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		
+
 		echo !datetime! : [ MSG ] : !_GDaily!.cp found. >> !_IMPORT_LOG!
-		
+
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
 		goto RotateGDailyLogs)
 	else (
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		
+
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
-		
+
 		echo !datetime! : [ ERROR ] : !_GDaily!.cp not found. >> !_IMPORT_LOG!
-		
+
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
 
 		echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-		
+
 		)
 		goto DONE
 
@@ -120,7 +135,7 @@ pause
 :RotateGOnlineLogs
 ::-----------------------------------------------------------------------
 	echo %datetime% : [JOB BEGIN] Begin Rotate GEMonline Logs >> %_IMPORT_LOG%
-	
+
 
 	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log07 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log08
@@ -132,14 +147,14 @@ pause
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log02
 	if exist %_SYS_ROOT%\%_GOnline%.log copy %_SYS_ROOT%\%_GOnline%.log %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01
 	del /Q %_SYS_ROOT%\%_GOnline%.log
-	
+
 	echo %datetime% : [JOB END] End Rotate GEMonline Logs >> %_IMPORT_LOG%
-	
+
 	echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-	
+
 	echo .............................................................................. >> %_IMPORT_LOG%
 	echo .............................................................................. >> %_IMPORT_LOG%
-	
+
 
 	goto CHK_GDaily
 
@@ -148,7 +163,7 @@ pause
 :RotateGDailyLogs
 ::-----------------------------------------------------------------------
 	echo %datetime% : [JOB BEGIN] Begin Rotate GEMDaily Logs >> %_IMPORT_LOG%
-	
+
 
 	del /Q %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 copy %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp07 %_SYS_ROOT%\%_ARCHIVE%\%_GDaily%.cp08
@@ -162,18 +177,18 @@ pause
 	del /Q %_SYS_ROOT%\%_GDaily%.cp
 
 	echo %datetime% : [JOB END] End Rotate GEMDaily Logs >> %_IMPORT_LOG%
-	
+
 	echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-	
+
 	echo .............................................................................. >> %_IMPORT_LOG%
 	echo .............................................................................. >> %_IMPORT_LOG%
-	
-	
+
+
 	goto DONE
 
 :DONE
 	echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
-	echo %datetime% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG% 
+	echo %datetime% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG%
 	echo ------------------------------------------------------------------------- >> !_IMPORT_LOG!
 
 	echo ------------------------------------------------------------------------------ >> %_IMPORT_LOG%
@@ -182,7 +197,7 @@ pause
 
 
 ::-------------------------------------------------------------------------------------------------------------------------------------
-::				BATCH : MASTER : RotateGEMLogs ( LTE WIN XP / WIN 2003 )																								
+::				BATCH : MASTER : RotateGEMLogs ( LTE WIN XP / WIN 2003 )
 ::-------------------------------------------------------------------------------------------------------------------------------------
 
 	@echo off
@@ -208,7 +223,7 @@ pause
 		set fullstamp=%datestamp% %timestamp%
 
 ::	Configure Batch Variables
-::	[ ** Modify AS NEEDED 						** ] 
+::	[ ** Modify AS NEEDED 						** ]
 ::	[ ** Be Sure To Create Archive & ImportEmployees Directories 	** ]
 ::---------------------------------------------------------
 	set _SYS_ROOT=C:
@@ -233,11 +248,11 @@ pause
 		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
 		echo !fullstamp! : [ MSG ] : !_GOnline!.log found. >> !_IMPORT_LOG!
 		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
-		goto RotateGOnlineLogs) 
+		goto RotateGOnlineLogs)
 	else (
 		echo --------------------------------------------------------------- >> !_IMPORT_LOG!
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
-		echo !fullstamp! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG! 
+		echo !fullstamp! : [ ERROR ] : !_GOnline!.log not found. >> !_IMPORT_LOG!
 		echo +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ >> !_IMPORT_LOG!
 		)
 		goto CHK_GDaily
@@ -273,7 +288,7 @@ pause
 	if exist %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 copy %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01 %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log02
 	if exist %_SYS_ROOT%\%_GOnline%.log copy %_SYS_ROOT%\%_GOnline%.log %_SYS_ROOT%\%_ARCHIVE%\%_GOnline%.log01
 	del /Q %_SYS_ROOT%\%_GOnline%.log
-	
+
 	echo %fullstamp% : [JOB END] End Rotate GEMonline Logs >> %_IMPORT_LOG%
 	echo --------------------------------------------------------------- >> !_IMPORT_LOG!
 	echo .............................................................................. >> %_IMPORT_LOG%
@@ -302,14 +317,14 @@ pause
 	echo --------------------------------------------------------------- >> !_IMPORT_LOG!
 	echo .............................................................................. >> %_IMPORT_LOG%
 	echo .............................................................................. >> %_IMPORT_LOG%
-	
+
 	goto DONE
 
 ::-----------------------------------------------------------------------
 :DONE
 ::-----------------------------------------------------------------------
 
-	echo %fullstamp% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG% 
+	echo %fullstamp% : [ MSG ] Exiting Rotate Job >> %_IMPORT_LOG%
 	echo ------------------------------------------------------------------------------ >> %_IMPORT_LOG%
 	echo ****************************************************************************** >> %_IMPORT_LOG%
 	echo ------------------------------------------------------------------------------ >> %_IMPORT_LOG%
