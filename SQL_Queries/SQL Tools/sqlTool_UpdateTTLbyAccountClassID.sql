@@ -1,5 +1,6 @@
-update t1
-set t1.dailylimit = '4.50'
-from tblaccountttl as t1
-join tblaccountohd as a on t1.accountno = a.accountno
-where a.accountclassid = 30
+
+UPDATE	t1
+SET		t1.< COLUMN > = < NEW VALUE >
+FROM		tblAccountTTL AS t1
+JOIN		tblAccountOHD AS a ON t1.AccountNo = a.AccountNo
+WHERE		a.AccountClassID = < ACCOUNT CLASS ID >

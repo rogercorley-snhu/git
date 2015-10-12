@@ -1,9 +1,11 @@
---SEARCH tblXLAT FOR ALLERGEN
+--	GEMserve
+--	'SEARCH tblXLAT FOR ALLERGEN'
 ---------------------------------------------------------------------------------------------------
-SELECT *
-FROM
-	tblXLAT
+
+SELECT	*
+
+FROM	tblXLAT
+
 WHERE
 	xlatID = 'modifierallergenid'
 	AND KeyIn = '< allergen name >'
-

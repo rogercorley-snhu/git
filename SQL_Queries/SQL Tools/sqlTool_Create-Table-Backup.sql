@@ -1,1 +1,7 @@
-select * into dbo.<tablename>_<date> from dbo.<tablename>
+
+SELECT		*
+
+INSERT INTO	dbo.< TABLE >_< DATE >
+
+FROM		dbo.< SAME TABLE AS ABOVE >
+

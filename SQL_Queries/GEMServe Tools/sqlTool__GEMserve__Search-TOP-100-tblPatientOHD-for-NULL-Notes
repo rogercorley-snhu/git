@@ -1,8 +1,10 @@
---SEARCH TOP 100 tblPATIENTOHD FOR NULL NOTES
+--	GEMserve
+--	'SEARCH TOP 100 tblPATIENTOHD For NULL Notes'
 ---------------------------------------------------------------------------------------------------
-SELECT
-	TOP 100 *
-FROM
-	tblPatientOHD
+
+SELECT	TOP 100 *
+
+FROM	tblPatientOHD
+
 WHERE
 	CAST(Notes AS VARCHAR(4000)) != ''

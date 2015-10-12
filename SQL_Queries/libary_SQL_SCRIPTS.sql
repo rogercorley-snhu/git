@@ -248,35 +248,34 @@ WHERE 	c.AccountNo = d.AccountNo
 
 /*		UPDATE: Modify Badge Expiration Dates
 =================================================*/
-USE [GEMdb]
-GO
+
 
 DECLARE	@_NewExpDate datetime, @_OldExpDateBeg datetime, @_OldExpDateEnd datetime;
 
-SET		@_OldExpDateBeg = '2055-01-01'
-SET		@_OldExpDateEnd = '2055-12-31'
+SET		@_OldExpDateBeg = 'YYYY-MM-DD'
+SET		@_OldExpDateEnd = 'YYYY-MM-DD'
 
-SET		@_NewExpDate = '2056-01-01 11:59:59 PM'
+SET		@_NewExpDate = 'YYYY-MM-DD 11:59:59 PM'
 
 
 UPDATE	tblAccountTTL
-SET 	ExpireDate = @_NewExpDate
-WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+SET 		ExpireDate = @_NewExpDate
+WHERE 		ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
 UPDATE	tblAccountOHD
-SET 	ExpireDate = @_NewExpDate
-WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+SET 		ExpireDate = @_NewExpDate
+WHERE 		ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
 UPDATE 	tblBadgesOHD
-SET 	ExpireDate = @_NewExpDate
-WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+SET 		ExpireDate = @_NewExpDate
+WHERE 		ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
 UPDATE 	cfgSIMxlat
-SET 	ExpireDate = @_NewExpDate
-WHERE 	ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
+SET 		ExpireDate = @_NewExpDate
+WHERE 		ExpireDate BETWEEN @_OldExpDateBeg AND @_OldExpDateEnd
 
 UPDATE	cfgOverhead
-SET 	ExpireDays = 18250
+SET		ExpireDays = 18250
 
 
 ------------------------------------------------------------------------------------

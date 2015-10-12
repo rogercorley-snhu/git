@@ -1,15 +1,15 @@
 SELECT
-	 i.AccountNo
+	 i.< COLUMN >
 	,c.dupeCount
 
 FROM
-	tblAccountImport AS i
+	< TABLE > AS i
 
 INNER JOIN (
 
-		SELECT AccountNo, COUNT(*) AS dupeCount
-		FROM tblAccountImport
-		GROUP BY AccountNo
+		SELECT		< SAME COLUMN AS ABOVE >, COUNT(*) AS dupeCount
+		FROM		< SAME TABLE AS ABOVE >
+		GROUP BY	< SAME COLUMN AS ABOVE >
 		HAVING COUNT(*) > 1
 
-	) c ON i.AccountNo = c.AccountNo
+	) c ON i.< SAME COLUMN AS ABOVE > = c.< SAME COLUMN AS ABOVE >

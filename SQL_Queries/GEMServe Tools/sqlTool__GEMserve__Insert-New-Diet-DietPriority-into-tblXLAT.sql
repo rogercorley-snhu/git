@@ -1,18 +1,31 @@
-INSERT NEW DIET & DIETPRIORITY into tblXLAT
+--	INSERT NEW DIET & DIETPRIORITY into tblXLAT
+---------------------------------------------------------------
 
 
-use GEMserve4;
-GO
+
+--	01. Find the record you want to use as the template
+--		Note the IDs of the Diet & DietPriority you want to copy
+---------------------------------------------------------------
+
+SELECT	*
+
+FROM	tblXLAT
+
+WHERE	KeyIn = '< KeyIn To Copy >'
+
+--	example:	keyin = 'NPO 2300 Night Prior to Surg/Proc'
 
 
-select *
-from tblXLAT
-where keyin
---keyin = 'NPO 2300 Night Prior to Surg/Proc'
+--	02. Insert Into tblXLAT the new and old values from template
+---------------------------------------------------------------
 
---INSERT INTO tblXLAT
-select xlatid, '< NEW DIET NAME >',keyout,description
+INSERT INTO	tblXLAT
 
-from tblXLAT
-where id IN (1269,1312)
---keyin = 'NPO 2300 Night Prior to Surg/Proc'
+SELECT	xlatID, '< NEW DIET NAME >',KeyOut,Description
+
+FROM	tblXLAT
+
+WHERE
+	ID IN (< ID FOR DIET >,< ID FOR DIETPRIORITY >)
+
+--	example:	ID IN (1269,1312)
