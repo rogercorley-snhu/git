@@ -1,28 +1,46 @@
-#  DEFAULT : MICROSOFT ISE $PROFILE : CONFIGURATIONS
-#__________________________________________________________________
+$sysD="$env:HOMEDRIVE"
+$gemD="$env:GEM"
 
 
-$GEM = "$env:GEM"
+Set-Location "$sysD\_Gem-Toolbox\PowerShell\"
 
-Set-Location $GEM
 
-$GTB = "$GEM\_Gem-Toolbox"
-$GBF = "$GTB\Batch-Files"
-$GPS = "$GTB\PowerShell"
-$GPF = "$GPS\Functions"
+. ".\Functions\Gem-Functions.ps1"
 
-. "$GPS\Gem-Tools.ps1"
 
-Clear
+#  Set-Aliases
+#---------------------------------------------------------------------------------------------------------------
 
-function Prompt {
-  $promptSpace = "  "
+Set-Alias np notepad.exe
+Set-Alias serv services.msc
+Set-Alias ex explorer
+Set-Alias ch Clear-Host
+Set-Alias tp Test-Path
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+function Prompt
+  {
   $promptLine = "________________________________________________________________________________"
-        $promptString = "--[  " + $(Get-Location) + "  ]----|"
+    $promptString = "--[  " + $(Get-Location) + "  ]----|"
   Write-Host $promptSpace
-  Write-Host $promptLine
+  Write-Host $promptLine -ForegroundColor Yellow
   Write-Host $promptSpace
-  Write-Host $promptString -NoNewLine
-
-  Return " "
+  Write-Host $promptString -NoNewLine -ForegroundColor Yellow
+    Return " "
   }
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+
+
+Clear-Host

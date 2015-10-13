@@ -1,6 +1,7 @@
-Set-Alias geminfo Gem-Get-Info -Option ReadOnly
+function Gem-Info {
 
-function Gem-Get-Info {
+Clear-Host
+
 #---------------------------------------------------------------------------------------------------------------
 $mc = $ENV:COMPUTERNAME
 
@@ -87,7 +88,7 @@ $myobj.RAM = "{0:n2} GB" -f ($CompInfo.TotalPhysicalMemory/1gb)
 
 # Computer Drive Info
 #-------------------------------------------------------
-$myobj.Disk = Gem-Get-DriveInfo $mc
+$myobj.Disk = Gem-Drive-Info $mc
 
 #
 #================================================================================================
@@ -174,4 +175,4 @@ Read-Host "Press the [ ENTER ] key to exit script."
 $space
 $space
 #---------------------------------------------------------------------------------------------------------------
-}  #End function Gem-Get-Info
+}  #End function Gem-Info

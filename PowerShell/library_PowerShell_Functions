@@ -47,7 +47,7 @@ $resultstime.Elapsed.ToString('dd\.hh\:mm\:ss')
 
 
 function Prompt
-  { 
+  {
     $promptLine = "________________________________________________________________________________"
     $promptSpace = "|"
     $promptString = "| ~ @ " + $(Get-Location) + ">"
@@ -77,4 +77,4 @@ function Prompt
 
   COLORS
   Screen Text:  R:  0  G:   255   B:   0
-  Screen Background:    R:  0    G:  0   B:  0  
+  Screen Background:    R:  0    G:  0   B:  0
