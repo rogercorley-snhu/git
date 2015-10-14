@@ -1,5 +1,6 @@
-USE GEMserve4
--- USE GEMserve3
+USE [GEMserve4]
+-- USE [GEMserve4_Test]
+-- USE [GEMserve3]
 
 GO
 
@@ -12,12 +13,12 @@ DECLARE @PatientVisitID  varchar(50),
   @IncludeOrderInfo bit,
   @IncludePatientLog bit
 
- SET @PatientVisitID = '< VISIT NUMBER >'
- SET @IncludeDiet = 1
- SET @IncludePatientNotes = 1
- SET @IncludePatientAllergens = 1
- SET @IncludeOrderInfo = 1
- SET @IncludePatientLog = 1
+ SET @PatientVisitID = ''
+ SET @IncludeDiet = 0
+ SET @IncludePatientNotes = 0
+ SET @IncludePatientAllergens = 0
+ SET @IncludeOrderInfo = 0
+ SET @IncludePatientLog = 0
 
  IF (@PatientVisitID = '')
   GOTO Finish
