@@ -162,18 +162,18 @@ Const FOR_APPENDING	= 8
 'Change the following constants to values you need for your import file, etc.
 '............................................................................
 '
-	 Const FILE_DIRECTORY			= "D:\GEM\ImportExport"
+	 Const FILE_DIRECTORY			= "E:\GEM\ImportExport"
 '						** DO NOT include a '\' at end. empty string means current dir **
 '............................................................................
 
 
-	 Const INPUT_FILE_NAME			= "GemPay-Nebraska-Demo.txt"
+	 Const INPUT_FILE_NAME			= "CCDEMO.06437"
 
-	 Const BAD_FILE_NAME			= "_Bad-Records\Bad-GemPay-Nebraska-Demo.csv"
+	 Const BAD_FILE_NAME			= "_Scripts\_Bad-Records\Bad-CCDEMO.06437.csv"
 
-	 Const GOOD_FILE_NAME			= "_Good-Records\GemPay-Nebraska-Demo.csv"
+	 Const GOOD_FILE_NAME			= "_Scripts\_Good-Records\CCDEMO.06437.csv"
 
-	 Const LOG_FILE_NAME			= "_Logs\ERROR_VerifyImport-GemPay-Nebraska-Demo.log"
+	 Const LOG_FILE_NAME			= "_Scripts\_Logs\ERROR_VerifyImport-CCDEMO.06437.log"
 
 	 Const FIELD_DELIMITER			= ","
 
@@ -223,19 +223,19 @@ Const FOR_APPENDING	= 8
 '  ----[[ BEGIN Test Config Arrays ]]----
 '------------------------------------------------------------------------------------------------------------------------------------------
 
-	MaxLengthArray			= Array(8, 10, 999, 999, 999)
+	MaxLengthArray			= Array(10, 8, 2, 999, 999)
 '
 '					** Numeric - to NOT test the max length,
 '					** use a high number like 999
 '............................................................................
 
-	MinLengthArray			= Array(5, 7, 2, 2, 2)
+	MinLengthArray			= Array(6, 4, 2, 2, 0)
 '
 '					** Numeric - to NOT test the min length,
 '					** use 0 (the number zero)
 '............................................................................
 
-	NumericOnlyArray		= Array(True, True, False, False, False)
+	NumericOnlyArray		= Array(True, True, True, False, False)
 '
 '					** Boolean - True = Must contain only numeric
 '					** characters, False = Don't test field
@@ -248,7 +248,7 @@ Const FOR_APPENDING	= 8
 '					** (i.e. "Employee|Department|Admin")
 '............................................................................
 
-	MustNotContainValueArray	= Array("", "2200000", "", "", "")
+	MustNotContainValueArray	= Array("", "", "", "", "")
 '
 '					** Text - provide empty string for fields not
 '					** being tested, Pipe char as delimiter
