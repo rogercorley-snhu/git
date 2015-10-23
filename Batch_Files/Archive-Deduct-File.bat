@@ -4,53 +4,52 @@
 
 
 
-::========================================================================================================================================
+::===========================================================================================================
 ::
-::-------[ TITLE 		]  :  BATCH SCRIPT : IMPORT, ARCHIVE & ROTATE : <****** FILE-NAME ******> Demographic File - Daily
+::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE : Payroll Deduction Files
 ::
-::========================================================================================================================================
-
-
-::----------------------------------------------------------------------------------------------------------------------------------------
+::===========================================================================================================
 ::
 ::-------[ AUTHOR		] : Roger Corley
-::-------[ CREATED		] : August 20, 2015 1:46:37 PM
+::-------[ CREATED		] : October 23, 2015 4:23:31 PM
 ::-------[ COPYRIGHT		] : Common CENTS Solutions - 2015
 ::
-::----------------------------------------------------------------------------------------------------------------------------------------
+::-----------------------------------------------------------------------------------------------------------
+
+
 
 
 ::========================================================================================================================================
 :: Description:
 ::========================================================================================================================================
 ::
-::	A daily run batch file that tests if the demographic file exists and then starts the RUNSCRIPT import process.
+::	A batch file that tests if a payroll deduction file exists and archives the file if exist is true.
 ::
 ::----------------------------------------------------------------------------------------------------------------------------------------
 ::
 ::	VARIABLES TO CONFIGURE
 ::----------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	SET "fileName="	Enter the filename with extension to be imported.
+::	SET "fileName="		Enter the deduction filename with extension.
 ::
 ::	SET "archExt="		Enter the desired extension for the archived imported file.
 ::				**  If no specific extension is required, do not modify.
 ::
-::	SET "gemDRIVE=C:\"	Enter the DRIVE LETTER when the GEM directory is located
+::	SET "gemDRIVE=E:\"	Enter the DRIVE LETTER when the GEM directory is located
 ::				**  ONLY CHANGE THE DRIVE LETTER! DO NOT MODIFY OR REMOVE THE ' :\ '
 ::
-::	SET "rsSVR=(local)"	Enter the COMPUTERNAME\SQLNAME of the SQL Server hosting the GEMdb database.
-::				**  If the GEMdb is on the local machine, enter (local) -- with parenthesis -- within double-quotes.
-::
-::	SET "rsMODULE=300"	Enter the sModule number that will be used for this import file.
-::				**  You can locate this value in SQL Server\GEMdb --> cfgScriptParams --> KeyValue 'sModule'
-::
-::	This batch file will also rotate any existing archived demographic files. You can set the number
+::	This batch file will also rotate any existing archived deduction files. You can set the number
 ::	of archived files to keep by changing the 'skip' number in the FOR statement towards the end of this script.
 ::	Search this file for ( for /f "skip= ). Copy everything starting with for and ending with the equals sign.
 ::
 ::	Once you find the FOR statement, ONLY CHANGE THE NUMBER following the equals sign.
 ::	This wil be the number of days to keep archived files. DO NOT CHANGED ANYTHING ELSE IN THIS STATEMENT!
+::
+::-----------------------------------------------------------------------------------------------------------
+::
+::	***	The default amount of files to keep is six ( 6 ).	***
+::
+::-----------------------------------------------------------------------------------------------------------
 ::
 ::	DO NOT MODIFY ANYTHING ELSE IN THIS SCRIPT OR IT WILL NOT WORK!
 ::
@@ -68,19 +67,39 @@
 ::-------[ ENVIRONMENT VARIABLES ] : Directories & FileNames
 ::========================================================================================================================================
 
-	SET "fileName=<****** FILE-NAME ******>"
+	SET "fileName=<FILE-NAME>.csv"
 	SET "archExt=.SAV"
 
+::	## If a System Environmental Variable for the GEM Directory location is not set,
+::	##  uncomment the SET "gemDRIVE=<DRIVELETTER>:\" and SET "gemDIR=%gemDRIVE%\GEM"
+::	##  statements by removing the two colons ( :: ) at the start of the line.  Change the <DRIVELETTER>
+::	##  to match the drive where the GEM directory is located. ** ONLY CHANGE THE DRIVELETTER **
 
-::========================================================================================================================================
+::	SET "gemDRIVE=E:\"
+::	SET "gemDIR=%gemDRIVE%\GEM"
+
+
+::-----------------------------------------------------------------------------------------------------------
+::	##  If a SYSTEM ENVIRONMENTAL VARIABLE for the GEM Directory has been configured on this
+::	##  machine, keep the two SETs for gemDRIVE and gemDIR commented and uncomment the
+::	##  SET "gemDIR=%GEM%" statement. ** DO NOT MODIFY THIS STATEMENT **
+
+	SET "gemDIR=%GEM%"
+
+::-----------------------------------------------------------------------------------------------------------
 ::
-::-------[ SCRIPT VARIABLES ] : RunScript Variables
-::========================================================================================================================================
-
-	SET "rsSVR=(local)"
-	SET "rsMODULE=300"
-
-
+::	##  To configure a SYSTEM ENVIRONMENTAL VARIABLE for the GEM Directory, right-click COMPUTER on
+::	##  the Desktop --> Click 'Advanced System Settings' -->  Click the 'Environmental Variables' button
+::	##  Under 'User variables for gemuser', click the 'New' button .
+::	##  In the 'New User Variable' pop-up box, enter 'GEM' for the Variable Name and the path of the
+::	##  GEM directory on this machine. For example, if the GEM directory is located on the E:\ drive,
+::	##  enter E:\GEM  --  ** DO NOT ENTER A BACK-SLASH ' \ ' AFTER GEM **
+::	##  Click 'OK' --> Click 'OK' -->  Click 'APPLY' --> Click 'OK' to close SYSTEM PROPERTIES
+::
+::	##  You can verify the ENVIRONMENTAL VARIABLE exists by opening a Command Line window
+::	##  and typing ECHO %GEM% -- If the Variable exists, the command should return the path to GEM.
+::
+::-----------------------------------------------------------------------------------------------------------
 
 
 
@@ -132,10 +151,8 @@
 ::-------[ ****  ENVIRONMENT CONSTANTS : DO NOT MODIFY  ****  ]
 ::========================================================================================================================================
 
-	SET "gemDIR=%GEM%"
-
 	SET "ieDIR=%gemDIR%\ImportExport"
-	SET "arcDIR=%ieDIR%\Archive\Import-Employees-Archives"
+	SET "arcDIR=%ieDIR%\Archive\Deduct-Archives"
 
 
 
@@ -145,21 +162,14 @@
 ::========================================================================================================================================
 
 
-	echo Beginning Import Employee File and Archive Rotataton ...
+	echo Beginning Rotate Deduction Archive Files and Archive Payroll Deduction File ...
 
 
-::-------[  TEST-FILE-EXISTS ] : Import-Employee-File
+
+::-------[  TEST-FILE-EXISTS ] : Payroll Deduct File
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
 	if not exist %ieDIR%\%fileName% goto NOFILE
-
-
-
-::-------[  IMPORT-FILE ] : RUNSCRIPT
-::----------------------------------------------------------------------------------------------------------------------------------------
-
-	%gemDIR%\runscript script=Import_v1_70.gsf,pw=gemie,svr=%rsSVR%,core=1,module=%rsMODULE%,include=gsf.txt
-
 
 
 
@@ -170,13 +180,12 @@
 
 
 
-
 ::-------[  COPY ORIGINAL ] : If Original File Exists, Copy to Archive Directory and Rename
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
 	if exist "%ieDIR%\%fileName%" (
 
-		move "!ieDIR!\!fileName!" "!arcDIR!\!fileName!!stamp!!archExt!"
+		copy "!ieDIR!\!fileName!" "!arcDIR!\!fileName!!stamp!!archExt!"
 
 		goto Rotate
 
@@ -196,7 +205,7 @@
 ::-------[  ROTATE SCRIPT ] : Rotate Archived Files
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
-	for /f "skip=14 eol=: delims=" %%F in ('dir /b /o-d %fileName%_*') do @del "%%F"
+	for /f "skip=6 eol=: delims=" %%F in ('dir /b /o-d %fileName%_*') do @del "%%F"
 
 
 
@@ -213,6 +222,6 @@
 
 :DONE
 ::========================================================================================================================================
-	echo Import Employee File and Archive Rotate Complete...
+	echo Rotate Deduction Archive Files and Archive Payroll Deduction File Complete...
 
 

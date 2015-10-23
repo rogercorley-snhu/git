@@ -1,4 +1,4 @@
-﻿
+
 $sysD = "$env:HOMEDRIVE"
 $gemD = "$env:GEM"
 
@@ -61,6 +61,15 @@ Set-Alias gemrefresh Gem-Refresh
 Set-Alias gref Gem-Refresh
 Set-Alias gemr Gem-Refresh
 Set-Alias gfresh Gem-Refresh
+
+Set-Alias gstart Gem-Check-Service
+Set-Alias gemstart Gem-Check-Service
+Set-Alias gem-start Gem-Check-Service
+Set-Alias grestart Gem-Check-Service
+Set-Alias gemrestart Gem-Check-Service
+Set-Alias gem-restart Gem-Check-Service
+
+
 
 
 #  Gem-Refresh-PowerShell
@@ -419,3 +428,120 @@ $diskObj.FreeSpace,$diskObj.Percent
 $msg
 #---------------------------------------------------------------------------------------------------------------
 }  #End function Gem-Drive-Info
+
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+
+
+function Gem-Check-Service{
+
+    param($ServiceName)
+
+        $arrService = Get-Service -Name $ServiceName
+
+        $feq = "===================================================================="
+        $fline = " --------------------------------------------------------------------"
+        $fspace = "                        "
+
+
+        $fspace
+        $feq
+        $fspace
+        $fspace
+
+#       CHECK SERVICE STATE AND EITHER START OR RESTART SERVICE
+#---------------------------------------------------------------------
+
+
+#       IF SERVICE IS STOPPED - START SERVICE
+#---------------------------------------------------------------------
+    if ($arrService.Status -ne "Running"){
+
+        Write-Host "Checking $ServiceName State."
+        $fline
+        $fspace
+        Write-Host "$ServiceName is stopped."
+
+
+        $fspace
+        $fspace
+        Write-Host "Script Action"
+        $fline
+        $fspace
+        Write-Host "Starting $ServiceName service"
+        Start-Service $ServiceName
+
+
+        $fspace
+        $fspace
+        Write-Host "Verify $ServiceName Current State."
+        $fline
+        $fspace
+        "$ServiceName is running."
+
+    }
+
+#       IF SERVICE IS RUNNING -RESTART SERVICE
+#---------------------------------------------------------------------
+
+    if ($arrService.Status -eq "running"){
+
+        Write-Host "Checking $ServiceName State."
+        $fline
+        $fspace
+        Write-Host "$ServiceName service is running."
+
+
+        $fspace
+        $fspace
+        Write-Host "Script Action"
+        $fline
+        $fspace
+        Write-Host "Restarting $ServiceName"
+        Restart-Service $ServiceName
+
+
+        $fspace
+        $fspace
+        Write-Host "Verify $ServiceName Current State."
+        $fline
+        $fspace
+        "$ServiceName has restarted and is running."
+
+    }
+
+    $fspace
+    $fspace
+    $feq
+    $fspace
+    $fspace
+
+}
+
+
+
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+
+
+function Gem-Remove-Header{
+
+    $file = "$ieD\<FILE-NAME>"
+
+    (  Get-Content $file | Where-Object { $_ -notmatch '"<PATTERN>"' }  ) | Set-Content $file
+}
+
+
+

@@ -6,12 +6,12 @@
 
 ::===========================================================================================================
 ::
-::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE : <****** FILE-NAME ******> Payroll Deduction Files
+::-------[ TITLE 		]  :  BATCH SCRIPT : ARCHIVE : Employee Demographic Files
 ::
 ::===========================================================================================================
 ::
 ::-------[ AUTHOR		] : Roger Corley
-::-------[ CREATED		] : August 19, 2015 4:23:31 PM
+::-------[ CREATED		] : October 23, 2015 4:23:31 PM
 ::-------[ COPYRIGHT		] : Common CENTS Solutions - 2015
 ::
 ::-----------------------------------------------------------------------------------------------------------
@@ -23,22 +23,22 @@
 :: Description:
 ::========================================================================================================================================
 ::
-::	A daily run batch file that tests if a payroll deduction file exists and archives the file if exist is true.
+::	A batch file that tests if a Employee Demographic file exists and archives the file if exist is true.
 ::
 ::----------------------------------------------------------------------------------------------------------------------------------------
 ::
 ::	VARIABLES TO CONFIGURE
 ::----------------------------------------------------------------------------------------------------------------------------------------
 ::
-::	SET "fileName="		Enter the deduction filename with extension.
+::	SET "fileName="		Enter the Import filename with extension.
 ::
 ::	SET "archExt="		Enter the desired extension for the archived imported file.
 ::				**  If no specific extension is required, do not modify.
 ::
-::	SET "gemDRIVE=C:\"	Enter the DRIVE LETTER when the GEM directory is located
+::	SET "gemDRIVE=E:\"	Enter the DRIVE LETTER when the GEM directory is located
 ::				**  ONLY CHANGE THE DRIVE LETTER! DO NOT MODIFY OR REMOVE THE ' :\ '
 ::
-::	This batch file will also rotate any existing archived deduction files. You can set the number
+::	This batch file will also rotate any existing archived Import files. You can set the number
 ::	of archived files to keep by changing the 'skip' number in the FOR statement towards the end of this script.
 ::	Search this file for ( for /f "skip= ). Copy everything starting with for and ending with the equals sign.
 ::
@@ -67,7 +67,7 @@
 ::-------[ ENVIRONMENT VARIABLES ] : Directories & FileNames
 ::========================================================================================================================================
 
-	SET "fileName=<****** FILE-NAME ******>"
+	SET "fileName=<FILE-NAME>.csv"
 	SET "archExt=.SAV"
 
 ::	## If a System Environmental Variable for the GEM Directory location is not set,
@@ -152,7 +152,7 @@
 ::========================================================================================================================================
 
 	SET "ieDIR=%gemDIR%\ImportExport"
-	SET "arcDIR=%ieDIR%\Archive\Payroll-Deduct-Archives\<****** DIRECTORY-NAME ******>"
+	SET "arcDIR=%ieDIR%\Archive\Import-Archives"
 
 
 
@@ -162,11 +162,11 @@
 ::========================================================================================================================================
 
 
-	echo Beginning Rotate Deduction Archive Files and Archive Payroll Deduction File ...
+	echo Beginning Rotate Import Archive Files and Archive Employee Demographic File ...
 
 
 
-::-------[  TEST-FILE-EXISTS ] : Payroll Deduct File
+::-------[  TEST-FILE-EXISTS ] : Import File
 ::----------------------------------------------------------------------------------------------------------------------------------------
 
 	if not exist %ieDIR%\%fileName% goto NOFILE
@@ -222,6 +222,6 @@
 
 :DONE
 ::========================================================================================================================================
-	echo Rotate Deduction Archive Files and Archive Payroll Deduction File Complete...
+	echo Rotate Import Archive Files and Archive Employee Demographic File Complete...
 
 
