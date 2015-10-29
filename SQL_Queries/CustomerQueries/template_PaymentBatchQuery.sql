@@ -4,7 +4,7 @@
 ========================================================================================
 
 ---[ AUTHOR   ]---  Roger Corley
----[ CREATED  ]---  October  16, 2015
+---[ CREATED  ]---  October  28, 2015
 
 ========================================================================================
 ---[ DESCRIPTION ]---   Set of SQL queries created to completed the following tasks:
@@ -72,8 +72,8 @@ GO
 ======================================================================================== */
 
 
-DECLARE   @tdate datetime, @bdate datetime, @edate datetime;
-DECLARE   @dateAdj int, @cid int, @outno int, @payid int;
+DECLARE   @tdate datetime, @bdate datetime, @edate datetime, @datesearch datetime;
+DECLARE   @edateno int, @dateadj int, @cid int, @outno int, @payid int;
 DECLARE   @bid char(10), @refnum char(6), @chknum char(6);
 DECLARE   @acid varchar(50), @ctid varchar(50);
 DECLARE   @badge char(19);
@@ -87,22 +87,17 @@ DECLARE   @badge char(19);
 ----------------------------------------------------------------------------------------
 
 ========================================================================================
-              ---[[[ VARIABLE  @dateAdj   ]]]---
+              ---[[[ VARIABLE  @datesearch   ]]]---
 ======================================================================================== */
 
-SET   @dateAdj = 1;
+
+SET @datesearch = 'INSERT DATE HERE';
+
 
 ----------------------------------------------------------------------------------------
---  The variable stores the number used to subtract
---  from the current date found with the GETDATE() function
---  to obtain a datetime used to determine the BeginDate and
---  EndDate of the PayPeriod Cycle desired.
---
---  e.g. -- To find the BeginDate and EndDate for the previous period,
---  enter the number 16. This will find the datetime 16 days from the
---  current datetime and use it to identify the Begindate and Enddate
---  in tblCycleXlat for date calculations.
-
+--  Enter a date in 'MM-DD-YYYY' format.
+--  This date will then be used in calculations to determine
+--  the BeginDate and EndDate of the PayPeriod Cycle desired.
 
 
 /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -194,7 +189,6 @@ ELSE
 
 
 
-
 ---[ SCRIPT CONSTANTS ]---
 ----------------------------------------------------------------------------------------
 
@@ -202,16 +196,23 @@ ELSE
             ---[[[ DO NOT MODIFY CONSTANTS ]]]---
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-SET @tdate    = LEFT(CONVERT(nvarchar, DATEADD(DAY, -@dateAdj, GETDATE()), 120), 11) + N'23:59:59';
 
 ----------------------------------------------------------------------------------------
 
 SET @bdate    = (SELECT BeginDate FROM tblCycleXlat AS xlat
-          WHERE @tdate BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+          WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
 ----------------------------------------------------------------------------------------
 
 SET @edate    = (SELECT EndDate FROM tblCycleXlat AS xlat
-          WHERE @tdate BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+          WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+SET @edateno = DATEDIFF(DAY, @edate, GETDATE())
+
+----------------------------------------------------------------------------------------
+
+SET @tdate    = LEFT(CONVERT(NVARCHAR, DATEADD(DAY, -(@eDateNo +1), GETDATE()), 120), 11) + N'23:59:59';
+
 ----------------------------------------------------------------------------------------
 
 SET @bid    = 'Payments';

@@ -5,8 +5,8 @@ DECLARE	@dateSearch DATETIME
 		,@xID VARCHAR(50)
 		,@postDate DATETIME
 
-SET		@xID			= 'BIWK'
-SET		@dateSearch 		= '2015-09-17';
+SET		@xID			= 'ENTER XLATID HERE'
+SET		@dateSearch 		= 'ENTER DATE AS MM-DD-YYYY';
 SET		@bDate		= (SELECT BeginDate FROM tblCycleXLAT WHERE @dateSearch BETWEEN BeginDate AND EndDate AND xlatID = @xID);
 SET		@eDate		= (SELECT EndDate FROM tblCycleXLAT WHERE @dateSearch BETWEEN BeginDate AND EndDate AND xlatID = @xID);
 SET		@eDateNo		= DATEDIFF(DAY, @eDate, GETDATE())
@@ -32,8 +32,8 @@ WHERE
 DECLARE	@p DATETIME
 		,@dayCount INT
 
-SET		@dayCount 	= 14;
-SET		@p		= LEFT(CONVERT(NVARCHAR, DATEADD(DAY, -@dayCount, GETDATE()), 120), 11) + N'23:59:59';
+SET		@dayCount = @eDateNo +1;
+SET		@p = LEFT(CONVERT(NVARCHAR, DATEADD(DAY, -@dayCount, GETDATE()), 120), 11) + N'23:59:59';
 
 SELECT		@dayCount AS [DayCount]
 		,@p AS [PostDate]
