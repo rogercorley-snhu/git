@@ -263,7 +263,7 @@ $gem = Get-WmiObject Win32_service | Where-Object { $_.name -like "GEMservice" }
 #
 
 #Create Custom Objects
-$myobj = "" | Select-Object Name,Domain,Model,MachineSN,OS,ServicePack,WindowsSN,Uptime,RAM,Disk
+$myobj = "" | Select-Object Name,Domain,Model,MachineSN,OS,ServicePack,WindowsSN,Uptime,RAM,Disk,LastReboot
 
 # Computer Name
 #-------------------------------------------------------
@@ -293,9 +293,8 @@ $myobj.ServicePack = $Os.servicepackmajorversion
 
 # Computer Uptime Calculations
 #-------------------------------------------------------
-$myobj.uptime = (Get-Date) - [System.DateTime]::ParseExact($Os.LastBootUpTime.Split(".")[0],'yyyyMMddHHmmss',$null)
-$myobj.uptime = "$($myobj.uptime.Days) days, $($myobj.uptime.Hours) hours," +`
-  " $($myobj.uptime.Minutes) minutes"
+$myobj.uptime = (Get-Date)-[System.DateTime]::ParseExact($Os.LastBootUpTime.Split(".")[0],'yyyyMMddHHmmss',$null)
+$myobj.uptime = "$($myobj.uptime.Days) days, $($myobj.uptime.Hours) hours," + " $($myobj.uptime.Minutes) minutes"
 
 # Computer Memory Calculations
 #-------------------------------------------------------
@@ -304,6 +303,10 @@ $myobj.RAM = "{0:n2} GB" -f ($CompInfo.TotalPhysicalMemory/1gb)
 # Computer Drive Info
 #-------------------------------------------------------
 $myobj.Disk = Gem-Drive-Info $mc
+
+# Computer Last Reboot Date/Time
+#-------------------------------------------------------
+$myobj.LastReboot = Get-LastBootTime
 
 #
 #================================================================================================
@@ -343,7 +346,8 @@ $space
 #-------------------------------------------------------
 Write-Host "System Uptime Info" -ForegroundColor Yellow
 Write-Host "--------------------------------------------"
-Write-Host "Last Reboot:`t" $myobj.uptime
+Write-Host "Last Reboot:`t" $myobj.LastReboot
+Write-Host "`t`t" $myobj.uptime
 $space
 
 # WRITE : RAM Info
@@ -400,6 +404,8 @@ $space
 #===============================================================================================================
 #
 
+
+
 function Gem-Drive-Info {
 #---------------------------------------------------------------------------------------------------------------
 $comp = $ENV:COMPUTERNAME
@@ -416,12 +422,13 @@ foreach ($disk in $logicalDisk)
     $diskObj.Disk = $disk.DeviceID
     $diskObj.Size = "{0:n0} GB" -f (( $disk | Measure-Object -Property Size -sum).sum/1gb)
     $diskObj.FreeSpace = "{0:n0} GB" -f (( $disk | Measure-Object -Property FreeSpace -sum).sum/1gb)
-    $diskObj.Percent = "{0:n0}%" -f ( (( $disk |
-        Measure-Object -Property FreeSpace -sum).sum/1gb) / ((( $disk | Measure-Object -Property Size -sum).sum/1gb)*100) )
+    $diskObj.Percent = "{0:n0}%" -f ( $PercentFree = [Math]::round((($disk.FreeSpace/$disk.Size) * 100)) )
+
+
 # Format Disk Info
 #-------------------------------------------------------
-    $text = "{0} [Drive Size]-- {1}    [Free Space]-- {2}    [Percent Free]-- {3}" -f $diskObj.Disk,$diskObj.size,
-$diskObj.FreeSpace,$diskObj.Percent
+    $text = "{0}`t[Drive Size]`t{1}`n`t[Free Space]`t{2}`n`t[Percent Free]`t{3}%`n" -f $diskObj.Disk,$diskObj.size,
+$diskObj.FreeSpace,$PercentFree
     $msg += $text + [char]13 + [char]10
 }
 
@@ -527,7 +534,6 @@ function Gem-Check-Service{
 
 
 
-
 #
 #===============================================================================================================
 #===============================================================================================================
@@ -536,12 +542,48 @@ function Gem-Check-Service{
 
 
 
-function Gem-Remove-Header{
 
-    $file = "$ieD\<FILE-NAME>"
 
-    (  Get-Content $file | Where-Object { $_ -notmatch '"<PATTERN>"' }  ) | Set-Content $file
+
+function Get-LastBootTime {
+
+    $cn = $ENV:COMPUTERNAME
+
+    [Management.ManagementDateTimeConverter]::ToDateTime((Get-WmiObject -Class Win32_OperatingSystem -ComputerName $cn | Select -ExpandProperty LastBootUpTime))
+
 }
 
 
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+
+function Delete-File-Older-Than {
+# Delolder.ps1
+# Syntax: DelOlder path_to_files Days
+
+    param( [string] $Folder, [int] $days )
+
+    "Delete from folder:$Folder items older than $days days"
+
+    if (test-path $Folder)
+    {
+      dir -recurse $Folder | ? {$_.LastWriteTime -lt (get-date).AddDays(-$days)} | del -recurse -whatif
+      # To delete for real, remove -whatif in the line above
+    }
+}
+
+
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
 
