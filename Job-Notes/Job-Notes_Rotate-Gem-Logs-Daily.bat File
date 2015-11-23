@@ -1,0 +1,7 @@
+Job Notes
+==============================================================
+Configured Weekly GEM Log Rotations:
+Daily at 12:01 AM - Runs C:\_Gem-Toolbox\Batch-Files\Rotate-Gem-Logs-Daily.bat
+Archives to C:\_Gem-Log-Archives
+Job Log file lives there for troubleshooting.
+Configured to also RESTART GemService as part of the daily rotation job

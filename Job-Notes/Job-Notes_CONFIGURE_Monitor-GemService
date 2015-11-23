@@ -1,11 +1,16 @@
 Job Notes
 ================================================================
 
-Configured GEMservice to run on this box
--- Tested and Worked
--- Contacted their IT department and notified them of the changes
-
-Setup Monitor-GemService.ps1
+Setup Monitor-GemService.ps1 on
 -- Configured Desktop and Startup shortcuts
 -- Tested and Worked
 
+
+Setup GEM Info on
+-- Configured Desktop and Startup shortcuts
+-- Tested and Worked
+
+
+Setup RESTART GEMservice on
+-- Configured Desktop and Startup shortcuts
+-- Tested and Worked

@@ -2,23 +2,22 @@ clear
 
 sal gtp Gem-Test-Path
 
-$sys="$env:HOMEDRIVE"
-$sysTest="$sys\_TEST-Gem-C"
-$logArc = "$sysTest\_Gem-Log-Archives"
+$sysD="$env:HOMEDRIVE"
+$logArc = "$sysD\_Gem-Log-Archives"
 $log = "$logArc\Rotate-Gem-Logs.log"
 
-Set-Location $sysTest
+Set-Location $sysD
 
 $go = @{
     "Name" = "gemonline";
     "Ext" = "log";
-    "Path" = "$sysTest\gemonline.log";
+    "Path" = "$sysD\gemonline.log";
 }
 
 $gd = @{
     "Name" = "GEMDaily";
     "Ext" = "cp";
-    "Path" = "$sysTest\GEMDaily.cp";
+    "Path" = "$sysD\GEMDaily.cp";
 }
 
 $fileName = @($go.Name;$gd.Name)
@@ -28,14 +27,14 @@ $filePath = @($go.Path;$gd.Path)
 #  Check Log Files Exists On C:\
 #------------------------------------------------------------------
 foreach ($i in $filePath) {
-    gtp $i
+    Gem-Test-Path $i
 }
 
 
 #  Check Log Files Exists On C:\
 #------------------------------------------------------------------
 foreach ($j in $fileName) {
-    Gem-Rotate $j
+    Gem-Rotate $logArc 80
 }
 
 
@@ -43,24 +42,12 @@ foreach ($j in $fileName) {
 #  *****  FUNCTIONS  *****
 #------------------------------------------------------------------
 
-function Gem-Calculate-Date {
-    param( [parameter(Mandatory=$true)][String]$dateIn )
+function Gem-Move-File {
 
-    $date = Get-Date
-
-    $dayCount = 84
-    $lastWrite = $date.AddDays(-$dayCount)
-
-    Switch ($dateIn) {
-        dayCount { $outDate = "$dayCount"; break }
-        lastWrite { $outDate = "$lastWrite"; break }
-        date { $outDate = "$date"; break }
+    Gem-Test-Path ( $sysD\gemonline.log ) {
+        Rename-Item
     }
-
-    Return $outDate
-
 }
-
 
 function Stamp-Log ( $StampType ) {
 
@@ -72,12 +59,10 @@ function Stamp-Log ( $StampType ) {
     }
 }
 
-
 function Ldt {
     $ldt = Stamp-Log logstamp
     $ldt
 }
-
 
 function Gem-Test-Path {
     param( [parameter(Mandatory=$true)][String]$file )
@@ -93,42 +78,16 @@ function Gem-Test-Path {
     Add-Content -Path $log -Value $out
 }
 
+
 function Gem-Rotate {
-    $stamp = Ldt
-    $lw = Gem-Calculate-Date lastWrite
-    $dc = Gem-Calculate-Date dayCount
 
-    $logs = gci $logArc -Recurse |
-        Where { $_.lastWrite -le "$lw" }
+    param( [string] $Folder, [int] $days )
 
-        foreach ( $file in $logs ) {
-            if ($file -ne $NULL) {
+    "Deleting log files from $Folder older than $days days"
 
-                $delMsg01 = "{0} : [ ROTATE ] : {1} is older than {2} days old." -f $stamp,$file,$dc
-                $delMsg02 = "{0} : [ ROTATE ] : {1} has been deleted." -f $stamp,$file
-
-                $delMsg01
-                $delMsg02
-
-                Out-File -FilePath $log -Append -InputObject $delMsg01
-                Out-File -FilePath $log -Append -InputObject $delMsg02
-
-                Remove-Item $file.FullName | Out-Null
-            }
-
-            else {
-
-                $delMsg03 = "{0} : [ ROTATE ] : All files are less than {2} days old." -f $stamp,$file,$dc
-                $delMsg04 = "{0} : [ ROTATE ] : No files to delete!" -f $stamp
-
-                $delMsg03
-                $delMsg04
-
-                Out-File -FilePath $log -Append -InputObject $delMsg03
-                Out-File -FilePath $log -Append -InputObject $delMsg04
-
-            }
-        }
-
-
+    if (test-path $Folder)
+    {
+      dir -recurse $Folder | ? {$_.LastWriteTime -lt (get-date).AddDays(-$days)} | del -recurse -whatif
+      # To delete for real, remove -whatif in the line above
+    }
 }
