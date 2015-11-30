@@ -563,18 +563,17 @@ function Get-LastBootTime {
 #
 
 
-function Delete-File-Older-Than {
-# Delolder.ps1
-# Syntax: DelOlder path_to_files Days
+function Gem-Rotate-Archives {
 
-    param( [string] $Folder, [int] $days )
+    param(  [parameter(Mandatory=$true)][string] $Folder,
+            [parameter(Mandatory=$true)][int] $days
+        )
 
-    "Delete from folder:$Folder items older than $days days"
 
     if (test-path $Folder)
     {
-      dir -recurse $Folder | ? {$_.LastWriteTime -lt (get-date).AddDays(-$days)} | del -recurse -whatif
-      # To delete for real, remove -whatif in the line above
+      dir -recurse $Folder | ? {$_.LastWriteTime -lt (get-date).AddDays(-$days)} | del -recurse
+
     }
 }
 
@@ -586,4 +585,54 @@ function Delete-File-Older-Than {
 #===============================================================================================================
 #===============================================================================================================
 #
+
+
+function Gem-Clean-Import {
+
+    param(  [parameter(Mandatory=$true)][string]$FileName,
+            [parameter(Mandatory=$true)][string] $Extension
+        )
+
+    $date = Get-Date -format yyyy-MM-dd #Variable for DateStamp in archived filename.
+
+
+    $file = "$FileName"
+    $ext = "$Extension"
+    $dir = "$gemD\ImportExport"
+    $path = "$dir\$file.$ext"
+    $arc = "$dir\Archive\Import-Archives"
+    $arcOrg = "$arc\$file.$ext"
+    $arcNew = "{0}_{1}.{2}" -f $file, $date, $ext
+
+
+
+    if ( test-path $path ) {
+
+        Copy-Item $path -destination "H:\GEM\ImportExport\Archive\Import-Archives\$arcNew"
+
+        (  Get-Content $path | Where-Object { $_ -notmatch '"FicaNbr","BadgeNbr","EmpStatus","LastName","FirstName"' }  ) | Set-Content $path
+
+    }
+
+    Gem-Rotate-Archives "$arc" 30
+
+}
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
+
+
+
+
+#
+#===============================================================================================================
+#===============================================================================================================
+#===============================================================================================================
+#
+
 
