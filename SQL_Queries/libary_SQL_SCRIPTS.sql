@@ -343,10 +343,62 @@ UPDATE	micros.rest_def
 SET		ob_classic_security = ‘T’
 
 
+
+/*  SEARCH FOR ALL OPEN CHECKS
+=============================================================== */
+SELECT *
+FROM MICROS.chk_dtl
+WHERE chk_open = 't'
+
+
+
 /*  FORCE CLOSE ALL OPEN CHECKS ( ** WILL CLOSE ALL OPEN CHEKCS ** )
 =============================================================== */
 BEGIN
-	DECLARE @mychk INT;
-	SET @mychk = (SELECT chk_seq FROM micros.chk_dtl WHERE chk_open = 'T');
-	CALL micros.sp_forcechkclose(@mychk);
-END
+
+    DECLARE err_NOTFOUND EXCEPTION FOR SQLSTATE VALUE '02000';
+    DECLARE @ChkSeqToClose INTEGER;
+
+    DECLARE LOCAL TEMPORARY TABLE t_chk_close_list (
+                                                    chkSeq INTEGER PRIMARY KEY ) ON COMMIT PRESERVE ROWS;
+
+    DECLARE c_check DYNAMIC SCROLL CURSOR FOR
+        SELECT
+                chkSeq
+        FROM
+                t_chk_close_list
+        ORDER BY
+                chkSeq;
+
+-- Get the check seqs for open checks that are more than 24 hours old
+    INSERT INTO t_chk_close_list ( chkSeq )
+    SELECT
+            chk_seq
+    FROM
+            MICROS.chk_dtl
+    WHERE
+            chk_open = 'T'
+      AND   now(*) - chk_open_date_time > 1;
+    MESSAGE 'ForceCloseChecks>>> Checks TO CLOSE: ' || @@rowcount;
+
+    OPEN c_check WITH HOLD;
+
+    CHECK_LOOP:
+    LOOP
+        FETCH NEXT c_check INTO
+            @ChkSeqToClose;
+
+        IF SQLSTATE = ERR_NOTFOUND THEN
+            LEAVE CHECK_LOOP;
+        END IF;
+
+        MESSAGE 'ForceCloseChecks>>> Closing check_seq: ' || @ChkSeqToClose;
+
+        CALL MICROS.sp_forcechkclose(@ChkSeqToClose);
+        COMMIT;
+
+    END LOOP CHECK_LOOP;
+
+    CLOSE c_check;
+
+END;
