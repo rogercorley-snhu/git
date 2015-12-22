@@ -275,26 +275,26 @@
 ::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ::-----------------------------------------------------------------------------------------------------------
 
-::		echo ============================================================================== >> %log%
-::			echo %fullstamp% : [ HEADER ] BEGIN FUNCTION: REMOVE HEADER >> %log%
-::		echo ============================================================================== >> %log%
-::		echo. >> %log%
+		echo ============================================================================== >> %log%
+			echo %fullstamp% : [ HEADER ] BEGIN FUNCTION: REMOVE HEADER >> %log%
+		echo ============================================================================== >> %log%
+		echo. >> %log%
 
-::		for /f "skip=1 delims=*" %%a in (%impPath%) do (
-::			echo %%a >> %tempPath%
-::		)
+		for /f "skip=1 delims=*" %%a in (%impPath%) do (
+			echo %%a >> %tempPath%
+		)
 
-::		xcopy %tempPath% %impPath% /y
-::		del %tempPath% /f /q
+		xcopy %tempPath% %impPath% /y
+		del %tempPath% /f /q
 
-::		echo. >> %log%
-::			echo %fullstamp% : [ HEADER ] Header row removed from %impFull%. >> %log%
-::		echo. >> %log%
+		echo. >> %log%
+			echo %fullstamp% : [ HEADER ] Header row removed from %impFull%. >> %log%
+		echo. >> %log%
 
-::		echo ============================================================================== >> %log%
-::			echo %fullstamp% : [ HEADER ] END FUNCTION: REMOVE HEADER >> %log%
-::		echo ============================================================================== >> %log%
-::		echo. >> %log%
+		echo ============================================================================== >> %log%
+			echo %fullstamp% : [ HEADER ] END FUNCTION: REMOVE HEADER >> %log%
+		echo ============================================================================== >> %log%
+		echo. >> %log%
 
 	goto funcLineCount
 

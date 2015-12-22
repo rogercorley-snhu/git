@@ -1,15 +1,16 @@
 DECLARE @table varchar(max), @sql nvarchar(max)
-DECLARE @col1 varchar(max), @col2 varchar(max), @col3 varchar(max)
+DECLARE @col1 varchar(max), @col2 varchar(max), @col3 varchar(max), @col4 varchar(max)
 
 SET @col1 = 'AccountNo'
 SET @col2 = 'LastName'
 SET @col3 = 'FirstName'
+SET @col4 = 'BadgeNo'
 
 SET @table = 'tblAccountImport'
 
 
 SET @sql = '
- SELECT i.'+@col1+', i.'+@col2+', i.'+@col3+'
+ SELECT i.'+@col1+', i.'+@col4+', i.'+@col2+', i.'+@col3+'
  FROM ' +@table+ ' AS i
  INNER JOIN (
   SELECT '+@col1+', COUNT(*) AS dupeCount
