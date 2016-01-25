@@ -1,0 +1,23 @@
+HACK :: WINDOWS :: Create A Symbolic Link
+=============================================================================
+Open Command Line as Administrator:
+Enter:	mklink /prefix link_path Target_file/folder_path
+
+Example:	mklink /J "C\:Program Files\SomeAppDirectory" "E:\Program Files\SomeAppDirectory"
+
+Parameters:	/D	Creates a directory symbolic link. Default is a file symbolic link.
+		/H  	Creates a hard link instead of a symbolic link.
+		/J 	Creates a Directory Junction.
+
+
+
+HACK :: WINDOWS SERVER 2003 :: REMOVE SHUT DOWN BUTTON FROM START MENU VIA REGEDIT
+=============================================================================
+Open RegEdit.msc --> Navigate to:
+	HCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+Right-Click 'Explorer' --> New --> DWORD Value
+	DWORD Name = 'NoClose'
+	DWORD Value = '1'
+
+Log out --> Log In --> Verify Shut Down button has been removed

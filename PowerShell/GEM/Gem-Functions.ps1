@@ -1,3 +1,5 @@
+#   LAST UPDATE:    01/22/2016  -- RC
+
 
 $sysD = "$env:HOMEDRIVE"
 $gemD = "$env:GEM"
@@ -22,8 +24,6 @@ $iesD = "$gemD\ImportExport\_Scripts"
 $iesgD = "$gemD\ImportExport\_Scripts\Good-Records"
 $iesbD = "$gemD\ImportExport\_Scripts\Bad-Records"
 $ieslD = "$gemD\ImportExport\_Scripts\_Logs"
-
-
 
 
 #  Set-Aliases
@@ -70,8 +70,6 @@ Set-Alias gemrestart Gem-Check-Service
 Set-Alias gem-restart Gem-Check-Service
 
 
-
-
 #  Gem-Refresh-PowerShell
 #---------------------------------------------------------------------------------------------------------------
 
@@ -82,7 +80,6 @@ function Gem-Refresh {
     & ".\Gem-Functions.ps1"
 
 }
-
 
 
 #
@@ -111,42 +108,42 @@ function Gem-Cd ($dir) {
 
 
     $list = {
-        'gem = GEM Directory',
-        'glad = Gem-Log-Archives Directory',
-        'gdef = GEM Defs Directory',
-    'gdefs = GEM Defs Directory',
-    'defs = GEM Defs Directory',
-        'glog = GEM Logs Directory',
-        'imp = GEM ImportExport Directory',
-        'gimp = GEM ImportExport Directory',
-        'impexp = GEM ImportExport Directory',
-        'impexparc = GEM ImpExp Archive Directory',
-        'ixarc = GEM ImpExp Archive Directory',
-        'impemparc = GEM Import-Employees-Archives Directory',
-        'iearc = GEM Import-Employees-Archives Directory',
-        'gtb = GEM-Toolbox Directory',
-        'tools = GEM-Toolbox Directory',
-        'gemtools = GEM-Toolbox Directory',
-        'toolbox = GEM-Toolbox Directory',
-        'psd = GEM PowerShell Directory',
-        'gemps = GEM PowerShell Directory',
-        'gempsd = GEM PowerShell Directory',
-        'gps = GEM PowerShell Directory',
-        'gpsd = GEM PowerShell Directory',
-        'gempsf = GEM PowerShell Functions Directory',
-        'gpsfd = GEM PowerShell Functions Directory',
-        'psf = GEM PowerShell Functions Directory',
-        'psfd = GEM PowerShell Functions Directory',
-        'functions = GEM PowerShell Functions Directory',
-        'batd = GEM Batch-Files Directory',
-        'bat = GEM Batch-Files Directory',
-        'gembat = GEM Batch-Files Directory',
-        'gembatd = GEM Batch-Files Directory',
-        'user = Current UserProfile Directory',
-        'desk = User Desktop',
-        'docs = Current UserProfile Documents Directory',
-        'pspro = Current User PowerShell Profile Directory',
-        'psprofile = Current User PowerShell Profile Directory'
+                    'gem = GEM Directory',
+                    'glad = Gem-Log-Archives Directory',
+                    'gdef = GEM Defs Directory',
+                    'gdefs = GEM Defs Directory',
+                    'defs = GEM Defs Directory',
+                    'glog = GEM Logs Directory',
+                    'imp = GEM ImportExport Directory',
+                    'gimp = GEM ImportExport Directory',
+                    'impexp = GEM ImportExport Directory',
+                    'impexparc = GEM ImpExp Archive Directory',
+                    'ixarc = GEM ImpExp Archive Directory',
+                    'impemparc = GEM Import-Employees-Archives Directory',
+                    'iearc = GEM Import-Employees-Archives Directory',
+                    'gtb = GEM-Toolbox Directory',
+                    'tools = GEM-Toolbox Directory',
+                    'gemtools = GEM-Toolbox Directory',
+                    'toolbox = GEM-Toolbox Directory',
+                    'psd = GEM PowerShell Directory',
+                    'gemps = GEM PowerShell Directory',
+                    'gempsd = GEM PowerShell Directory',
+                    'gps = GEM PowerShell Directory',
+                    'gpsd = GEM PowerShell Directory',
+                    'gempsf = GEM PowerShell Functions Directory',
+                    'gpsfd = GEM PowerShell Functions Directory',
+                    'psf = GEM PowerShell Functions Directory',
+                    'psfd = GEM PowerShell Functions Directory',
+                    'functions = GEM PowerShell Functions Directory',
+                    'batd = GEM Batch-Files Directory',
+                    'bat = GEM Batch-Files Directory',
+                    'gembat = GEM Batch-Files Directory',
+                    'gembatd = GEM Batch-Files Directory',
+                    'user = Current UserProfile Directory',
+                    'desk = User Desktop',
+                    'docs = Current UserProfile Documents Directory',
+                    'pspro = Current User PowerShell Profile Directory',
+                    'psprofile = Current User PowerShell Profile Directory'
             }
 
   Switch ($dir) {
@@ -532,17 +529,11 @@ function Gem-Check-Service{
 }
 
 
-
-
 #
 #===============================================================================================================
 #===============================================================================================================
 #===============================================================================================================
 #
-
-
-
-
 
 
 function Get-LastBootTime {
@@ -552,7 +543,6 @@ function Get-LastBootTime {
     [Management.ManagementDateTimeConverter]::ToDateTime((Get-WmiObject -Class Win32_OperatingSystem -ComputerName $cn | Select -ExpandProperty LastBootUpTime))
 
 }
-
 
 
 
@@ -578,8 +568,6 @@ function Gem-Rotate-Archives {
 }
 
 
-
-
 #
 #===============================================================================================================
 #===============================================================================================================
@@ -590,31 +578,33 @@ function Gem-Rotate-Archives {
 function Gem-Clean-Import {
 
     param(  [parameter(Mandatory=$true)][string]$FileName,
-            [parameter(Mandatory=$true)][string] $Extension
+                    [parameter(Mandatory=$true)][string] $Extension,
+                    [parameter(Mandatory=$true)][int]$KeepDays
         )
 
     $date = Get-Date -format yyyy-MM-dd #Variable for DateStamp in archived filename.
 
+    $days = $KeepDays
 
-    $file = "$FileName"
-    $ext = "$Extension"
-    $dir = "$gemD\ImportExport"
-    $path = "$dir\$file.$ext"
-    $arc = "$dir\Archive\Import-Archives"
-    $arcOrg = "$arc\$file.$ext"
-    $arcNew = "{0}_{1}.{2}" -f $file, $date, $ext
+                    $file = "$FileName"
+                    $ext = "$Extension"
+                    $dir = "$gemD\ImportExport"
+                    $path = "$dir\$file.$ext"
+                    $arc = "$dir\Archive\Import-Archives"
+                    $arcOrg = "$arc\$file.$ext"
+                    $arcNew = "{0}_{1}.{2}" -f $file, $date, $ext
 
 
 
-    if ( test-path $path ) {
+    if ( test-path "$path" ) {
 
-        Copy-Item $path -destination "H:\GEM\ImportExport\Archive\Import-Archives\$arcNew"
+        Copy-Item "$path" -destination "$arc\$arcNew"
 
-        (  Get-Content $path | Where-Object { $_ -notmatch '"FicaNbr","BadgeNbr","EmpStatus","LastName","FirstName"' }  ) | Set-Content $path
+        (  Get-Content "$path" | Where-Object { $_ -notmatch '"FicaNbr","BadgeNbr","EmpStatus","LastName","FirstName"' }  ) | Set-Content $path
 
     }
 
-    Gem-Rotate-Archives "$arc" 30
+    Gem-Rotate-Archives "$arc" $days
 
 }
 
@@ -625,9 +615,34 @@ function Gem-Clean-Import {
 #===============================================================================================================
 #
 
+function Gem-Archive-File {
+    param(  [parameter(Mandatory=$true)][string]$DirName,
+                    [parameter(Mandatory=$true)][string]$FileName,
+                    [parameter(Mandatory=$true)][string] $Extension,
+                    [parameter(Mandatory=$true)][string]$ArcName,
+                    [parameter(Mandatory=$true)][int]$KeepDays
+        )
 
+    $date = Get-Date -format yyyy-MM-dd #Variable for DateStamp in archived filename.
 
+    $days = $KeepDays
 
+                    $file = "$FileName"
+                    $ext = "$Extension"
+                    $dir = "$DirName"
+                    $path = "$dir\$file.$ext"
+                    $arc = "$ArcName"
+                    $arcOrg = "$arc\$file.$ext"
+                    $arcNew = "{0}_{1}.{2}" -f $file, $date, $ext
+
+    if ( test-path "$path" ) {
+
+        Copy-Item "$path" -destination "$arc\$arcNew"
+    }
+
+    Gem-Rotate-Archives "$arc" $days
+
+}
 
 #
 #===============================================================================================================

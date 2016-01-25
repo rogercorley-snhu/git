@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<GEMDefFile><Company>Common CENTS Solutions</Company><Version>0.0.24</Version><Application>GEM Export Utility </Application><Copyright>(c) Copyright 2002, All Rights Reserved</Copyright><CreateDate>4/16/2003 10:11:25 AM</CreateDate><Author>Roger Corley</Author><Description>Saved by gemuser from COMCENTSSRV at 7/26/2007 11:31:47 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:31:52 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:33:38 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:34:06 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:34:37 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:43:01 AM
+Saved by gemuser from COMCENTSSRV at 7/26/2007 11:43:44 AM
+Saved by gemuser from COMCENTSSRV at 8/3/2007 2:46:26 PM
+Saved by gemuser from COMCENTSSRV at 9/22/2010 8:39:07 AM
+Saved by gemuser from COMCENTSSRV at 9/22/2010 8:39:09 AM
+Saved by gemuser from COMCENTSSRV at 9/22/2010 8:39:13 AM
+Saved by gemuser from COMCENTSSRV at 9/22/2010 8:39:31 AM
+Saved by gemuser from COMCENTSSRV at 4/15/2011 8:39:37 AM
+Saved by gemuser from COMCENTSSRV at 4/15/2011 8:39:40 AM
+Saved by gemuser from COMCENTSSRV at 4/15/2011 8:39:42 AM
+Saved by gemuser from COMCENTSSRV at 10/26/2011 3:06:07 PM
+Saved by gemuser from COMCENTSSRV at 10/26/2011 3:06:10 PM
+Saved by gemuser from COMCENTSSRV at 11/22/2011 10:50:10 AM
+Saved by gemuser from COMCENTSSRV at 11/22/2011 10:50:13 AM
+Saved by gemuser from COMCENTSSRV at 11/22/2011 10:50:19 AM
+Saved by gemuser from COMCENTSSRV at 1/31/2012 11:15:24 AM
+Saved by gemuser from COMCENTSSRV at 1/31/2012 11:15:26 AM
+Saved by gemuser from COMCENTSSRV at 1/31/2012 11:15:28 AM
+Saved by gemuser from COMCENTSSRV at 1/15/2013 9:22:50 AM
+Saved by gemuser from COMCENTSSRV at 1/15/2013 9:22:59 AM
+Saved by gemuser from COMCENTSSRV at 5/2/2013 1:18:45 PM
+Saved by gemuser from COMCENTSSRV at 5/2/2013 1:18:47 PM
+Saved by gemuser from COMCENTSSRV at 5/2/2013 1:18:49 PM
+Saved by gemuser from COMCENTSSRV at 8/29/2014 11:29:00 AM
+Saved by gemuser from COMCENTSSRV at 8/29/2014 11:29:02 AM
+Saved by gemuser from COMCENTSSRV at 8/29/2014 11:29:04 AM
+Saved by gemuser from COMCENTSSRV at 12/21/2015 9:12:55 AM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 11:38:14 AM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 11:54:21 AM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:25:25 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:25:39 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:27:46 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:28:04 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:32:28 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 12:34:06 PM
+Saved by gemuser from COMCENTSSRV at 1/18/2016 5:00:04 PM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:31:44 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:32:03 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:32:10 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:32:54 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:33:42 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 2:31:26 PM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 2:31:45 PM
+Saved by gemuser from COMCENTSSRV at 1/22/2016 12:57:13 PM
+Saved by gemuser from COMCENTSSRV at 1/22/2016 12:57:56 PM
+Saved by gemuser from COMCENTSSRV at 1/22/2016 12:58:35 PM</Description><ExportDefs Creator="GEM Export Utility "><ExportDef><Title>Header</Title><OutputSequence></OutputSequence><Database></Database><SQLCMD>--
+
+DECLARE   @date datetime, @bdate datetime, @edate datetime, @datesearch datetime;
+DECLARE   @edateno int, @dateadj int;
+DECLARE   @chknum char(6), @LocID varchar(2);
+
+SET @dateadj = 8;
+
+SET @datesearch = GETDATE()-@dateadj;
+
+
+SET @chknum	= 'MTH';
+
+SET @LocID = '20';
+
+
+SET @bdate	= (SELECT BeginDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+SET @edate	= (SELECT EndDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+
+
+SELECT
+	'A' + @LocID + ' A' + CAST(YEAR(@edate) AS VARCHAR(4)) + (SELECT RIGHT('0' + CAST(MONTH(@edate) AS VARCHAR(2)),2)) + SPACE(27) AS [HeaderData]
+
+
+--</SQLCMD>
+
+<Description>Header information for export file</Description>
+
+<Active>1</Active><Append>0</Append><Delimiter></Delimiter><OutputFilename>C:\GEM\ImportExport\Starded20Admin</OutputFilename><UseCRLF>1</UseCRLF><UseCR>0</UseCR><UseLF>0</UseLF><GenerateCredits>0</GenerateCredits><TransID>100</TransID><Outlet>1000</Outlet><Reference>EU Auto</Reference><Fields Creator="GEM Export Utility "><Field><Fieldname>HeaderData</Fieldname><Position>1</Position><Width>0</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field></Fields></ExportDef><ExportDef><Title>Detail</Title><OutputSequence></OutputSequence><Database></Database><SQLCMD>--
+
+DECLARE   @tdate datetime, @bdate datetime, @edate datetime, @datesearch datetime;
+DECLARE   @edateno int, @dateadj int, @cid int;
+DECLARE   @acid int, @chknum char(6);
+
+SET @dateadj = 8;
+
+SET @datesearch = GETDATE()-@dateadj;
+
+
+SET @chknum	= 'MTH';
+SET @acid	= 20;
+
+
+SET @bdate	= (SELECT BeginDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+SET @edate	= (SELECT EndDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+
+
+SELECT
+	'B' + dbo.LPad(RTRIM(A.AccountNo),10,'0') [AccountNo],
+	CAST(dbo.RPad(REPLACE(CAST(SUM(D.TransTotal) AS VARCHAR(9)),'.',''),9,' ') AS INT) [Total],
+	o.Category
+
+FROM
+	tblDetail AS D
+	JOIN tblAccountOHD AS A ON D.AccountNo = A.AccountNo
+	JOIN tblAccountClass AS AC ON A.AccountClassID = AC.AccountClassID
+	JOIN tblOutletOHD as O ON D.OutletNo = O.OutletNo
+
+WHERE
+	A.AccountClassID = @acid AND
+	O.OutletNo IN (1,2,3,4,5,6,9,10,11,21,22,51,606,607,623,641,1330) AND
+	D.TransDate BETWEEN @bdate and @edate
+
+GROUP BY
+	A.AccountNo, O.Category
+
+ORDER BY
+	A.AccountNo, O.Category
+
+--</SQLCMD><Description></Description><Active>1</Active><Append>1</Append><Delimiter></Delimiter><OutputFilename>C:\GEM\ImportExport\Starded20Admin</OutputFilename><UseCRLF>1</UseCRLF><UseCR>0</UseCR><UseLF>0</UseLF><GenerateCredits>0</GenerateCredits><TransID>100</TransID><Outlet>1000</Outlet><Reference>EU Auto</Reference><Fields Creator="GEM Export Utility "><Field><Fieldname>AccountNo</Fieldname><Position>0</Position><Width>11</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname>Category</Fieldname><Position>12</Position><Width>3</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname></Fieldname><Position>15</Position><Width>1</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars>
+					</LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname>Total</Fieldname><Position>16</Position><Width>8</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname></Fieldname><Position>24</Position><Width>15</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars>
+					</LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field></Fields></ExportDef></ExportDefs></GEMDefFile>

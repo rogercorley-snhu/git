@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<GEMDefFile><Company>Common CENTS Solutions</Company><Version>0.0.24</Version><Application>GEM Export Utility </Application><Copyright>(c) Copyright 2002, All Rights Reserved</Copyright><CreateDate>4/16/2003 10:11:25 AM</CreateDate><Author>Roger Corley</Author>
+
+<Description>Saved by gemuser from COMCENTSSRV at 7/26/2007 11:31:47 AM
+Saved by gemuser from COMCENTSSRV at 1/19/2016 11:25:31 AM</Description>
+
+<ExportDefs Creator="GEM Export Utility "><ExportDef><Title>Header</Title><OutputSequence></OutputSequence><Database></Database><SQLCMD>--
+
+DECLARE @date DATETIME, @cDate DATETIME, @dateAdj INT, @bDate DATETIME, @eDate DATETIME, @year VARCHAR(4);
+DECLARE @xid VARCHAR(10), @cNo INT, @period VARCHAR(2), @locID INT, @loc VARCHAR(2);
+
+SET @locID = '42';
+
+SET @xid = 'BIWK';
+
+SET @dateAdj = 8;
+
+----------------------------------------------------------------------------------------------------------
+
+SET @date = GETDATE();
+SET @cDate = @date-@dateAdj;
+SET @year = ( SELECT CAST(YEAR(@date) AS VARCHAR(4)));
+
+SET @cNo = ( SELECT CycleNo FROM tblCycleXlat WHERE xlatID = @xid and @cDate BETWEEN BeginDate AND EndDate );
+SET @bDate = ( SELECT BeginDate FROM tblCycleXlat WHERE xlatID = @xid and @cDate BETWEEN BeginDate AND EndDate );
+SET @eDate = ( SELECT EndDate FROM tblCycleXlat WHERE xlatID = @xid and @cDate BETWEEN BeginDate AND EndDate );
+
+SET @period = ( SELECT RIGHT( '0' + CAST((DATEPART(WK,@date)/2) AS VARCHAR(2)),2));
+SET @loc = ( SELECT CAST(@locID AS VARCHAR(2)) );
+
+----------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
+
+SELECT 'A' + @loc + ' B' + @year + @period + SPACE(27) [HeaderData]
+
+--</SQLCMD><Description>Header information for export file</Description><Active>1</Active><Append>0</Append><Delimiter></Delimiter><OutputFilename>C:\GEM\ImportExport\Starded42</OutputFilename><UseCRLF>1</UseCRLF><UseCR>0</UseCR><UseLF>0</UseLF><GenerateCredits>0</GenerateCredits><TransID>100</TransID><Outlet>1000</Outlet><Reference>EU Auto</Reference><Fields Creator="GEM Export Utility "><Field><Fieldname>HeaderData</Fieldname><Position>1</Position><Width>0</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field></Fields></ExportDef><ExportDef><Title>Detail</Title><OutputSequence></OutputSequence><Database></Database><SQLCMD>--
+
+DECLARE   @tdate datetime, @bdate datetime, @edate datetime, @datesearch datetime;
+DECLARE   @edateno int, @dateadj int, @cid int;
+DECLARE   @acid int, @chknum char(6);
+
+SET @dateadj = 8;
+
+SET @datesearch = GETDATE()-@dateadj;
+
+
+SET @chknum	= 'BIWK';
+SET @acid	= 11;
+
+
+SET @bdate	= (SELECT BeginDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+SET @edate	= (SELECT EndDate FROM tblCycleXlat AS xlat
+				WHERE @datesearch BETWEEN xlat.BeginDate AND xlat.EndDate AND xlat.xlatID = @chknum);
+----------------------------------------------------------------------------------------
+
+
+
+SELECT
+	'B' + dbo.LPad(RTRIM(A.AccountNo),10,'0') [AccountNo],
+	CAST(dbo.RPad(REPLACE(CAST(SUM(D.TransTotal) AS VARCHAR(9)),'.',''),9,' ') AS INT) [Total],
+	o.Category
+
+FROM
+	tblDetail AS D
+	JOIN tblAccountOHD AS A ON D.AccountNo = A.AccountNo
+	JOIN tblOutletOHD as O ON D.OutletNo = O.OutletNo
+
+WHERE
+	A.AccountClassID = @acid AND
+	o.outletno IN (1,2,3,4,5,6,9,10,11,21,22,51,606,607,623,641,1330) AND
+	d.TransDate BETWEEN @bdate and @edate
+
+GROUP BY
+	A.AccountNo, O.Category
+
+ORDER BY
+	A.AccountNo, O.Category
+
+
+--</SQLCMD><Description></Description><Active>1</Active><Append>1</Append><Delimiter></Delimiter><OutputFilename>C:\GEM\ImportExport\Starded42</OutputFilename><UseCRLF>1</UseCRLF><UseCR>0</UseCR><UseLF>0</UseLF><GenerateCredits>0</GenerateCredits><TransID>100</TransID><Outlet>1000</Outlet><Reference>EU Auto</Reference><Fields Creator="GEM Export Utility "><Field><Fieldname>AccountNo</Fieldname><Position>0</Position><Width>11</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname>Category</Fieldname><Position>12</Position><Width>3</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname></Fieldname><Position>15</Position><Width>1</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars>
+					</LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname>Total</Fieldname><Position>16</Position><Width>8</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars></LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field><Field><Fieldname></Fieldname><Position>24</Position><Width>15</Width><TrimSpaces>0</TrimSpaces><Justification>0</Justification><SuppressDecimal>0</SuppressDecimal><NumDecimal>2</NumDecimal><LeadChars>
+					</LeadChars><TrailChars></TrailChars><SpacePad></SpacePad><UseQuotes>0</UseQuotes><LeadQuote>"</LeadQuote><TrailQuote>"</TrailQuote><Transformation></Transformation><SubtotalField>0</SubtotalField><CreditField>0</CreditField></Field></Fields></ExportDef></ExportDefs></GEMDefFile>
