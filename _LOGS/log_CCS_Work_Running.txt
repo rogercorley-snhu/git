@@ -205,7 +205,12 @@ VMs
 
 Calls:
 ----------------------------------
+Orange Regional Medical : Lynn Lees
+Printer not printing for GEMserve
 
+2:31 PM --  Pappa Joe's - Returning phone for Tony - Partially fixed - No data for 20th - 248-609-5670 x *275
+
+Ann Menz - SEMO - Most iPads referenced account currently locked out servir\sv-unidine & 'Unidine123'
 
 
 
@@ -221,19 +226,50 @@ Cases:
 ----------------------------------
 
 `````````````````````````````````````````````````````````````````````````````````````````````````````````````
+61609 : Children's Dayton : Jerry Pope
 
-
-Start:
+Start:	9:10 AM
 End:
 Notes:
+Logged into sever and opened GEMpay - Worked - Called client to start session
+Message that the phone number given for Gayle was no longer in service
+Called Jerry and left voice message
 
+937-641-4955 : Gayle
+
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````
+61429 : Parrish Medial Center : LaVaughn Green
+
+Start:	9:37 AM
+End:	9:57 AM
+Notes:
+Tried logging into the VNC apps in Citrix for both GEMpay and Micros - Getting an error
+"Resource shortcuts are currently disabled" - Called client and requested that she have
+IT contact me to open access to our servers
+
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````
+60875 : Griffin Hospital - Unidine : Melissa Mitri
+
+Start:	9:57 AM
+End:	10:02 AM
+Notes:
+Requested R/D Assistance from Russ
+
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````
+59464 : Columbus Regional Hospital : BJ Everroad
+
+Start:	10:05 AM
+End:	10:09 AM
+Notes:
+Called and left final voice mail for BJ - Closing due to lack of response
+Informed her that she could open another case regarding this issue if needed
 
 `````````````````````````````````````````````````````````````````````````````````````````````````````````````
 
 
 
 
-
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````
 
 =======================================================================================================
 
@@ -249,8 +285,8 @@ VMs
 
 Calls:
 ----------------------------------
-
-
+Childrens' Dayton : Bev Kraft : 9:24 AM
+-- RE: Needs the number of badges that have a badgeno greater than 10K
 
 
 
