@@ -579,7 +579,8 @@ function Gem-Clean-Import {
 
     param(  [parameter(Mandatory=$true)][string]$FileName,
                     [parameter(Mandatory=$true)][string] $Extension,
-                    [parameter(Mandatory=$true)][int]$KeepDays
+                    [parameter(Mandatory=$true)][int]$KeepDays,
+                    [parameter(Mandatory=$true)][int]$tring
         )
 
     $date = Get-Date -format yyyy-MM-dd #Variable for DateStamp in archived filename.
@@ -594,14 +595,16 @@ function Gem-Clean-Import {
                     $arcOrg = "$arc\$file.$ext"
                     $arcNew = "{0}_{1}.{2}" -f $file, $date, $ext
 
+                    $header = $tring
+
 
 
     if ( test-path "$path" ) {
 
         Copy-Item "$path" -destination "$arc\$arcNew"
 
-        (  Get-Content "$path" | Where-Object { $_ -notmatch '"FicaNbr","BadgeNbr","EmpStatus","LastName","FirstName"' }  ) | Set-Content $path
-
+  #      (  Get-Content "$path" | Where-Object { $_ -notmatch '"FicaNbr","BadgeNbr","EmpStatus","LastName","FirstName"' }  ) | Set-Content $path
+            (  Get-Content "$path" | Where-Object { $_ -notmatch '"$header"' }  ) | Set-Content $path
     }
 
     Gem-Rotate-Archives "$arc" $days
