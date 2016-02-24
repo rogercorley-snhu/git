@@ -1,1 +1,9 @@
-shutdown.exe /l /r /f /t 30 /c "Script: Manual Reboot of Server"
+@echo off
+
+ECHO Rebooting Server in 60 seconds.
+ECHO.
+ECHO To abort this reboot, type "shutdown /a" and press enter......
+ECHO.
+
+
+SHUTDOWN.exe /r /f /t 60
